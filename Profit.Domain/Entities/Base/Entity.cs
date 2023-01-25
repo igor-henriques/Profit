@@ -1,4 +1,4 @@
-﻿namespace Profit.Domain.Entities;
+﻿namespace Profit.Domain.Entities.Base;
 
 public abstract record Entity
 {
