@@ -4,7 +4,7 @@ public static class ConfigureMapperProfiles
 {
     public static IServiceCollection AddMapperProfiles(this IServiceCollection services)
     {
-        services.AddAutoMapper(typeof(EntitiesProfile));
+        services.AddAutoMapper(typeof(IngredientProfile));
         return services;
     }
 }

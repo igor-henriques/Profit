@@ -1,10 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Moq;
-using Profit.Infrastructure.Repository.DataContext;
-using Profit.Infrastructure.Repository.Repositories;
-
-namespace Profit.UnitTests.Repository;
+﻿namespace Profit.UnitTests.Repository;
 
 public sealed class IngredientRepository
 {
@@ -14,15 +8,16 @@ public sealed class IngredientRepository
     {
         // Arrange        
         var options = new DbContextOptionsBuilder<ProfitDbContext>()
+            .EnableSensitiveDataLogging()
             .UseInMemoryDatabase(databaseName: "Ingredients")
             .Options;
-        
-        using var context = new ProfitDbContext(options);        
+
+        using var context = new ProfitDbContext(options);
         var unitOfWork = new UnitOfWork(context, loggerMock.Object);
 
         // Act
-        unitOfWork.IngredientRepository.Add(ingredient);
-        await unitOfWork.Save();
+        await unitOfWork.IngredientRepository.Add(ingredient);
+        await unitOfWork.SaveAsync();
 
         // Assert
         Assert.Equal(1, context.Ingredients.Count());

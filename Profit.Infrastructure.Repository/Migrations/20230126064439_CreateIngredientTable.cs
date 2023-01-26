@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Profit.Infrastructure.Repository.Migrations
 {
     /// <inheritdoc />
-    public partial class createingredienttable : Migration
+    public partial class CreateIngredientTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

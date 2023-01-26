@@ -1,8 +1,8 @@
 ﻿namespace Profit.Domain.Profiles;
 
-public sealed class EntitiesProfile : Profile
+public sealed class IngredientProfile : Profile
 {
-	public EntitiesProfile()
+	public IngredientProfile()
 	{
 		CreateMap<IngredientDTO, Ingredient>().ReverseMap();
 	}

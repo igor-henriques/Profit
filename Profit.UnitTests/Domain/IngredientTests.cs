@@ -10,17 +10,16 @@ public sealed class IngredientTests
             ingredient.Name,
             ingredient.Price,
             ingredient.Quantity,
-            ingredient.TotalPrice,
             ingredient.ImageThumbnailUrl);
 
-        var config = new MapperConfiguration(cfg => cfg.AddProfile<EntitiesProfile>());
+        var config = new MapperConfiguration(cfg => cfg.AddProfile<IngredientProfile>());
         var mapper = new Mapper(config);
 
         var ingredientDtoMapped = mapper.Map<IngredientDTO>(ingredient);
         var ingredientMapped = mapper.Map<Ingredient>(ingredientDto);
 
         ingredientDtoMapped.Should().Be(ingredientDto);
-        ingredient.Should().BeEquivalentTo(ingredientMapped, options => options.Excluding(x => x.Guid));
+        ingredient.Should().BeEquivalentTo(ingredientMapped, options => options.Excluding(x => x.Guid).Excluding(x => x.UnitPrice));
     }
 
     [Theory]

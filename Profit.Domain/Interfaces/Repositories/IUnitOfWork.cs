@@ -3,5 +3,14 @@
 public interface IUnitOfWork
 {
     IIngredientRepository IngredientRepository { get; }
-    ValueTask Save(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Save all changes in the transaction
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <exception cref="Core.Exceptions.DbUpdateException"></exception>
+    /// <exception cref="Core.Exceptions.DbUpdateConcurrencyException"></exception>
+    /// <exception cref="OperationCanceledException"></exception>
+    /// <returns></returns>
+    ValueTask SaveAsync(CancellationToken cancellationToken = default);
 }

@@ -12,7 +12,8 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.2">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>		
+		</PackageReference>
+		<PackageReference Include="Serilog" Version="2.9.0" />		
 	</ItemGroup>
 
 	<ItemGroup>

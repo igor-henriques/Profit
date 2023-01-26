@@ -25,4 +25,12 @@ public sealed class ArgumentValidator
             throw new System.ArgumentException($"{paramName ?? "Argument"} cannot be zero");
         }
     }
+
+    public static void ThrowIfDefault<T>(T obj, string paramName = null) where T : new()
+    {
+        if (obj.Equals(default(T)))
+        {
+            throw new System.ArgumentException($"{paramName ?? "Argument"} cannot be default");
+        }
+    }
 }

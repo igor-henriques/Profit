@@ -9,7 +9,6 @@ public sealed class IngredientFluentMapping : IEntityTypeConfiguration<Ingredien
         builder.Property(i => i.Name).IsRequired().HasMaxLength(100);
         builder.Property(i => i.Price).IsRequired().HasPrecision(18, 2);
         builder.Property(i => i.Quantity).IsRequired().HasPrecision(18, 2);
-        builder.Property(i => i.TotalPrice).IsRequired().HasPrecision(18, 2);
         builder.Property(i => i.ImageThumbnailUrl).IsRequired().HasMaxLength(500);
     }
 }

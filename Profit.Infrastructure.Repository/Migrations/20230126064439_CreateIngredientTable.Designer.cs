@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Profit.Infrastructure.Repository.DataContext;
 
@@ -11,9 +12,11 @@ using Profit.Infrastructure.Repository.DataContext;
 namespace Profit.Infrastructure.Repository.Migrations
 {
     [DbContext(typeof(ProfitDbContext))]
-    partial class ProfitDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230126064439_create-ingredient-table")]
+    partial class CreateIngredientTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,6 +46,10 @@ namespace Profit.Infrastructure.Repository.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Quantity")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalPrice")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 

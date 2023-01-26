@@ -5,35 +5,32 @@ public sealed record Ingredient : Entity
     public string Name { get; private set; }
     public decimal Price { get; private set; }
     public decimal Quantity { get; private set; }
-    public decimal TotalPrice { get; private set; }
-    public decimal UnitPrice { get => Price / Quantity; }
+    public decimal UnitPrice { get => Quantity is 0 ? 0 : Price / Quantity; }
     public string ImageThumbnailUrl { get; private set; }
 
     public Ingredient(string name,
                       decimal price,
                       decimal quantity,
-                      decimal totalPrice,
                       string imageThumbnailUrl)
     {
         Name = name;
         Price = price;
         Quantity = quantity;
-        TotalPrice = totalPrice;
         ImageThumbnailUrl = imageThumbnailUrl;
     }
+
+    public Ingredient() { }
 
     public Ingredient Update(Ingredient ingredient)
     {
         ArgumentValidator.ThrowIfNullOrEmpty(ingredient.Name);
         ArgumentValidator.ThrowIfNegative(ingredient.Price);
         ArgumentValidator.ThrowIfNegative(ingredient.Quantity);
-        ArgumentValidator.ThrowIfNegative(ingredient.TotalPrice);
         ArgumentValidator.ThrowIfNullOrEmpty(ingredient.ImageThumbnailUrl);
 
         this.Name = ingredient.Name;
         this.Price = ingredient.Price;
         this.Quantity = ingredient.Quantity;
-        this.TotalPrice = ingredient.TotalPrice;
         this.ImageThumbnailUrl = ingredient.ImageThumbnailUrl;
 
         return this;
@@ -60,13 +57,6 @@ public sealed record Ingredient : Entity
         return this;
     }
 
-    public Ingredient UpdateTotalPrice(decimal totalPrice)
-    {
-        ArgumentValidator.ThrowIfNegative(totalPrice);
-        this.TotalPrice = totalPrice;
-        return this;
-    }
-
     public Ingredient UpdateImageThumbnailUrl(string imageThumbnailUrl)
     {
         ArgumentValidator.ThrowIfNullOrEmpty(imageThumbnailUrl);
@@ -77,15 +67,13 @@ public sealed record Ingredient : Entity
     public static Ingredient Create(string name,
                                     decimal price,
                                     decimal quantity,
-                                    decimal totalPrice,
                                     string imageThumbnailUrl)
     {
         ArgumentValidator.ThrowIfNullOrEmpty(name);
         ArgumentValidator.ThrowIfNegative(price);
         ArgumentValidator.ThrowIfNegative(quantity);
-        ArgumentValidator.ThrowIfNegative(totalPrice);
         ArgumentValidator.ThrowIfNullOrEmpty(imageThumbnailUrl);
 
-        return new Ingredient(name, price, quantity, totalPrice, imageThumbnailUrl);
+        return new Ingredient(name, price, quantity, imageThumbnailUrl);
     }
 }

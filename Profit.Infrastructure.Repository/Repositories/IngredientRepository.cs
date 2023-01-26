@@ -1,4 +1,6 @@
-﻿namespace Profit.Infrastructure.Repository.Repositories;
+﻿using Serilog;
+
+namespace Profit.Infrastructure.Repository.Repositories;
 
 internal sealed class IngredientRepository : IIngredientRepository
 {
@@ -13,10 +15,18 @@ internal sealed class IngredientRepository : IIngredientRepository
         this.logger = logger;
     }
 
-    public void Add(Ingredient ingredient)
-    {                
+    public async ValueTask Add(Ingredient ingredient, CancellationToken cancellationToken = default)
+    {
+        var entityExists = await this.Exists(ingredient, cancellationToken);
+        
+        if (entityExists)
+        {
+            throw new InvalidOperationException("Entity already exists");
+        }
+            
         _context.Ingredients.Add(ingredient);
         logger.LogInformation($"{ingredient} was added");
+        Log.Logger.Information($"{ingredient} was added");
     }
 
     public void BulkAdd(IEnumerable<Ingredient> ingredients)
@@ -31,14 +41,14 @@ internal sealed class IngredientRepository : IIngredientRepository
         logger.LogInformation($"{ingredient} removed were added");
     }
 
-    public async ValueTask<Ingredient> Get(Guid id, CancellationToken cancellationToken = default)
+    public async ValueTask<Ingredient> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var response = await _context.Ingredients.FindAsync(id, cancellationToken);
         logger.LogInformation($"{response} was retrieved");
         return response;
     }
 
-    public async ValueTask<IEnumerable<Ingredient>> GetMany(CancellationToken cancellationToken = default)
+    public async ValueTask<IEnumerable<Ingredient>> GetManyAsync(CancellationToken cancellationToken = default)
     {
         var response = await _context.Ingredients.ToListAsync(cancellationToken);
         logger.LogInformation($"{response.Count()} ingredients were retrieved");
@@ -49,5 +59,16 @@ internal sealed class IngredientRepository : IIngredientRepository
     {
         _context.Ingredients.Update(ingredient);
         logger.LogInformation($"{ingredient} was updated");
+    }
+    
+    public async ValueTask<bool> Exists(Ingredient ingredient, CancellationToken cancellationToken = default)
+    {
+        var entityExists = await _context.Ingredients.AnyAsync(
+            i => i.Name.Equals(ingredient.Name) &&
+                 i.Quantity.Equals(ingredient.Quantity) &&
+                 i.Price.Equals(ingredient.Price) &&
+                 i.ImageThumbnailUrl.Equals(ingredient.ImageThumbnailUrl), cancellationToken);
+
+        return entityExists;
     }
 }

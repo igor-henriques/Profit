@@ -12,8 +12,8 @@ using Profit.Infrastructure.Repository.DataContext;
 namespace Profit.Infrastructure.Repository.Migrations
 {
     [DbContext(typeof(ProfitDbContext))]
-    [Migration("20230126064439_create-ingredient-table")]
-    partial class createingredienttable
+    [Migration("20230126152631_RemovedTotalPriceColumnFromIngredient")]
+    partial class RemovedTotalPriceColumnFromIngredient
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,10 +46,6 @@ namespace Profit.Infrastructure.Repository.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Quantity")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalPrice")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 

@@ -1,8 +1,12 @@
 ﻿global using FluentValidation;
+global using MediatR;
 global using Microsoft.Extensions.DependencyInjection;
+global using Profit.Domain.Commands.Ingredient.Create;
 global using Profit.Domain.Entities;
 global using Profit.Domain.Interfaces.Repositories;
 global using Profit.Domain.Profiles;
+global using Profit.Domain.Queries.Ingredient.GetMany;
+global using Profit.Domain.Queries.Ingredient.GetUnique;
 global using Profit.Domain.Validations.DTOs;
 global using Profit.Domain.Validations.Entities;
 global using Profit.Domain.ValueObjects;

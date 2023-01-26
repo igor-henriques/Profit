@@ -18,11 +18,19 @@ public sealed class UnitOfWork : IUnitOfWork
         ProfitDbContext context,
         ILogger<UnitOfWork> logger)
     {
-        this._context = context;
-        this._logger = logger;
+        _context = context;
+        _logger = logger;
     }
 
-    public async ValueTask Save(CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Save all changes in the transaction
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <exception cref="DbUpdateException"></exception>
+    /// <exception cref="DbUpdateConcurrencyException"></exception>
+    /// <exception cref="OperationCanceledException"></exception>
+    /// <returns></returns>
+    public async ValueTask SaveAsync(CancellationToken cancellationToken = default)
     {
         await _context.SaveChangesAsync(cancellationToken);
     }
