@@ -1,10 +1,10 @@
-﻿namespace Profit.Domain.Validations.Entities;
+﻿namespace Profit.Domain.Validations.DTOs;
 
-public sealed class IngredientValidator : AbstractValidator<Ingredient>
+public sealed class IngredientDtoValidator : AbstractValidator<IngredientDTO>
 {
-    public IngredientValidator()
+    public IngredientDtoValidator()
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessage(x => $"{nameof(x.Name)} is required").MaximumLength(100).WithMessage("Maximum length is 100 characters");
+        RuleFor(x => x.Name).NotEmpty().WithMessage(x => $"{nameof(x.Name)} is required").MaximumLength(100).WithMessage("Maximum length is 100 characters"); ;
         RuleFor(x => x.Price).GreaterThan(0).WithMessage(x => $"{nameof(x.Price)} must be greater than 0");
         RuleFor(x => x.Quantity).GreaterThan(0).WithMessage(x => $"{nameof(x.Quantity)} must be greater than 0");
         RuleFor(x => x.TotalPrice).GreaterThan(0).WithMessage(x => $"{nameof(x.TotalPrice)} must be greater than 0");

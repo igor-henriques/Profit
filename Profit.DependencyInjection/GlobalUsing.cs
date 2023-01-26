@@ -1,0 +1,10 @@
+﻿global using FluentValidation;
+global using Microsoft.Extensions.DependencyInjection;
+global using Profit.Domain.Entities;
+global using Profit.Domain.Interfaces.Repositories;
+global using Profit.Domain.Profiles;
+global using Profit.Domain.Validations.DTOs;
+global using Profit.Domain.Validations.Entities;
+global using Profit.Domain.ValueObjects;
+global using Profit.Infrastructure.Repository.Repositories;
+global using Serilog;
