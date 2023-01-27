@@ -15,11 +15,11 @@ public class ExceptionHandlerMiddleware
         {
             await next(context);
         }
-        catch(InvalidOperationException ex)
+        catch (InvalidOperationException ex)
         {
             await Handle(context, ex);
         }
-        catch(EntityNotFoundException ex)
+        catch (EntityNotFoundException ex)
         {
             await Handle(context, ex);
         }

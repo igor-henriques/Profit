@@ -4,7 +4,7 @@ public sealed class PatchIngredientCommandHandler : IRequestHandler<PatchIngredi
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IValidator<IngredientDTO> validator;
+    private readonly IValidator<IngredientDTO> _validator;
 
     public PatchIngredientCommandHandler(
         IUnitOfWork unitOfWork,
@@ -13,19 +13,20 @@ public sealed class PatchIngredientCommandHandler : IRequestHandler<PatchIngredi
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        this.validator = validator;
+        _validator = validator;
     }
     public async Task<Unit> Handle(PatchIngredientCommand request, CancellationToken cancellationToken)
     {
-        await validator.ValidateAndThrowAsync(request.Ingredient, cancellationToken);
+        await _validator.ValidateAndThrowAsync(request.Ingredient, cancellationToken);
 
-        var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.Guid, cancellationToken);
+        var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.Ingredient.Guid, cancellationToken);
         if (ingredient is null)
         {
-            throw new EntityNotFoundException(request.Guid, nameof(Entities.Ingredient));
+            throw new EntityNotFoundException(request.Ingredient.Guid, nameof(Entities.Ingredient));
         }
 
-        _unitOfWork.IngredientRepository.Update(ingredient);
+        ingredient.Update(_mapper.Map<Entities.Ingredient>(request.Ingredient));
+
         await _unitOfWork.SaveAsync(cancellationToken);
         return Unit.Value;
     }

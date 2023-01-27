@@ -18,15 +18,14 @@ internal sealed class IngredientRepository : IIngredientRepository
     public async ValueTask Add(Ingredient ingredient, CancellationToken cancellationToken = default)
     {
         var entityExists = await this.Exists(ingredient, cancellationToken);
-        
+
         if (entityExists)
         {
             throw new InvalidOperationException("Entity already exists");
         }
-            
+
         _context.Ingredients.Add(ingredient);
         logger.LogInformation($"{ingredient} was added");
-        Log.Logger.Information($"{ingredient} was added");
     }
 
     public void BulkAdd(IEnumerable<Ingredient> ingredients)
@@ -38,7 +37,7 @@ internal sealed class IngredientRepository : IIngredientRepository
     public void Delete(Ingredient ingredient)
     {
         _context.Ingredients.Remove(ingredient);
-        logger.LogInformation($"{ingredient} removed were added");
+        logger.LogInformation($"{ingredient}");
     }
 
     public async ValueTask<Ingredient> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default)
@@ -60,7 +59,7 @@ internal sealed class IngredientRepository : IIngredientRepository
         _context.Ingredients.Update(ingredient);
         logger.LogInformation($"{ingredient} was updated");
     }
-    
+
     public async ValueTask<bool> Exists(Ingredient ingredient, CancellationToken cancellationToken = default)
     {
         var entityExists = await _context.Ingredients.AnyAsync(
@@ -70,5 +69,12 @@ internal sealed class IngredientRepository : IIngredientRepository
                  i.ImageThumbnailUrl.Equals(ingredient.ImageThumbnailUrl), cancellationToken);
 
         return entityExists;
+    }
+
+    public async ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+    {
+        var response = await _context.Ingredients.CountAsync(cancellationToken);
+        logger.LogInformation($"{response} ingredients were counted");
+        return response;
     }
 }

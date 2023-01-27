@@ -17,21 +17,31 @@ public sealed record Ingredient : Entity
         Price = price;
         Quantity = quantity;
         ImageThumbnailUrl = imageThumbnailUrl;
+
+        Validate();
     }
 
-    public Ingredient() { }
+    public void Validate()
+    {
+        ArgumentValidator.ThrowIfNullOrEmpty(Name);
+        ArgumentValidator.ThrowIfNegative(Price);
+        ArgumentValidator.ThrowIfNegative(Quantity);
+        ArgumentValidator.ThrowIfNullOrEmpty(ImageThumbnailUrl);
+    }
 
+    /// <summary>
+    /// Updates all properties by the provided Ingredient instance.
+    /// Runs validation on each property.
+    /// Only updates properties that are different from current.
+    /// </summary>
+    /// <param name="ingredient"></param>
+    /// <returns></returns>
     public Ingredient Update(Ingredient ingredient)
     {
-        ArgumentValidator.ThrowIfNullOrEmpty(ingredient.Name);
-        ArgumentValidator.ThrowIfNegative(ingredient.Price);
-        ArgumentValidator.ThrowIfNegative(ingredient.Quantity);
-        ArgumentValidator.ThrowIfNullOrEmpty(ingredient.ImageThumbnailUrl);
-
-        this.Name = ingredient.Name;
-        this.Price = ingredient.Price;
-        this.Quantity = ingredient.Quantity;
-        this.ImageThumbnailUrl = ingredient.ImageThumbnailUrl;
+        UpdateName(ingredient.Name);
+        UpdatePrice(ingredient.Price);
+        UpdateQuantity(ingredient.Quantity);
+        UpdateImageThumbnailUrl(ingredient.ImageThumbnailUrl);
 
         return this;
     }
@@ -39,41 +49,48 @@ public sealed record Ingredient : Entity
     public Ingredient UpdateName(string name)
     {
         ArgumentValidator.ThrowIfNullOrEmpty(name);
-        this.Name = name;
+
+        if (Name != name)
+        {
+            this.Name = name;
+        }
+
         return this;
     }
 
     public Ingredient UpdatePrice(decimal price)
     {
         ArgumentValidator.ThrowIfNegative(price);
-        this.Price = price;
+
+        if (Price != price)
+        {
+            this.Price = price;
+        }
+
         return this;
     }
 
     public Ingredient UpdateQuantity(decimal quantity)
     {
         ArgumentValidator.ThrowIfNegative(quantity);
-        this.Quantity = quantity;
+
+        if (Quantity != quantity)
+        {
+            this.Quantity = quantity;
+        }
+
         return this;
     }
 
     public Ingredient UpdateImageThumbnailUrl(string imageThumbnailUrl)
     {
         ArgumentValidator.ThrowIfNullOrEmpty(imageThumbnailUrl);
-        this.ImageThumbnailUrl = imageThumbnailUrl;
+
+        if (ImageThumbnailUrl != imageThumbnailUrl)
+        {
+            this.ImageThumbnailUrl = imageThumbnailUrl;
+        }
+
         return this;
-    }
-
-    public static Ingredient Create(string name,
-                                    decimal price,
-                                    decimal quantity,
-                                    string imageThumbnailUrl)
-    {
-        ArgumentValidator.ThrowIfNullOrEmpty(name);
-        ArgumentValidator.ThrowIfNegative(price);
-        ArgumentValidator.ThrowIfNegative(quantity);
-        ArgumentValidator.ThrowIfNullOrEmpty(imageThumbnailUrl);
-
-        return new Ingredient(name, price, quantity, imageThumbnailUrl);
     }
 }

@@ -4,7 +4,7 @@ public sealed class CreateManyIngredientsCommandHandler : IRequestHandler<Create
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IValidator<IngredientDTO> validator;
+    private readonly IValidator<IngredientDTO> _validator;
 
     public CreateManyIngredientsCommandHandler(
         IUnitOfWork unitOfWork,
@@ -13,7 +13,7 @@ public sealed class CreateManyIngredientsCommandHandler : IRequestHandler<Create
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        this.validator = validator;
+        _validator = validator;
     }
 
     public async Task<IEnumerable<Guid>> Handle(CreateManyIngredientsCommand request, CancellationToken cancellationToken)
@@ -23,7 +23,7 @@ public sealed class CreateManyIngredientsCommandHandler : IRequestHandler<Create
 
         foreach (var ingredientDto in request.Ingredients)
         {
-            var validation = await validator.ValidateAsync(ingredientDto, cancellationToken);
+            var validation = await _validator.ValidateAsync(ingredientDto, cancellationToken);
 
             if (!validation.IsValid)
             {

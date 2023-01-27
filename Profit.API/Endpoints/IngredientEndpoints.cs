@@ -1,7 +1,4 @@
-﻿using Profit.Domain.Commands.Ingredient.CreateMany;
-using Profit.Domain.Commands.Ingredient.Patch;
-
-namespace Profit.API.Endpoints;
+﻿namespace Profit.API.Endpoints;
 
 public static class IngredientEndpoints
 {
@@ -54,14 +51,22 @@ public static class IngredientEndpoints
             return Results.NoContent();
         });
 
-        app.MapPut(Routes.Ingredient.Put, () =>
+        app.MapPut(Routes.Ingredient.Put, async (
+            [FromBody] PutIngredientCommand putIngredientCommand,
+            [FromServices] IMediator mediator,
+            CancellationToken cancellationToken) =>
         {
-            return Results.Ok();
+            var response = await mediator.Send(putIngredientCommand);
+            return Results.NoContent();
         });
 
-        app.MapDelete(Routes.Ingredient.Delete, () =>
+        app.MapDelete(Routes.Ingredient.Delete, async (
+            [FromBody] DeleteIngredientCommand deleteIngredientCommand,
+            [FromServices] IMediator mediator,
+            CancellationToken cancellationToken) =>
         {
-            return Results.Ok();
+            var response = await mediator.Send(deleteIngredientCommand);
+            return Results.NoContent();
         });
     }
 }
