@@ -17,4 +17,6 @@ public sealed class ProfitDbContext : DbContext
     }
 
     public DbSet<Ingredient> Ingredients { get; init; }
+    public DbSet<Claim> Claims { get; init; }
+    public DbSet<User> Users { get; init; }
 }

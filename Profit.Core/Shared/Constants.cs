@@ -1,4 +1,4 @@
-﻿namespace Profit.Core;
+﻿namespace Profit.Core.Shared;
 
 public static class Constants
 {
@@ -14,5 +14,18 @@ public static class Constants
             public const string Patch = "api/ingredient/patch";
             public const string Delete = "api/ingredient/delete";
         }
+
+        public readonly struct User
+        {
+            public const string GetUnique = "api/user/{guid}";
+            public const string Create = "api/user/create";
+            public const string Put = "api/user/put";
+            public const string Delete = "api/user/delete";
+            public const string Authenticate = "api/user/authenticate";
+        }
     }
+
+    public const string INGREDIENT_TAG = "Ingredient";
+    public const string USER_TAG = "User";
+    public const string CACHE_SERVICE_TEXT = "CacheServiceText";
 }

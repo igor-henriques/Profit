@@ -17,6 +17,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Commands\User\Delete\" />
+		<Folder Include="Commands\User\Put\" />
+		<Folder Include="Queries\User\GetUnique\" />
+		<Folder Include="Queries\User\Authenticate\" />
 		<Folder Include="Validations\ValueObjects\" />
 	</ItemGroup>
 

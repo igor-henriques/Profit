@@ -4,11 +4,14 @@ public sealed class GetUniqueIngredientQueryHandler : IRequestHandler<GetUniqueI
 {
     private readonly IIngredientRepository _ingredientRepository;
     private readonly IMapper _mapper;
+    private readonly ICacheService _cache;
 
     public GetUniqueIngredientQueryHandler(
         IUnitOfWork unitOfWork,
-        IMapper mapper)
+        IMapper mapper,
+        IServiceProvider serviceProvider)
     {
+        _cache = serviceProvider.GetCacheService<ICacheService>(ECacheType.InMemory);
         _ingredientRepository = unitOfWork.IngredientRepository;
         _mapper = mapper;
     }

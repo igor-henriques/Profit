@@ -16,5 +16,6 @@ global using Profit.Infrastructure.Repository.DataContext;
 global using Serilog;
 global using System.Net;
 global using System.Text.Json;
-global using static Profit.Core.Constants;
+global using Profit.Domain.Commands.User.Create;
+global using static Profit.Core.Shared.Constants;
 global using ExceptionHandlerMiddleware = Profit.API.Middlewares.ExceptionHandlerMiddleware;

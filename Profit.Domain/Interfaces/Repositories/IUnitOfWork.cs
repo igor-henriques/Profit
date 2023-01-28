@@ -3,6 +3,7 @@
 public interface IUnitOfWork
 {
     IIngredientRepository IngredientRepository { get; }
+    IUserRepository UserRepository { get; }
 
     /// <summary>
     /// Save all changes in the transaction

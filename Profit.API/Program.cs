@@ -14,6 +14,7 @@ try
 	builder.Services.AddMapperProfiles();
 	builder.Services.AddValidators();
 	builder.Services.AddCqrsHandlers();
+	builder.Services.AddCommandBatchProcessors();
 	builder.Services.AddGeneralDependencies();
 
 	var app = builder.Build();
@@ -28,6 +29,7 @@ try
 	app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 	app.ConfigureIngredientEndpoints();
+	app.ConfigureUserEndpoints();
 
 	app.Run();
 }
