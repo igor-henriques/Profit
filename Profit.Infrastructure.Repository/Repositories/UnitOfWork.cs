@@ -39,5 +39,6 @@ public sealed class UnitOfWork : IUnitOfWork
     {
         var changesCount = await _context.SaveChangesAsync(cancellationToken);
         _logger.LogInformation($"{changesCount} changes were saved");
+        return changesCount;
     }
 }

@@ -13,5 +13,5 @@ public interface IUnitOfWork
     /// <exception cref="Core.Exceptions.DbUpdateConcurrencyException"></exception>
     /// <exception cref="OperationCanceledException"></exception>
     /// <returns></returns>
-    ValueTask SaveAsync(CancellationToken cancellationToken = default);
+    ValueTask<int> SaveAsync(CancellationToken cancellationToken = default);
 }
