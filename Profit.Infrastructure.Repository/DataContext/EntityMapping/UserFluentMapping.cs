@@ -18,7 +18,5 @@ public sealed class UserFluentMapping : IEntityTypeConfiguration<User>
         builder.Property(u => u.Password)
             .HasMaxLength(100)
             .IsRequired();
-
-        builder.HasMany(u => u.Claims);
     }
 }

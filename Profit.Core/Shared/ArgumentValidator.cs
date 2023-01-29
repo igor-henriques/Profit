@@ -1,4 +1,4 @@
-﻿namespace Profit.Domain.Validations.Common;
+﻿namespace Profit.Core.Shared;
 
 public sealed class ArgumentValidator
 {

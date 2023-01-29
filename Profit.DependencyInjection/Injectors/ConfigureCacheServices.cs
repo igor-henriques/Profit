@@ -6,6 +6,8 @@ public static class ConfigureCacheServices
         this IServiceCollection services,
         string redisConnectionString)
     {
+        ArgumentValidator.ThrowIfNullOrEmpty(redisConnectionString);
+
         services.AddScoped<ICacheService, InMemoryCacheService>();
         services.AddScoped<ICacheService, RedisCacheService>(_ => new RedisCacheService(redisConnectionString));
 

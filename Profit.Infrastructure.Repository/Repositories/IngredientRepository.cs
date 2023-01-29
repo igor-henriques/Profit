@@ -1,6 +1,4 @@
-﻿using Serilog;
-
-namespace Profit.Infrastructure.Repository.Repositories;
+﻿namespace Profit.Infrastructure.Repository.Repositories;
 
 internal sealed class IngredientRepository : IIngredientRepository
 {

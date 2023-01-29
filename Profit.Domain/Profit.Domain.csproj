@@ -9,7 +9,8 @@
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
 		<PackageReference Include="FluentValidation" Version="11.4.0" />
-		<PackageReference Include="MediatR" Version="11.1.0" />		
+		<PackageReference Include="MediatR" Version="11.1.0" />
+		<PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.2.0" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -21,7 +22,6 @@
 		<Folder Include="Commands\User\Put\" />
 		<Folder Include="Queries\User\GetUnique\" />
 		<Folder Include="Queries\User\Authenticate\" />
-		<Folder Include="Validations\ValueObjects\" />
 	</ItemGroup>
 
 </Project>

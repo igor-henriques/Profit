@@ -1,6 +1,9 @@
 ﻿namespace Profit.Domain.Commands.Ingredient.Patch;
 
-public sealed class PatchIngredientCommandHandler : IRequestHandler<PatchIngredientCommand, Unit>
+public sealed class PatchIngredientCommandHandler :
+    BaseCommandHandler<PatchIngredientCommand>,
+    IRequestHandler<PatchIngredientCommand, Unit>,
+    IAsyncDisposable
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -9,15 +12,22 @@ public sealed class PatchIngredientCommandHandler : IRequestHandler<PatchIngredi
     public PatchIngredientCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
-        IValidator<IngredientDTO> validator)
+        IValidator<IngredientDTO> validator,
+        ICommandBatchProcessorService<PatchIngredientCommand> commandBatchProcessor) : base(commandBatchProcessor)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _validator = validator;
     }
+    public async ValueTask DisposeAsync()
+    {
+        await base.ProcessBatchAsync();
+    }
+
     public async Task<Unit> Handle(PatchIngredientCommand request, CancellationToken cancellationToken)
     {
         await _validator.ValidateAndThrowAsync(request.Ingredient, cancellationToken);
+        base.EnqueueCommandForStoraging(request);
 
         var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.Ingredient.Guid, cancellationToken);
         if (ingredient is null)

@@ -2,5 +2,6 @@
 
 public interface ITokenGeneratorService
 {
-    JwtToken GenerateToken(User user = null);
+    JwtToken GenerateToken(Claim claim = null);
+    JwtToken GenerateToken(IEnumerable<Claim> claims = null);
 }

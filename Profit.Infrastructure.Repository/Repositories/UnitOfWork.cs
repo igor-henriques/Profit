@@ -4,7 +4,7 @@ public sealed class UnitOfWork : IUnitOfWork
 {
     private readonly ProfitDbContext _context;
     private readonly ILogger<UnitOfWork> _logger;
-    
+
     private IIngredientRepository _ingredientRepository;
     private IUserRepository _userRepository;
 
@@ -39,5 +39,5 @@ public sealed class UnitOfWork : IUnitOfWork
     {
         var changesCount = await _context.SaveChangesAsync(cancellationToken);
         _logger.LogInformation($"{changesCount} changes were saved");
-    }    
+    }
 }

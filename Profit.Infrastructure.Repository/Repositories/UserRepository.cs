@@ -20,16 +20,14 @@ public sealed class UserRepository : IUserRepository
         if (entityExists)
         {
             throw new InvalidOperationException("Entity already exists");
-        }        
-
-        _context.Claims.AddRange(user.Claims);
+        }
+                
         _context.Users.Add(user);
         logger.LogInformation($"{user} was added");
     }
 
     public void Delete(User entity)
     {
-        _context.Claims.RemoveRange(entity.Claims);
         _context.Users.Remove(entity);
         logger.LogInformation($"{entity} was deleted");
     }
@@ -37,16 +35,14 @@ public sealed class UserRepository : IUserRepository
     public async ValueTask<User> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var response = await _context.Users
-            .Include(x => x.Claims)
             .FirstOrDefaultAsync(x => x.Guid.Equals(id), cancellationToken);
-        
+
         logger.LogInformation($"{response} was retrieved");
         return response;
     }
 
     public void Update(User entity)
     {
-        _context.Claims.UpdateRange(entity.Claims);
         _context.Users.Update(entity);
         logger.LogInformation($"{entity} was updated");
     }

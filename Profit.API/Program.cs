@@ -16,6 +16,11 @@ try
 	builder.Services.AddCqrsHandlers();
 	builder.Services.AddCommandBatchProcessors();
 	builder.Services.AddGeneralDependencies();
+	builder.Services.AddCustomAuthentication(builder.Configuration.GetValue<string>("JwtAuthentication:Key"));
+	builder.Services.AddCustomAuthorization();
+	builder.Services.AddHealthChecks();
+	builder.Services.AddMemoryCache();
+	builder.Services.AddCors();
 
 	var app = builder.Build();
 
@@ -24,8 +29,9 @@ try
 		app.UseSwagger();
 		app.UseSwaggerUI();
 	}
-
-	app.UseHttpsRedirection();
+    app.MapHealthChecks("/health");
+    app.UseCors(c => c.AllowAnyOrigin());
+    app.UseHttpsRedirection();
 	app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 	app.ConfigureIngredientEndpoints();

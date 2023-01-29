@@ -14,7 +14,7 @@ public sealed class RedisCacheService : ICacheService
     {
         var database = _redis.GetDatabase();
         var keyValue = database.StringGet(key);
-        
+
         return keyValue.HasValue
             ? JsonConvert.DeserializeObject<T>(keyValue)
             : default;

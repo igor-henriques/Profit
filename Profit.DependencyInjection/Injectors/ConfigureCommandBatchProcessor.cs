@@ -9,6 +9,7 @@ public static class ConfigureCommandBatchProcessor
         services.AddSingleton<ICommandBatchProcessorService<PatchIngredientCommand>, CommandBatchProcessorService<PatchIngredientCommand>>();
         services.AddSingleton<ICommandBatchProcessorService<PutIngredientCommand>, CommandBatchProcessorService<PutIngredientCommand>>();
         services.AddSingleton<ICommandBatchProcessorService<CreateManyIngredientsCommand>, CommandBatchProcessorService<CreateManyIngredientsCommand>>();
+        services.AddSingleton<ICommandBatchProcessorService<CreateUserCommand>, CommandBatchProcessorService<CreateUserCommand>>();
 
         return services;
     }

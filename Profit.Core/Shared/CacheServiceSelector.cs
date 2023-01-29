@@ -5,11 +5,11 @@ namespace Profit.Core.Shared
     public static class CacheServiceSelector
     {
         public static TInterface GetCacheService<TInterface>(
-            this IServiceProvider serviceProvider, 
+            this IServiceProvider serviceProvider,
             ECacheType cacheType) where TInterface : class
         {
             var cacheServices = serviceProvider.GetServices<TInterface>();
-            
+
             foreach (var cacheService in cacheServices)
             {
                 if (cacheService.GetType().Name
@@ -18,7 +18,7 @@ namespace Profit.Core.Shared
                 {
                     return cacheService;
                 }
-                       
+
             }
 
             throw new Exception("Cache service not found");

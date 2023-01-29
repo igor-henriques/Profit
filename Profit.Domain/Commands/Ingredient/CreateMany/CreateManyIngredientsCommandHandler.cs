@@ -1,6 +1,9 @@
 ﻿namespace Profit.Domain.Commands.Ingredient.CreateMany;
 
-public sealed class CreateManyIngredientsCommandHandler : IRequestHandler<CreateManyIngredientsCommand, IEnumerable<Guid>>
+public sealed class CreateManyIngredientsCommandHandler :
+    BaseCommandHandler<CreateManyIngredientsCommand>,
+    IRequestHandler<CreateManyIngredientsCommand, IEnumerable<Guid>>,
+    IAsyncDisposable
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -9,11 +12,17 @@ public sealed class CreateManyIngredientsCommandHandler : IRequestHandler<Create
     public CreateManyIngredientsCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
-        IValidator<IngredientDTO> validator)
+        IValidator<IngredientDTO> validator,
+        ICommandBatchProcessorService<CreateManyIngredientsCommand> commandBatchProcessor) : base(commandBatchProcessor)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _validator = validator;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await base.ProcessBatchAsync();
     }
 
     public async Task<IEnumerable<Guid>> Handle(CreateManyIngredientsCommand request, CancellationToken cancellationToken)
@@ -41,6 +50,7 @@ public sealed class CreateManyIngredientsCommandHandler : IRequestHandler<Create
             throw new ValidationException(string.Join("\n", errors));
         }
 
+        base.EnqueueCommandForStoraging(request);
         await _unitOfWork.SaveAsync(cancellationToken);
         return response;
     }

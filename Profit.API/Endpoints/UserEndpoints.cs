@@ -20,15 +20,15 @@ public static class UserEndpoints
             CancellationToken cancellationToken) =>
         {
             var response = await mediator.Send(command, cancellationToken);
-            return Results.Ok(response);
+            return Results.CreatedAtRoute(Routes.User.GetUnique, response, response);
         }).WithTags(USER_TAG);
-        
+
         app.MapPut(Routes.User.Put, async (
             [FromBody] PutIngredientCommand putIngredientCommand,
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {
-            var response = await mediator.Send(putIngredientCommand);
+            var response = await mediator.Send(putIngredientCommand, cancellationToken);
             return Results.NoContent();
         }).WithTags(USER_TAG);
 
@@ -37,7 +37,7 @@ public static class UserEndpoints
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {
-            var response = await mediator.Send(deleteIngredientCommand);
+            var response = await mediator.Send(deleteIngredientCommand, cancellationToken);
             return Results.NoContent();
         }).WithTags(USER_TAG);
 
@@ -46,7 +46,7 @@ public static class UserEndpoints
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {
-            var response = await mediator.Send(deleteIngredientCommand);
+            var response = await mediator.Send(deleteIngredientCommand, cancellationToken);
             return Results.NoContent();
         }).WithTags(USER_TAG);
     }
