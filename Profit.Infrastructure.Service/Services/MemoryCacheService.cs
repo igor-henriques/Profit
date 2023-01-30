@@ -1,10 +1,10 @@
 ﻿namespace Profit.Infrastructure.Service.Services;
 
-public sealed class InMemoryCacheService : ICacheService
+public sealed class MemoryCacheService : IMemoryCacheService
 {
     private readonly IMemoryCache _memoryCache;
 
-    public InMemoryCacheService(IMemoryCache memoryCache)
+    public MemoryCacheService(IMemoryCache memoryCache)
     {
         _memoryCache = memoryCache;
     }

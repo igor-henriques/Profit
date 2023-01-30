@@ -9,7 +9,8 @@ public sealed class DeleteIngredientCommandHandler :
 
     public DeleteIngredientCommandHandler(
         IUnitOfWork unitOfWork,
-        ICommandBatchProcessorService<DeleteIngredientCommand> commandBatchProcessor) : base(commandBatchProcessor)
+        ICommandBatchProcessorService<DeleteIngredientCommand> commandBatchProcessor,
+        IConfiguration configuration) : base(commandBatchProcessor, configuration)
     {
         _unitOfWork = unitOfWork;
     }
@@ -24,7 +25,9 @@ public sealed class DeleteIngredientCommandHandler :
         base.EnqueueCommandForStoraging(request);
         var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.IngredientGuid, cancellationToken);
         _unitOfWork.IngredientRepository.Delete(ingredient);
-        await _unitOfWork.SaveAsync(cancellationToken);
+
+        if (await _unitOfWork.SaveAsync(cancellationToken) is 0)
+            throw new EntityNotFoundException(request.IngredientGuid, nameof(Entities.Ingredient));
 
         return Unit.Value;
     }

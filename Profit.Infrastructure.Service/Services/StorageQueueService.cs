@@ -6,9 +6,9 @@ public sealed class StorageQueueService : IStorageQueueService
 
     public StorageQueueService(IConfiguration configuration)
     {
-        const string QUEUE_NAME = "profit-commands";
+        var queueName = configuration.GetSection("CommandBatchStoraging:StorageQueueName").Value;
         var connectionString = configuration.GetConnectionString("AzureStorage");
-        _queueClient = new QueueClient(connectionString, QUEUE_NAME);
+        _queueClient = new QueueClient(connectionString, queueName);
     }
 
     public Task EnqueueAsync<T>(T message) where T : class

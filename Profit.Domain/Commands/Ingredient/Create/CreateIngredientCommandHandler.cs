@@ -13,7 +13,8 @@ public sealed class CreateIngredientCommandHandler :
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IValidator<IngredientDTO> validator,
-        ICommandBatchProcessorService<CreateIngredientCommand> commandBatchProcessor) : base(commandBatchProcessor)
+        ICommandBatchProcessorService<CreateIngredientCommand> commandBatchProcessor,
+        IConfiguration configuration) : base(commandBatchProcessor, configuration)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;

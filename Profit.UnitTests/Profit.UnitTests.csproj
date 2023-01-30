@@ -31,6 +31,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Profit.Domain\Profit.Domain.csproj" />
 		<ProjectReference Include="..\Profit.Infrastructure.Repository\Profit.Infrastructure.Repository.csproj" />
+		<ProjectReference Include="..\Profit.Infrastructure.Service\Profit.Infrastructure.Service.csproj" />
 	</ItemGroup>
 
 </Project>

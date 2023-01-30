@@ -28,7 +28,7 @@ public sealed class TokenGeneratorService : ITokenGeneratorService
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
         var jwt = tokenHandler.WriteToken(token);
-                                                                                     
+
         return new JwtToken
         {
             Token = jwt,

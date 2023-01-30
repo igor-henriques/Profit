@@ -7,7 +7,6 @@ public sealed class IngredientTests
     public void Mapping_Ingredient_To_DTO_Should_Returns_Success_When_Valid_Entity(Ingredient ingredient)
     {
         var ingredientDto = new IngredientDTO(
-            ingredient.Guid,
             ingredient.Name,
             ingredient.Price,
             ingredient.Quantity,

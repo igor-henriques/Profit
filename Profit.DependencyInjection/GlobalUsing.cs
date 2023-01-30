@@ -2,12 +2,12 @@
 global using MediatR;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.OpenApi.Models;
+global using Profit.Core.Shared;
 global using Profit.Domain.Commands.Ingredient.Create;
 global using Profit.Domain.Commands.Ingredient.CreateMany;
 global using Profit.Domain.Commands.Ingredient.Delete;
 global using Profit.Domain.Commands.Ingredient.Patch;
 global using Profit.Domain.Commands.Ingredient.Put;
-global using Profit.Domain.Commands.User.Create;
 global using Profit.Domain.Entities;
 global using Profit.Domain.Interfaces.Repositories;
 global using Profit.Domain.Interfaces.Services;
@@ -20,4 +20,3 @@ global using Profit.Domain.ValueObjects;
 global using Profit.Infrastructure.Repository.Repositories;
 global using Profit.Infrastructure.Service.Services;
 global using Serilog;
-global using Profit.Core.Shared;

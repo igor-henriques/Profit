@@ -9,7 +9,6 @@ global using Profit.Domain.Commands.Ingredient.CreateMany;
 global using Profit.Domain.Commands.Ingredient.Delete;
 global using Profit.Domain.Commands.Ingredient.Patch;
 global using Profit.Domain.Commands.Ingredient.Put;
-global using Profit.Domain.Commands.User.Create;
 global using Profit.Domain.Exceptions;
 global using Profit.Domain.Queries.Ingredient.GetMany;
 global using Profit.Domain.Queries.Ingredient.GetUnique;

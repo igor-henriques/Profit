@@ -1,5 +1,11 @@
 ﻿namespace Profit.Domain.Commands.Base;
 
+/// <summary>
+/// Provides a base class for command handlers.
+/// With <see cref="ICommandBatchProcessorService<T>"/>,
+/// All CommandHandlers can enqueue its commands for observability
+/// </summary>
+/// <typeparam name="T">A Command type</typeparam>
 public abstract class BaseCommandHandler<T> where T : BaseCommand
 {
     private readonly ICommandBatchProcessorService<T> _commandBatchProcessor;
@@ -7,10 +13,12 @@ public abstract class BaseCommandHandler<T> where T : BaseCommand
 
     public BaseCommandHandler(
         ICommandBatchProcessorService<T> commandBatchProcessor,
-        int batchMaxSize = 0)
+        IConfiguration configuration)
     {
+        if (!int.TryParse(configuration.GetSection("CommandBatchStoraging:BatchSize").Value, out _batchMaxSize))
+            throw new ArgumentException("Invalid configuration for BatchSize");
+
         _commandBatchProcessor = commandBatchProcessor;
-        _batchMaxSize = batchMaxSize;
     }
 
     public void EnqueueCommandForStoraging(T command)

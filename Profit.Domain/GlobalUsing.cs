@@ -1,7 +1,7 @@
 ﻿global using AutoMapper;
 global using FluentValidation;
 global using MediatR;
-global using Profit.Core.Enum;
+global using Microsoft.Extensions.Configuration;
 global using Profit.Core.Shared;
 global using Profit.Domain.Commands.Base;
 global using Profit.Domain.DTOs;
@@ -11,7 +11,7 @@ global using Profit.Domain.Exceptions;
 global using Profit.Domain.Interfaces.Repositories;
 global using Profit.Domain.Interfaces.Repositories.Base;
 global using Profit.Domain.Interfaces.Services;
+global using Profit.Domain.Models;
 global using Profit.Domain.ValueObjects;
 global using System.Security.Claims;
 global using System.Text.Json.Serialization;
-global using Profit.Domain.Models;

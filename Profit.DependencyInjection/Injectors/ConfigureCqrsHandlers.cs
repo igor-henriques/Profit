@@ -10,8 +10,7 @@ public static class ConfigureCqrsHandlers
             typeof(PatchIngredientCommandHandler).Assembly,
             typeof(PutIngredientCommandHandler).Assembly,
             typeof(GetManyIngredientsQueryHandler).Assembly,
-            typeof(GetUniqueIngredientQueryHandler).Assembly,
-            typeof(CreateUserCommandHandler).Assembly);
+            typeof(GetUniqueIngredientQueryHandler).Assembly);
 
         return services;
     }

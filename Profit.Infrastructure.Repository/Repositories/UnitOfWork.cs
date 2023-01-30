@@ -6,7 +6,6 @@ public sealed class UnitOfWork : IUnitOfWork
     private readonly ILogger<UnitOfWork> _logger;
 
     private IIngredientRepository _ingredientRepository;
-    private IUserRepository _userRepository;
 
     /// <summary>
     /// Instead of delegating the object management to the IoC container
@@ -15,9 +14,6 @@ public sealed class UnitOfWork : IUnitOfWork
     /// </summary>
     public IIngredientRepository IngredientRepository
         => _ingredientRepository ??= new IngredientRepository(_context, _logger);
-
-    public IUserRepository UserRepository
-        => _userRepository ??= new UserRepository(_context, _logger);
 
     public UnitOfWork(
         ProfitDbContext context,
@@ -35,7 +31,7 @@ public sealed class UnitOfWork : IUnitOfWork
     /// <exception cref="DbUpdateConcurrencyException"></exception>
     /// <exception cref="OperationCanceledException"></exception>
     /// <returns></returns>
-    public async ValueTask SaveAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<int> SaveAsync(CancellationToken cancellationToken = default)
     {
         var changesCount = await _context.SaveChangesAsync(cancellationToken);
         _logger.LogInformation($"{changesCount} changes were saved");

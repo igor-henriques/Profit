@@ -13,7 +13,8 @@ public sealed class PutIngredientCommandHandler :
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IValidator<IngredientDTO> validator,
-        ICommandBatchProcessorService<PutIngredientCommand> commandBatchProcessor) : base(commandBatchProcessor)
+        ICommandBatchProcessorService<PutIngredientCommand> commandBatchProcessor,
+        IConfiguration configuration) : base(commandBatchProcessor, configuration)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -32,7 +33,8 @@ public sealed class PutIngredientCommandHandler :
         var mappedIngredient = _mapper.Map<Entities.Ingredient>(request.Ingredient);
         _unitOfWork.IngredientRepository.Update(mappedIngredient);
 
-        await _unitOfWork.SaveAsync(cancellationToken);
+        if (await _unitOfWork.SaveAsync(cancellationToken) is 0)
+            throw new EntityNotFoundException(request.IngredientGuid, nameof(Entities.Ingredient));
 
         return Unit.Value;
     }

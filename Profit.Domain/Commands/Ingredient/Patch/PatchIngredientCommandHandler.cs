@@ -13,7 +13,8 @@ public sealed class PatchIngredientCommandHandler :
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IValidator<IngredientDTO> validator,
-        ICommandBatchProcessorService<PatchIngredientCommand> commandBatchProcessor) : base(commandBatchProcessor)
+        ICommandBatchProcessorService<PatchIngredientCommand> commandBatchProcessor,
+        IConfiguration configuration) : base(commandBatchProcessor, configuration)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -27,17 +28,20 @@ public sealed class PatchIngredientCommandHandler :
     public async Task<Unit> Handle(PatchIngredientCommand request, CancellationToken cancellationToken)
     {
         await _validator.ValidateAndThrowAsync(request.Ingredient, cancellationToken);
+
         base.EnqueueCommandForStoraging(request);
 
-        var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.Ingredient.Guid, cancellationToken);
+        var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.IngredientGuid, cancellationToken);
         if (ingredient is null)
         {
-            throw new EntityNotFoundException(request.Ingredient.Guid, nameof(Entities.Ingredient));
+            throw new EntityNotFoundException(request.IngredientGuid, nameof(Entities.Ingredient));
         }
 
         ingredient.Update(_mapper.Map<Entities.Ingredient>(request.Ingredient));
 
-        await _unitOfWork.SaveAsync(cancellationToken);
+        if (await _unitOfWork.SaveAsync(cancellationToken) is 0)
+            throw new EntityNotFoundException(request.IngredientGuid, nameof(Entities.Ingredient));
+
         return Unit.Value;
     }
 }

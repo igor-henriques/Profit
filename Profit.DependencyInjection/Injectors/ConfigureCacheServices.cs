@@ -8,8 +8,8 @@ public static class ConfigureCacheServices
     {
         ArgumentValidator.ThrowIfNullOrEmpty(redisConnectionString);
 
-        services.AddScoped<ICacheService, InMemoryCacheService>();
-        services.AddScoped<ICacheService, RedisCacheService>(_ => new RedisCacheService(redisConnectionString));
+        services.AddScoped<IMemoryCacheService, MemoryCacheService>();
+        services.AddScoped<IRedisCacheService, RedisCacheService>(_ => new RedisCacheService(redisConnectionString));
 
         return services;
     }

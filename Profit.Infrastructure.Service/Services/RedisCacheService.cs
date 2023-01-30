@@ -1,6 +1,6 @@
 ﻿namespace Profit.Infrastructure.Service.Services;
 
-public sealed class RedisCacheService : ICacheService
+public sealed class RedisCacheService : IRedisCacheService
 {
     private readonly ConnectionMultiplexer _redis;
 
@@ -10,20 +10,20 @@ public sealed class RedisCacheService : ICacheService
         _redis = ConnectionMultiplexer.Connect(connectionString);
     }
 
-    public T Get<T>(string key)
+    public async Task<T> GetAsync<T>(string key)
     {
         var database = _redis.GetDatabase();
-        var keyValue = database.StringGet(key);
+        var keyValue = await database.StringGetAsync(key);
 
         return keyValue.HasValue
             ? JsonConvert.DeserializeObject<T>(keyValue)
             : default;
     }
 
-    public void Set<T>(string key, T value, TimeSpan expirationTime)
+    public async Task<bool> Set<T>(string key, T value, TimeSpan expirationTime)
     {
         var database = _redis.GetDatabase();
-        database.StringSet(key, JsonConvert.SerializeObject(value), expirationTime);
+        return await database.StringSetAsync(key, JsonConvert.SerializeObject(value), expirationTime);
     }
 
     public void Remove(string key)

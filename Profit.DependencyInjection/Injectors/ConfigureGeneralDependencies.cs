@@ -7,6 +7,7 @@ public static class ConfigureGeneralDependencies
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
         services.AddSingleton<IStorageQueueService, StorageQueueService>();
+        services.AddSingleton<IPasswordHashingService, PasswordHashingService>();
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
         return services;
     }

@@ -15,7 +15,7 @@ public static class UserEndpoints
         }).WithTags(USER_TAG);
 
         app.MapPost(Routes.User.Create, async (
-            [FromBody] CreateUserCommand command,
+            [FromBody] PutIngredientCommand command,
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {

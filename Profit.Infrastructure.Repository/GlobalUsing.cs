@@ -5,4 +5,3 @@ global using Profit.Domain.Entities;
 global using Profit.Domain.Interfaces.Repositories;
 global using Profit.Infrastructure.Repository.DataContext;
 global using System.Reflection;
-global using Profit.Domain.Models;

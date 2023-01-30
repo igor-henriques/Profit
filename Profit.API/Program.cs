@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Profit.Infrastructure.Repository;
+
 try
 {
 	var builder = WebApplication.CreateBuilder(args);
@@ -10,9 +13,11 @@ try
 
 	builder.Services.AddEndpointsApiExplorer();
 	builder.Services.AddSwaggerGen();
-	builder.Services.AddDbContext<ProfitDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
+	builder.Services.AddDbContext<ProfitDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProfitSqlServer")));
+	builder.Services.AddDbContext<ProfitAuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProfitAuthSqlServer")));
 	builder.Services.AddMapperProfiles();
 	builder.Services.AddValidators();
+	builder.Services.AddCacheServices(builder.Configuration.GetConnectionString("Redis"));
 	builder.Services.AddCqrsHandlers();
 	builder.Services.AddCommandBatchProcessors();
 	builder.Services.AddGeneralDependencies();
@@ -29,9 +34,9 @@ try
 		app.UseSwagger();
 		app.UseSwaggerUI();
 	}
-    app.MapHealthChecks("/health");
-    app.UseCors(c => c.AllowAnyOrigin());
-    app.UseHttpsRedirection();
+	app.MapHealthChecks("/health");
+	app.UseCors(c => c.AllowAnyOrigin());
+	app.UseHttpsRedirection();
 	app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 	app.ConfigureIngredientEndpoints();

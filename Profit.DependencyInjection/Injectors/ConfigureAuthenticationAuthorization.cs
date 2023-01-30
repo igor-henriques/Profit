@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Profit.Core.Shared;
 using System.Security.Claims;
 using System.Text;
 
-namespace Profit.DependencyInjection.Injectors;     
+namespace Profit.DependencyInjection.Injectors;
 
 public static class ConfigureAuthenticationAuthorization
 {

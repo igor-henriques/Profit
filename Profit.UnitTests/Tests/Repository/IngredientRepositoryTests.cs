@@ -1,6 +1,6 @@
 ﻿namespace Profit.UnitTests.Tests.Repository;
 
-public sealed class IngredientRepository
+public sealed class IngredientRepositoryTests
 {
     [Theory]
     [AutoDomainData]
