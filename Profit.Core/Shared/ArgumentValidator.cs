@@ -9,7 +9,7 @@ public sealed class ArgumentValidator
             throw new System.ArgumentException($"{paramName ?? "Argument"} cannot be null or empty", paramName);
         }
     }
-
+        
     public static void ThrowIfNegative<T>(T argument, string paramName = null) where T : INumber<T>
     {
         if (argument < T.Zero)

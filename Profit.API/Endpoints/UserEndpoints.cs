@@ -1,4 +1,6 @@
-﻿namespace Profit.API.Endpoints;
+﻿using Profit.Domain.Commands.User;
+
+namespace Profit.API.Endpoints;
 
 public static class UserEndpoints
 {
@@ -15,12 +17,12 @@ public static class UserEndpoints
         }).WithTags(USER_TAG);
 
         app.MapPost(Routes.User.Create, async (
-            [FromBody] PutIngredientCommand command,
+            [FromBody] CreateUserCommand command,
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {
             var response = await mediator.Send(command, cancellationToken);
-            return Results.CreatedAtRoute(Routes.User.GetUnique, response, response);
+            return Results.Ok(response);
         }).WithTags(USER_TAG);
 
         app.MapPut(Routes.User.Put, async (

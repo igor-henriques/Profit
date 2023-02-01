@@ -15,3 +15,5 @@ global using Profit.Domain.Models;
 global using Profit.Domain.ValueObjects;
 global using System.Security.Claims;
 global using System.Text.Json.Serialization;
+global using Profit.Domain.Models.Authentication;
+global using Profit.Infrastructure.Repository.Repositories;

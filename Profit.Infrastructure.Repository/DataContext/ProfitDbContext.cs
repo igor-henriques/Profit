@@ -16,5 +16,7 @@ public sealed class ProfitDbContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public DbSet<Ingredient> Ingredients { get; init; }    
+    public DbSet<Ingredient> Ingredients { get; init; }
+    public DbSet<User> Users { get; init; }
+    public DbSet<UserClaim> Claims { get; init; }
 }

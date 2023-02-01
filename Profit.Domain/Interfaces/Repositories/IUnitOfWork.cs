@@ -9,7 +9,12 @@ public interface IUnitOfWork
     /// <summary>
     /// Readonly access to <see cref="IIngredientRepository"/>
     /// </summary>
-    IIngredientRepository IngredientRepository { get; }
+    IIngredientRepository IngredientRepository { get; } 
+    
+    /// <summary>
+    /// Readonly access to <see cref="IIngredientRepository"/>
+    /// </summary>
+    IUserRepository UserRepository { get; }
 
     /// <summary>
     /// Save all changes in the transaction

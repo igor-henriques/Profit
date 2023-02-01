@@ -13,8 +13,7 @@ try
 
 	builder.Services.AddEndpointsApiExplorer();
 	builder.Services.AddSwaggerGen();
-	builder.Services.AddDbContext<ProfitDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProfitSqlServer")));
-	builder.Services.AddDbContext<ProfitAuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProfitAuthSqlServer")));
+	builder.Services.AddDbContext<ProfitDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProfitSqlServer")));	
 	builder.Services.AddMapperProfiles();
 	builder.Services.AddValidators();
 	builder.Services.AddCacheServices(builder.Configuration.GetConnectionString("Redis"));

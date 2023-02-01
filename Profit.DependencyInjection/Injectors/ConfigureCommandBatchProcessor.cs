@@ -1,4 +1,6 @@
-﻿namespace Profit.DependencyInjection.Injectors;
+﻿using Profit.Domain.Commands.User;
+
+namespace Profit.DependencyInjection.Injectors;
 
 public static class ConfigureCommandBatchProcessor
 {
@@ -9,6 +11,7 @@ public static class ConfigureCommandBatchProcessor
         services.AddSingleton<ICommandBatchProcessorService<PatchIngredientCommand>, CommandBatchProcessorService<PatchIngredientCommand>>();
         services.AddSingleton<ICommandBatchProcessorService<PutIngredientCommand>, CommandBatchProcessorService<PutIngredientCommand>>();
         services.AddSingleton<ICommandBatchProcessorService<CreateManyIngredientsCommand>, CommandBatchProcessorService<CreateManyIngredientsCommand>>();        
+        services.AddSingleton<ICommandBatchProcessorService<CreateUserCommand>, CommandBatchProcessorService<CreateUserCommand>>();        
 
         return services;
     }
