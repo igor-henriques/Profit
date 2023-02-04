@@ -1,6 +1,4 @@
-﻿using Profit.Domain.Commands.User;
-
-namespace Profit.DependencyInjection.Injectors;
+﻿namespace Profit.DependencyInjection.Injectors;
 
 public static class ConfigureCqrsHandlers
 {
@@ -13,6 +11,12 @@ public static class ConfigureCqrsHandlers
             typeof(PutIngredientCommandHandler).Assembly,
             typeof(GetManyIngredientsQueryHandler).Assembly,
             typeof(GetUniqueIngredientQueryHandler).Assembly,
+            typeof(CreateProductCommandHandler).Assembly,
+            typeof(DeleteProductCommandHandler).Assembly,
+            typeof(PatchProductCommandHandler).Assembly,
+            typeof(PutProductCommandHandler).Assembly,
+            typeof(GetManyProductsQueryHandler).Assembly,
+            typeof(GetUniqueProductQueryHandler).Assembly,
             typeof(CreateUserCommandHandler).Assembly);
 
         return services;

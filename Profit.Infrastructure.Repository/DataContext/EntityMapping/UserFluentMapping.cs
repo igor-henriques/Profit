@@ -4,8 +4,8 @@ public sealed class UserFluentMapping : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.HasKey(x => x.Guid);
-        builder.Property(x => x.Guid).ValueGeneratedOnAdd();
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id).ValueGeneratedOnAdd();
         builder.Property(x => x.Username).IsRequired();
         builder.Property(x => x.HashedPassword).IsRequired();
         builder.Property(x => x.Email).IsRequired();

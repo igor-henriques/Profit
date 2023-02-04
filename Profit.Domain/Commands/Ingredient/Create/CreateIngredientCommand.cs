@@ -2,5 +2,5 @@
 
 public sealed record CreateIngredientCommand : BaseCommand, IRequest<Guid>
 {
-    public IngredientDTO Ingredient { get; init; }
+    public CreateIngredientDTO Ingredient { get; init; }
 }

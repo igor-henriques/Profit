@@ -7,6 +7,8 @@ public sealed class UnitOfWork : IUnitOfWork
 
     private IIngredientRepository _ingredientRepository;
     private IUserRepository _userRepository;
+    private IProductRepository _productRepository;
+    private IRecipeRepository _recipeRepository;
 
     /// <summary>
     /// Instead of delegating the object management to the IoC container
@@ -23,6 +25,22 @@ public sealed class UnitOfWork : IUnitOfWork
     /// </summary>
     public IUserRepository UserRepository
         => _userRepository ??= new UserRepository(_context, _logger);
+
+    /// <summary>
+    /// Instead of delegating the object management to the IoC container
+    /// It's being provided by UoW to ensure the repositories
+    /// Is used only through UnitOfWork
+    /// </summary>
+    public IProductRepository ProductRepository
+        => _productRepository ??= new ProductRepository(_context, _logger);
+
+    /// <summary>
+    /// Instead of delegating the object management to the IoC container
+    /// It's being provided by UoW to ensure the repositories
+    /// Is used only through UnitOfWork
+    /// </summary>
+    public IRecipeRepository RecipeRepository
+        => _recipeRepository ??= new RecipeRepository(_context, _logger);
 
     public UnitOfWork(
         ProfitDbContext context,

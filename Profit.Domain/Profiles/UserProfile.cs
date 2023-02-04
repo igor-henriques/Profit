@@ -4,6 +4,6 @@ public sealed class UserProfile : Profile
 {
     public UserProfile()
     {
-        CreateMap<UserDTO, User>();
+        CreateMap<UserDTO, User>().ReverseMap();
     }
 }

@@ -2,5 +2,6 @@
 
 public abstract record Entity
 {
-    public Guid Guid { get; init; }
+    public Guid Id { get; init; }
+    public abstract void Validate();
 }

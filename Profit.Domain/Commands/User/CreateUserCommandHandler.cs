@@ -1,7 +1,7 @@
 ﻿namespace Profit.Domain.Commands.User;
 
-public sealed class CreateUserCommandHandler : 
-    BaseCommandHandler<CreateUserCommand>, 
+public sealed class CreateUserCommandHandler :
+    BaseCommandHandler<CreateUserCommand>,
     IRequestHandler<CreateUserCommand, Guid>,
     IAsyncDisposable
 {
@@ -28,15 +28,14 @@ public sealed class CreateUserCommandHandler :
     public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var user = _mapper.Map<Entities.User>(new UserDTO
-        { 
+        {
             Email = request.UserDTO.Email,
             HashedPassword = _passwordHashingService.HashPassword(request.UserDTO.HashedPassword),
             Username = request.UserDTO.Username,
         });
-        
+
         await _unitOfWork.UserRepository.Add(user);
         await _unitOfWork.SaveAsync(cancellationToken);
-        return user.Guid;
+        return user.Id;
     }
 }
-                  

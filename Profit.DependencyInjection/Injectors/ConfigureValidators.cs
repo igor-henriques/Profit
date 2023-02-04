@@ -6,6 +6,16 @@ public static class ConfigureValidators
     {
         services.AddSingleton<IValidator<Ingredient>, IngredientValidator>();
         services.AddSingleton<IValidator<IngredientDTO>, IngredientDtoValidator>();
+        services.AddSingleton<IValidator<CreateIngredientDTO>, CreateIngredientDtoValidator>();
+
+        services.AddSingleton<IValidator<Product>, ProductValidator>();
+        services.AddSingleton<IValidator<ProductDTO>, ProductDtoValidator>();
+        services.AddSingleton<IValidator<CreateProductDTO>, CreateProductDtoValidator>();
+
+        services.AddSingleton<IValidator<Recipe>, RecipeValidator>();
+        services.AddSingleton<IValidator<RecipeDTO>, RecipeDtoValidator>();
+        services.AddSingleton<IValidator<CreateRecipeDTO>, CreateRecipeDtoValidator>();
+
         return services;
     }
 }

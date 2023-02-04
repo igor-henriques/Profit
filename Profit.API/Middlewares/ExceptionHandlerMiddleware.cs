@@ -31,12 +31,31 @@ public class ExceptionHandlerMiddleware
         {
             await Handle(context, ex);
         }
+        catch (ArgumentException ex)
+        {
+            await Handle(context, ex);
+        }
         catch (Exception ex)
         {
             await Handle(context, ex);
         }
     }
     private static async Task Handle(HttpContext context, InvalidOperationException ex)
+    {
+        context.Response.StatusCode = 400;
+        context.Response.ContentType = "application/json";
+
+        var errorMessage = JsonSerializer.Serialize(
+            new
+            {
+                Messages = ex.Message,
+                context.Response.StatusCode
+            });
+
+        await context.Response.WriteAsync(errorMessage);
+    }
+
+    private static async Task Handle(HttpContext context, ArgumentException ex)
     {
         context.Response.StatusCode = 400;
         context.Response.ContentType = "application/json";

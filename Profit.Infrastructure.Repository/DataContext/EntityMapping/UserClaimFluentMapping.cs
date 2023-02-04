@@ -1,5 +1,5 @@
 ﻿namespace Profit.Infrastructure.Repository.DataContext.EntityMapping;
-      
+
 public sealed class UserClaimFluentMapping : IEntityTypeConfiguration<UserClaim>
 {
     public void Configure(EntityTypeBuilder<UserClaim> builder)

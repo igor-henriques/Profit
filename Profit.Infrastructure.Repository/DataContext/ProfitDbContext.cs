@@ -19,4 +19,7 @@ public sealed class ProfitDbContext : DbContext
     public DbSet<Ingredient> Ingredients { get; init; }
     public DbSet<User> Users { get; init; }
     public DbSet<UserClaim> Claims { get; init; }
+    public DbSet<IngredientRecipeRelation> IngredientRecipeRelations { get; init; }
+    public DbSet<Recipe> Recipes { get; init; }
+    public DbSet<Product> Products { get; init; }
 }

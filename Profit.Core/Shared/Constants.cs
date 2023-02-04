@@ -6,26 +6,49 @@ public static class Constants
     {
         public readonly struct Ingredient
         {
-            public const string GetUnique = "api/ingredient/get";
-            public const string GetMany = "api/ingredient/get-many";
-            public const string Create = "api/ingredient/create";
-            public const string BulkCreate = "api/ingredient/bulk-create";
-            public const string Put = "api/ingredient/put";
-            public const string Patch = "api/ingredient/patch";
-            public const string Delete = "api/ingredient/delete";
+            public const string GetUnique = "api/v1/ingredient/get";
+            public const string GetMany = "api/v1/ingredient/get-many";
+            public const string Create = "api/v1/ingredient/create";
+            public const string BulkCreate = "api/v1/ingredient/bulk-create";
+            public const string Put = "api/v1/ingredient/put";
+            public const string Patch = "api/v1/ingredient/patch";
+            public const string Delete = "api/v1/ingredient/delete";
+        }
+
+        public readonly struct Recipe
+        {
+            public const string GetUnique = "api/v1/recipe/get";
+            public const string GetMany = "api/v1/recipe/get-many";
+            public const string Create = "api/v1/recipe/create";
+            public const string BulkCreate = "api/v1/recipe/bulk-create";
+            public const string Put = "api/v1/recipe/put";
+            public const string Patch = "api/v1/recipe/patch";
+            public const string Delete = "api/v1/recipe/delete";
+        }
+
+        public readonly struct Product
+        {
+            public const string GetUnique = "api/v1/product/get";
+            public const string GetMany = "api/v1/product/get-many";
+            public const string Create = "api/v1/product/create";
+            public const string BulkCreate = "api/v1/product/bulk-create";
+            public const string Put = "api/v1/product/put";
+            public const string Patch = "api/v1/product/patch";
+            public const string Delete = "api/v1/product/delete";
         }
 
         public readonly struct User
         {
-            public const string GetUnique = "api/user/get";
-            public const string Create = "api/user/create";
-            public const string Put = "api/user/put";
-            public const string Delete = "api/user/delete";
-            public const string Authenticate = "api/user/authenticate";
+            public const string GetUnique = "api/v1/user/get";
+            public const string Create = "api/v1/user/create";
+            public const string Put = "api/v1/user/put";
+            public const string Delete = "api/v1/user/delete";
+            public const string Authenticate = "api/v1/user/authenticate";
         }
     }
 
-    public const string INGREDIENT_TAG = "Ingredient";
-    public const string USER_TAG = "User";
-    public const string CACHE_SERVICE_TEXT = "CacheServiceText";
+    public const string INGREDIENT_SWAGGER_TAG = "Ingredient";
+    public const string PRODUCT_SWAGGER_TAG = "Product";
+    public const string RECIPE_SWAGGER_TAG = "Recipe";
+    public const string USER_SWAGGER_TAG = "User";
 }

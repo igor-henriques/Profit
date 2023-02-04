@@ -62,6 +62,7 @@ internal sealed class IngredientRepository : IIngredientRepository
     {
         var entityExists = await _context.Ingredients.AnyAsync(
             i => i.Name.Equals(ingredient.Name) &&
+                 i.MeasurementUnitType.Equals(ingredient.MeasurementUnitType) &&
                  i.Quantity.Equals(ingredient.Quantity) &&
                  i.Price.Equals(ingredient.Price) &&
                  i.ImageThumbnailUrl.Equals(ingredient.ImageThumbnailUrl), cancellationToken);

@@ -18,7 +18,7 @@ public sealed class GetUniqueIngredientQueryHandler : IRequestHandler<GetUniqueI
 
     public async Task<IngredientDTO> Handle(GetUniqueIngredientQuery request, CancellationToken cancellationToken)
     {
-        ArgumentValidator.ThrowIfDefault(request.Guid);
+        ArgumentValidator.ThrowIfNullOrDefault(request.Guid);
 
         var ingredient = await _ingredientRepository.GetUniqueAsync(request.Guid, cancellationToken);
         if (ingredient is null)

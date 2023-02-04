@@ -1,6 +1,4 @@
-﻿using Profit.Domain.Commands.User;
-
-namespace Profit.API.Endpoints;
+﻿namespace Profit.API.Endpoints.V1;
 
 public static class UserEndpoints
 {
@@ -14,7 +12,7 @@ public static class UserEndpoints
             var query = new GetUniqueIngredientQuery(guid);
             var response = await mediator.Send(query, cancellationToken);
             return Results.Ok(response);
-        }).WithTags(USER_TAG);
+        }).WithTags(USER_SWAGGER_TAG);
 
         app.MapPost(Routes.User.Create, async (
             [FromBody] CreateUserCommand command,
@@ -23,7 +21,7 @@ public static class UserEndpoints
         {
             var response = await mediator.Send(command, cancellationToken);
             return Results.Ok(response);
-        }).WithTags(USER_TAG);
+        }).WithTags(USER_SWAGGER_TAG);
 
         app.MapPut(Routes.User.Put, async (
             [FromBody] PutIngredientCommand putIngredientCommand,
@@ -32,7 +30,7 @@ public static class UserEndpoints
         {
             var response = await mediator.Send(putIngredientCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(USER_TAG);
+        }).WithTags(USER_SWAGGER_TAG);
 
         app.MapDelete(Routes.User.Delete, async (
             [FromBody] DeleteIngredientCommand deleteIngredientCommand,
@@ -41,7 +39,7 @@ public static class UserEndpoints
         {
             var response = await mediator.Send(deleteIngredientCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(USER_TAG);
+        }).WithTags(USER_SWAGGER_TAG);
 
         app.MapPost(Routes.User.Authenticate, async (
             [FromBody] DeleteIngredientCommand deleteIngredientCommand,
@@ -50,6 +48,6 @@ public static class UserEndpoints
         {
             var response = await mediator.Send(deleteIngredientCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(USER_TAG);
+        }).WithTags(USER_SWAGGER_TAG);
     }
 }

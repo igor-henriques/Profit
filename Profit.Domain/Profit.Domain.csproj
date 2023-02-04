@@ -19,4 +19,8 @@
 		<ProjectReference Include="..\Profit.Core\Profit.Core.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Commands\Recipe\" />
+	</ItemGroup>
+
 </Project>

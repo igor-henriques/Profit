@@ -34,7 +34,7 @@ public sealed class PutIngredientCommandHandler :
         _unitOfWork.IngredientRepository.Update(mappedIngredient);
 
         if (await _unitOfWork.SaveAsync(cancellationToken) is 0)
-            throw new EntityNotFoundException(request.IngredientGuid, nameof(Entities.Ingredient));
+            throw new EntityNotFoundException(request.Ingredient.Id, nameof(Entities.Ingredient));
 
         return Unit.Value;
     }

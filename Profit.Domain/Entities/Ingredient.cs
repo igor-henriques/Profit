@@ -4,28 +4,35 @@ public sealed record Ingredient : Entity
 {
     public string Name { get; private set; }
     public decimal Price { get; private set; }
+    public EMeasurementUnit MeasurementUnitType { get; private set; }
     public decimal Quantity { get; private set; }
-    public decimal UnitPrice { get => Quantity is 0 ? 0 : Price / Quantity; }
+    public decimal UnitPrice { get => Price / Quantity; }
     public string ImageThumbnailUrl { get; private set; }
+    public string Description { get; private set; }
+    public ICollection<IngredientRecipeRelation> IngredientRecipeRelations { get; init; }
 
     public Ingredient(string name,
                       decimal price,
+                      EMeasurementUnit measurementUnitType,
                       decimal quantity,
                       string imageThumbnailUrl)
     {
         Name = name;
         Price = price;
+        MeasurementUnitType = measurementUnitType;
         Quantity = quantity;
         ImageThumbnailUrl = imageThumbnailUrl;
 
         Validate();
     }
 
-    public void Validate()
+    public Ingredient() { }
+
+    public override void Validate()
     {
         ArgumentValidator.ThrowIfNullOrEmpty(Name);
         ArgumentValidator.ThrowIfNegative(Price);
-        ArgumentValidator.ThrowIfNegative(Quantity);
+        ArgumentValidator.ThrowIfZero(Quantity);
         ArgumentValidator.ThrowIfNullOrEmpty(ImageThumbnailUrl);
     }
 
@@ -40,9 +47,25 @@ public sealed record Ingredient : Entity
     {
         UpdateName(ingredient.Name);
         UpdatePrice(ingredient.Price);
+        UpdateMeasurementUnitType(ingredient.MeasurementUnitType);
         UpdateQuantity(ingredient.Quantity);
         UpdateImageThumbnailUrl(ingredient.ImageThumbnailUrl);
 
+        return this;
+    }
+
+    public Ingredient UpdateMeasurementUnitType(EMeasurementUnit measurementUnitType)
+    {
+        this.MeasurementUnitType = measurementUnitType;
+        return this;
+    }
+
+    public Ingredient UpdateQuantity(decimal quantity)
+    {
+        ArgumentValidator.ThrowIfZero(quantity, nameof(quantity));
+        ArgumentValidator.ThrowIfNegative(quantity, nameof(quantity));
+
+        this.Quantity = quantity;
         return this;
     }
 
@@ -65,18 +88,6 @@ public sealed record Ingredient : Entity
         if (Price != price)
         {
             this.Price = price;
-        }
-
-        return this;
-    }
-
-    public Ingredient UpdateQuantity(decimal quantity)
-    {
-        ArgumentValidator.ThrowIfNegative(quantity);
-
-        if (Quantity != quantity)
-        {
-            this.Quantity = quantity;
         }
 
         return this;

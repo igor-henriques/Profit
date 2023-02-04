@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Profit.Domain.Entities;
-using System.Security.Policy;
 
 namespace Profit.Infrastructure.Service.Services;
 
@@ -18,13 +17,13 @@ public sealed class PasswordHashingService : IPasswordHashingService, IPasswordH
     {
         return HashPassword(password);
     }
-                                                                           
+
     public PasswordVerificationResult VerifyHashedPassword(User _, string hashedPassword, string providedPassword)
     {
         ArgumentValidator.ThrowIfNullOrEmpty(hashedPassword, nameof(hashedPassword));
         ArgumentValidator.ThrowIfNullOrEmpty(providedPassword, nameof(providedPassword));
 
-        var validationResult =  BCrypt.Net.BCrypt.Verify(providedPassword, hashedPassword);
+        var validationResult = BCrypt.Net.BCrypt.Verify(providedPassword, hashedPassword);
 
         return validationResult ? PasswordVerificationResult.Success : PasswordVerificationResult.Failed;
     }

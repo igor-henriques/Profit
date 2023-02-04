@@ -7,12 +7,12 @@ public sealed class CreateManyIngredientsCommandHandler :
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IValidator<IngredientDTO> _validator;
+    private readonly IValidator<CreateRecipeDTO> _validator;
 
     public CreateManyIngredientsCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
-        IValidator<IngredientDTO> validator,
+        IValidator<CreateRecipeDTO> validator,
         ICommandBatchProcessorService<CreateManyIngredientsCommand> commandBatchProcessor,
         IConfiguration configuration) : base(commandBatchProcessor, configuration)
     {
@@ -43,7 +43,7 @@ public sealed class CreateManyIngredientsCommandHandler :
 
             var ingredientEntity = _mapper.Map<Entities.Ingredient>(ingredientDto);
             await _unitOfWork.IngredientRepository.Add(ingredientEntity, cancellationToken);
-            response.Add(ingredientEntity.Guid);
+            response.Add(ingredientEntity.Id);
         }
 
         if (errors.Any())

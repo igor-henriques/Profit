@@ -2,5 +2,5 @@
 
 public sealed record DeleteIngredientCommand : BaseCommand, IRequest<Unit>
 {
-    public Guid IngredientGuid { get; init; }
+    public Guid IngredientId { get; init; }
 }

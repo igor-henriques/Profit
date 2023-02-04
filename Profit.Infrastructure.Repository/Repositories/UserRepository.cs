@@ -28,11 +28,11 @@ internal sealed class UserRepository : IUserRepository
 
     public async ValueTask<bool> Exists(User user, CancellationToken cancellationToken = default)
     {
-        if (user.Guid.Equals(default))
+        if (user.Id.Equals(default))
             return false;
 
-        var response = await _context.Users.AnyAsync(x => x.Guid == user.Guid, cancellationToken);
-        _logger.LogInformation($"User with id {user.Guid} exists: {response}");
+        var response = await _context.Users.AnyAsync(x => x.Id == user.Id, cancellationToken);
+        _logger.LogInformation($"User with id {user.Id} exists: {response}");
         return response;
     }
 

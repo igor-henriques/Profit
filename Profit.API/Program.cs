@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Profit.Infrastructure.Repository;
-
 try
 {
 	var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +10,7 @@ try
 
 	builder.Services.AddEndpointsApiExplorer();
 	builder.Services.AddSwaggerGen();
-	builder.Services.AddDbContext<ProfitDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProfitSqlServer")));	
+	builder.Services.AddDbContext<ProfitDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProfitSqlServer")));
 	builder.Services.AddMapperProfiles();
 	builder.Services.AddValidators();
 	builder.Services.AddCacheServices(builder.Configuration.GetConnectionString("Redis"));
@@ -39,6 +36,7 @@ try
 	app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 	app.ConfigureIngredientEndpoints();
+	app.ConfigureProductEndpoints();
 	app.ConfigureUserEndpoints();
 
 	app.Run();

@@ -31,16 +31,16 @@ public sealed class PatchIngredientCommandHandler :
 
         base.EnqueueCommandForStoraging(request);
 
-        var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.IngredientGuid, cancellationToken);
+        var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.Ingredient.Id, cancellationToken);
         if (ingredient is null)
         {
-            throw new EntityNotFoundException(request.IngredientGuid, nameof(Entities.Ingredient));
+            throw new EntityNotFoundException(request.Ingredient.Id, nameof(Entities.Ingredient));
         }
 
         ingredient.Update(_mapper.Map<Entities.Ingredient>(request.Ingredient));
 
         if (await _unitOfWork.SaveAsync(cancellationToken) is 0)
-            throw new EntityNotFoundException(request.IngredientGuid, nameof(Entities.Ingredient));
+            throw new EntityNotFoundException(request.Ingredient.Id, nameof(Entities.Ingredient));
 
         return Unit.Value;
     }

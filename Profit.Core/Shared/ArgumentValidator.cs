@@ -1,6 +1,6 @@
 ﻿namespace Profit.Core.Shared;
 
-public sealed class ArgumentValidator
+public static class ArgumentValidator
 {
     public static void ThrowIfNullOrEmpty(string argument, string paramName = null)
     {
@@ -9,7 +9,7 @@ public sealed class ArgumentValidator
             throw new System.ArgumentException($"{paramName ?? "Argument"} cannot be null or empty", paramName);
         }
     }
-        
+
     public static void ThrowIfNegative<T>(T argument, string paramName = null) where T : INumber<T>
     {
         if (argument < T.Zero)
@@ -26,11 +26,11 @@ public sealed class ArgumentValidator
         }
     }
 
-    public static void ThrowIfDefault<T>(T obj, string paramName = null) where T : new()
+    public static void ThrowIfNullOrDefault<T>(T obj, string paramName = null) where T : new()
     {
-        if (obj.Equals(default(T)))
+        if (obj.Equals(default(T)) | obj == null)
         {
-            throw new System.ArgumentException($"{paramName ?? "Argument"} cannot be default");
+            throw new System.ArgumentException($"{paramName ?? "Argument"} cannot be null or default");
         }
     }
 }

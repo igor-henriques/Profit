@@ -24,14 +24,21 @@ namespace Profit.Infrastructure.Repository.Migrations
 
             modelBuilder.Entity("Profit.Domain.Entities.Ingredient", b =>
                 {
-                    b.Property<Guid>("Guid")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ImageThumbnailUrl")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<byte>("MeasurementUnitType")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -46,14 +53,96 @@ namespace Profit.Infrastructure.Repository.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("Guid");
+                    b.HasKey("Id");
 
                     b.ToTable("Ingredients");
                 });
 
+            modelBuilder.Entity("Profit.Domain.Entities.IngredientRecipeRelation", b =>
+                {
+                    b.Property<Guid>("IngredientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RecipeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("IngredientCount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<byte>("MeasurementUnit")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("IngredientId", "RecipeId");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("IngredientRecipeRelations");
+                });
+
+            modelBuilder.Entity("Profit.Domain.Entities.Product", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ImageThumbnailUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("RecipeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Profit.Domain.Entities.Recipe", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("TotalCost")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Recipes");
+                });
+
             modelBuilder.Entity("Profit.Domain.Entities.User", b =>
                 {
-                    b.Property<Guid>("Guid")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -72,7 +161,7 @@ namespace Profit.Infrastructure.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Guid");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
@@ -101,6 +190,36 @@ namespace Profit.Infrastructure.Repository.Migrations
                     b.ToTable("Claims");
                 });
 
+            modelBuilder.Entity("Profit.Domain.Entities.IngredientRecipeRelation", b =>
+                {
+                    b.HasOne("Profit.Domain.Entities.Ingredient", "Ingredient")
+                        .WithMany("IngredientRecipeRelations")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Profit.Domain.Entities.Recipe", "Recipe")
+                        .WithMany("IngredientRecipeRelations")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ingredient");
+
+                    b.Navigation("Recipe");
+                });
+
+            modelBuilder.Entity("Profit.Domain.Entities.Product", b =>
+                {
+                    b.HasOne("Profit.Domain.Entities.Recipe", "Recipe")
+                        .WithMany()
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+                });
+
             modelBuilder.Entity("Profit.Domain.Models.Authentication.UserClaim", b =>
                 {
                     b.HasOne("Profit.Domain.Entities.User", "User")
@@ -110,6 +229,16 @@ namespace Profit.Infrastructure.Repository.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Profit.Domain.Entities.Ingredient", b =>
+                {
+                    b.Navigation("IngredientRecipeRelations");
+                });
+
+            modelBuilder.Entity("Profit.Domain.Entities.Recipe", b =>
+                {
+                    b.Navigation("IngredientRecipeRelations");
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.User", b =>
