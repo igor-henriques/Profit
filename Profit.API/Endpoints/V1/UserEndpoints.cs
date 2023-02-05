@@ -12,7 +12,7 @@ public static class UserEndpoints
             var query = new GetUniqueIngredientQuery(guid);
             var response = await mediator.Send(query, cancellationToken);
             return Results.Ok(response);
-        }).WithTags(USER_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.USER);
 
         app.MapPost(Routes.User.Create, async (
             [FromBody] CreateUserCommand command,
@@ -21,7 +21,7 @@ public static class UserEndpoints
         {
             var response = await mediator.Send(command, cancellationToken);
             return Results.Ok(response);
-        }).WithTags(USER_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.USER);
 
         app.MapPut(Routes.User.Put, async (
             [FromBody] PutIngredientCommand putIngredientCommand,
@@ -30,7 +30,7 @@ public static class UserEndpoints
         {
             var response = await mediator.Send(putIngredientCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(USER_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.USER);
 
         app.MapDelete(Routes.User.Delete, async (
             [FromBody] DeleteIngredientCommand deleteIngredientCommand,
@@ -39,7 +39,7 @@ public static class UserEndpoints
         {
             var response = await mediator.Send(deleteIngredientCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(USER_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.USER);
 
         app.MapPost(Routes.User.Authenticate, async (
             [FromBody] DeleteIngredientCommand deleteIngredientCommand,
@@ -48,6 +48,6 @@ public static class UserEndpoints
         {
             var response = await mediator.Send(deleteIngredientCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(USER_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.USER);
     }
 }

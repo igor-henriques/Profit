@@ -7,11 +7,13 @@ public sealed class IngredientTests
     public void Mapping_Ingredient_To_DTO_Should_Returns_Success_When_Valid_Entity(Ingredient ingredient)
     {
         var ingredientDto = new IngredientDTO(
+            ingredient.Id,
             ingredient.Name,
             ingredient.Price,
             ingredient.Quantity,
             ingredient.ImageThumbnailUrl,
-            ingredient.MeasurementUnitType);
+            ingredient.MeasurementUnitType,
+            ingredient.Description);
 
         var config = new MapperConfiguration(cfg => cfg.AddProfile<IngredientProfile>());
         var mapper = new Mapper(config);

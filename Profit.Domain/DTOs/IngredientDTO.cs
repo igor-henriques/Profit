@@ -8,18 +8,23 @@ public readonly record struct IngredientDTO
     public decimal Quantity { get; init; }
     public EMeasurementUnit MeasurementUnitType { get; init; }
     public string ImageThumbnailUrl { get; init; }
+    public string Description { get; init; }
 
-    public IngredientDTO(string name,
+    public IngredientDTO(Guid id,
+                         string name,
                          decimal price,
                          decimal quantity,
                          string imageThumbnailUrl,
-                         EMeasurementUnit measurementUnitType)
+                         EMeasurementUnit measurementUnitType,
+                         string description)
     {
+        Id = id;
         Name = name;
         Price = price;
         Quantity = quantity;
         ImageThumbnailUrl = imageThumbnailUrl;
         MeasurementUnitType = measurementUnitType;
+        Description = description;
     }
 
     public IngredientDTO() { }

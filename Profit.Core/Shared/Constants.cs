@@ -47,8 +47,20 @@ public static class Constants
         }
     }
 
-    public const string INGREDIENT_SWAGGER_TAG = "Ingredient";
-    public const string PRODUCT_SWAGGER_TAG = "Product";
-    public const string RECIPE_SWAGGER_TAG = "Recipe";
-    public const string USER_SWAGGER_TAG = "User";
+    public readonly struct SwaggerTags
+    {
+        public const string INGREDIENT = "Ingredient";
+        public const string PRODUCT = "Product";
+        public const string RECIPE = "Recipe";
+        public const string USER = "User";
+    }    
+
+    public readonly struct FieldsDefinitions
+    {
+        public const int MaxLengthDescriptions = 200;
+        public const int MaxLengthImageThumbnail = 500;
+        public const int MaxLengthName = 100;
+        public const int MaxLengthHashedPassword = 256;
+        public const int MaxLengthEmail = 255;
+    }
 }

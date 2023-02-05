@@ -12,7 +12,7 @@ public static class IngredientEndpoints
             var response = await mediator.Send(query, cancellationToken);
 
             return response.Any() ? Results.Ok(response) : Results.NoContent();
-        }).WithTags(INGREDIENT_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.INGREDIENT);
 
         app.MapGet(Routes.Ingredient.GetUnique, async (
             [FromQuery] Guid guid,
@@ -22,7 +22,7 @@ public static class IngredientEndpoints
             var query = new GetUniqueIngredientQuery(guid);
             var response = await mediator.Send(query, cancellationToken);
             return Results.Ok(response);
-        }).WithTags(INGREDIENT_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.INGREDIENT);
 
         app.MapPost(Routes.Ingredient.Create, async (
             [FromBody] CreateIngredientCommand command,
@@ -31,7 +31,7 @@ public static class IngredientEndpoints
         {
             var response = await mediator.Send(command, cancellationToken);
             return Results.CreatedAtRoute(Routes.Ingredient.GetUnique, new { guid = response }, response);
-        }).WithTags(INGREDIENT_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.INGREDIENT);
 
         app.MapPost(Routes.Ingredient.BulkCreate, async (
             [FromBody] CreateManyIngredientsCommand command,
@@ -40,7 +40,7 @@ public static class IngredientEndpoints
         {
             var response = await mediator.Send(command, cancellationToken);
             return response.Any() ? Results.Ok(response) : Results.NoContent();
-        }).WithTags(INGREDIENT_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.INGREDIENT);
 
         app.MapPatch(Routes.Ingredient.Patch, async (
             [FromBody] PatchIngredientCommand patchIngredientCommand,
@@ -49,7 +49,7 @@ public static class IngredientEndpoints
         {
             var response = await mediator.Send(patchIngredientCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(INGREDIENT_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.INGREDIENT);
 
         app.MapPut(Routes.Ingredient.Put, async (
             [FromBody] PutIngredientCommand putIngredientCommand,
@@ -58,7 +58,7 @@ public static class IngredientEndpoints
         {
             var response = await mediator.Send(putIngredientCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(INGREDIENT_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.INGREDIENT);
 
         app.MapDelete(Routes.Ingredient.Delete, async (
             [FromBody] DeleteIngredientCommand deleteIngredientCommand,
@@ -67,6 +67,6 @@ public static class IngredientEndpoints
         {
             var response = await mediator.Send(deleteIngredientCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(INGREDIENT_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.INGREDIENT);
     }
 }

@@ -6,3 +6,6 @@ global using Profit.Domain.Interfaces.Repositories;
 global using Profit.Domain.Models.Authentication;
 global using Profit.Infrastructure.Repository.DataContext;
 global using System.Reflection;
+global using Profit.Infrastructure.Repository.Repositories;
+global using Profit.Infrastructure.Repository.Cache;
+global using Profit.Core.Shared;

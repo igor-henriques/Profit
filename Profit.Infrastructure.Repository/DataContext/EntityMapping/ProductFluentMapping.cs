@@ -6,9 +6,9 @@ public sealed class ProductFluentMapping : IEntityTypeConfiguration<Product>
     {
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Id).ValueGeneratedOnAdd();
-        builder.Property(p => p.Name).IsRequired().HasMaxLength(100);
-        builder.Property(p => p.ImageThumbnailUrl).IsRequired().HasMaxLength(500);
-        builder.Property(p => p.Description).HasMaxLength(200);
+        builder.Property(p => p.Name).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthName);
+        builder.Property(p => p.ImageThumbnailUrl).HasMaxLength(Constants.FieldsDefinitions.MaxLengthImageThumbnail);
+        builder.Property(p => p.Description).HasMaxLength(Constants.FieldsDefinitions.MaxLengthDescriptions);
 
         builder.HasOne(p => p.Recipe)
             .WithMany()

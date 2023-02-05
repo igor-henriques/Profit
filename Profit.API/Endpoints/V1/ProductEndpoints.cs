@@ -12,7 +12,7 @@ public static class ProductEndpoints
             var response = await mediator.Send(query, cancellationToken);
 
             return response.Any() ? Results.Ok(response) : Results.NoContent();
-        }).WithTags(PRODUCT_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.PRODUCT);
 
         app.MapGet(Routes.Product.GetUnique, async (
             [FromQuery] Guid guid,
@@ -22,7 +22,7 @@ public static class ProductEndpoints
             var query = new GetUniqueProductQuery(guid);
             var response = await mediator.Send(query, cancellationToken);
             return Results.Ok(response);
-        }).WithTags(PRODUCT_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.PRODUCT);
 
         app.MapPost(Routes.Product.Create, async (
             [FromBody] CreateProductCommand command,
@@ -31,7 +31,7 @@ public static class ProductEndpoints
         {
             var response = await mediator.Send(command, cancellationToken);
             return Results.CreatedAtRoute(Routes.Product.GetUnique, new { guid = response }, response);
-        }).WithTags(PRODUCT_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.PRODUCT);
 
         app.MapPost(Routes.Product.BulkCreate, async (
             [FromBody] CreateManyProductsCommand command,
@@ -40,7 +40,7 @@ public static class ProductEndpoints
         {
             var response = await mediator.Send(command, cancellationToken);
             return response.Any() ? Results.Ok(response) : Results.NoContent();
-        }).WithTags(PRODUCT_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.PRODUCT);
 
         app.MapPatch(Routes.Product.Patch, async (
             [FromBody] PatchProductCommand patchProductCommand,
@@ -49,7 +49,7 @@ public static class ProductEndpoints
         {
             var response = await mediator.Send(patchProductCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(PRODUCT_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.PRODUCT);
 
         app.MapPut(Routes.Product.Put, async (
             [FromBody] PutProductCommand putProductCommand,
@@ -58,7 +58,7 @@ public static class ProductEndpoints
         {
             var response = await mediator.Send(putProductCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(PRODUCT_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.PRODUCT);
 
         app.MapDelete(Routes.Product.Delete, async (
             [FromBody] DeleteProductCommand deleteProductCommand,
@@ -67,6 +67,6 @@ public static class ProductEndpoints
         {
             var response = await mediator.Send(deleteProductCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(PRODUCT_SWAGGER_TAG);
+        }).WithTags(SwaggerTags.PRODUCT);
     }
 }

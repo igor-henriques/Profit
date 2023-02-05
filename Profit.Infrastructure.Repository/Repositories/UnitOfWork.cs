@@ -13,15 +13,15 @@ public sealed class UnitOfWork : IUnitOfWork
     /// <summary>
     /// Instead of delegating the object management to the IoC container
     /// It's being provided by UoW to ensure the repositories
-    /// Is used only through UnitOfWork
+    /// are used only through UnitOfWork
     /// </summary>
     public IIngredientRepository IngredientRepository
-        => _ingredientRepository ??= new IngredientRepository(_context, _logger);
+        => _ingredientRepository ??= new CachedIngredientRepository(_context, _logger);
 
     /// <summary>
     /// Instead of delegating the object management to the IoC container
     /// It's being provided by UoW to ensure the repositories
-    /// Is used only through UnitOfWork
+    /// are used only through UnitOfWork
     /// </summary>
     public IUserRepository UserRepository
         => _userRepository ??= new UserRepository(_context, _logger);
@@ -29,18 +29,18 @@ public sealed class UnitOfWork : IUnitOfWork
     /// <summary>
     /// Instead of delegating the object management to the IoC container
     /// It's being provided by UoW to ensure the repositories
-    /// Is used only through UnitOfWork
+    /// are used only through UnitOfWork
     /// </summary>
     public IProductRepository ProductRepository
-        => _productRepository ??= new ProductRepository(_context, _logger);
+        => _productRepository ??= new CachedProductRepository(_context, _logger);
 
     /// <summary>
     /// Instead of delegating the object management to the IoC container
     /// It's being provided by UoW to ensure the repositories
-    /// Is used only through UnitOfWork
+    /// are used only through UnitOfWork
     /// </summary>
     public IRecipeRepository RecipeRepository
-        => _recipeRepository ??= new RecipeRepository(_context, _logger);
+        => _recipeRepository ??= new CachedRecipeRepository(_context, _logger);
 
     public UnitOfWork(
         ProfitDbContext context,

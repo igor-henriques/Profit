@@ -6,9 +6,9 @@ public sealed class UserFluentMapping : IEntityTypeConfiguration<User>
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
-        builder.Property(x => x.Username).IsRequired();
-        builder.Property(x => x.HashedPassword).IsRequired();
-        builder.Property(x => x.Email).IsRequired();
+        builder.Property(x => x.Username).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthName);
+        builder.Property(x => x.HashedPassword).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthHashedPassword);
+        builder.Property(x => x.Email).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthEmail);
         builder.Property(x => x.IsEmailVerified).IsRequired();
 
         builder.HasMany(x => x.UserClaims)

@@ -27,7 +27,7 @@ public sealed record Ingredient : Entity
     }
 
     public Ingredient() { }
-
+        
     public override void Validate()
     {
         ArgumentValidator.ThrowIfNullOrEmpty(Name);
