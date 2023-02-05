@@ -8,11 +8,11 @@ public sealed class CreateRecipeDtoValidator : AbstractValidator<CreateRecipeDTO
             .NotEmpty()
             .WithMessage(x => $"{nameof(x.Name)} is required")
             .MaximumLength(Constants.FieldsDefinitions.MaxLengthName)
-            .WithMessage(x => $"{x.Name} maximum length is {Constants.FieldsDefinitions.MaxLengthName} characters");
+            .WithMessage(x => $"{nameof(x.Name)} maximum length is {Constants.FieldsDefinitions.MaxLengthName} characters");
 
         RuleFor(x => x.Description)
             .MaximumLength(Constants.FieldsDefinitions.MaxLengthDescriptions)
-            .WithMessage(x => $"{x.Description} maximum length is {Constants.FieldsDefinitions.MaxLengthDescriptions} characters");
+            .WithMessage(x => $"{nameof(x.Description)} maximum length is {Constants.FieldsDefinitions.MaxLengthDescriptions} characters");
 
         RuleFor(x => x.TotalCost)
             .GreaterThan(0)

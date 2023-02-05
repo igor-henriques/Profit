@@ -1,4 +1,4 @@
-﻿namespace Profit.Domain.Models;
+﻿namespace Profit.Domain.Models.Authentication;
 
 public readonly record struct JwtToken
 {

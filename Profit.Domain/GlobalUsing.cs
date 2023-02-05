@@ -19,3 +19,4 @@ global using Profit.Infrastructure.Repository.Repositories;
 global using System.Collections.Immutable;
 global using System.Security.Claims;
 global using System.Text.Json.Serialization;
+global using System.Text.RegularExpressions;

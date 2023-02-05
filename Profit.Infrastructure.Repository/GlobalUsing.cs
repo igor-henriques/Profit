@@ -9,3 +9,7 @@ global using System.Reflection;
 global using Profit.Infrastructure.Repository.Repositories;
 global using Profit.Infrastructure.Repository.Cache;
 global using Profit.Core.Shared;
+global using Profit.Domain.Interfaces.Services;
+global using Profit.Domain.Entities.Base;
+global using Profit.Domain.Interfaces.Repositories.Base;
+global using Profit.Infrastructure.Repository.Repositories.Base;

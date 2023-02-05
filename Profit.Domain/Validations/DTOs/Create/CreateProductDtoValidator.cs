@@ -8,11 +8,11 @@ public sealed class CreateProductDtoValidator : AbstractValidator<CreateProductD
             .NotEmpty()
             .WithMessage(x => $"{nameof(x.Name)} is required")
             .MaximumLength(Constants.FieldsDefinitions.MaxLengthName)
-            .WithMessage(x => $"{x.Name} maximum length is {Constants.FieldsDefinitions.MaxLengthName} characters");
+            .WithMessage(x => $"{nameof(x.Name)} maximum length is {Constants.FieldsDefinitions.MaxLengthName} characters");
 
         RuleFor(x => x.Description)
             .MaximumLength(Constants.FieldsDefinitions.MaxLengthDescriptions)
-            .WithMessage(x => $"{x.Description} maximum length is {Constants.FieldsDefinitions.MaxLengthDescriptions} characters");
+            .WithMessage(x => $"{nameof(x.Description)} maximum length is {Constants.FieldsDefinitions.MaxLengthDescriptions} characters");
 
         RuleFor(x => x.ImageThumbnailUrl)
             .MaximumLength(Constants.FieldsDefinitions.MaxLengthImageThumbnail)
@@ -23,7 +23,7 @@ public sealed class CreateProductDtoValidator : AbstractValidator<CreateProductD
             .WithMessage(x => $"{nameof(x.TotalPrice)} must be greater than 0");
         
         RuleFor(x => x.RecipeId)
-            .Must(id => !id.Equals(default(Guid)))
+            .Must(id => !id.Equals(default))
             .WithMessage(x => $"{nameof(x.RecipeId)} is required");
     }
 }

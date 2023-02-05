@@ -1,9 +1,14 @@
 ﻿namespace Profit.Infrastructure.Repository.Repositories;
 
-public sealed class UnitOfWork : IUnitOfWork
+/// <summary>
+/// Provides a mechanism for working with the repository pattern, 
+/// centralizing all the transactions in a single database context.
+/// </summary>
+public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
 {
     private readonly ProfitDbContext _context;
     private readonly ILogger<UnitOfWork> _logger;
+    private readonly IRedisCacheService _cacheService;
 
     private IIngredientRepository _ingredientRepository;
     private IUserRepository _userRepository;
@@ -16,7 +21,7 @@ public sealed class UnitOfWork : IUnitOfWork
     /// are used only through UnitOfWork
     /// </summary>
     public IIngredientRepository IngredientRepository
-        => _ingredientRepository ??= new CachedIngredientRepository(_context, _logger);
+        => _ingredientRepository ??= new RedisCachedIngredientRepository(_context, _logger, _cacheService);
 
     /// <summary>
     /// Instead of delegating the object management to the IoC container
@@ -24,7 +29,7 @@ public sealed class UnitOfWork : IUnitOfWork
     /// are used only through UnitOfWork
     /// </summary>
     public IUserRepository UserRepository
-        => _userRepository ??= new UserRepository(_context, _logger);
+        => _userRepository ??= new RedisCachedUserRepository(_context, _logger, _cacheService);
 
     /// <summary>
     /// Instead of delegating the object management to the IoC container
@@ -32,7 +37,7 @@ public sealed class UnitOfWork : IUnitOfWork
     /// are used only through UnitOfWork
     /// </summary>
     public IProductRepository ProductRepository
-        => _productRepository ??= new CachedProductRepository(_context, _logger);
+        => _productRepository ??= new RedisCachedProductRepository(_context, _logger, _cacheService);
 
     /// <summary>
     /// Instead of delegating the object management to the IoC container
@@ -40,14 +45,16 @@ public sealed class UnitOfWork : IUnitOfWork
     /// are used only through UnitOfWork
     /// </summary>
     public IRecipeRepository RecipeRepository
-        => _recipeRepository ??= new CachedRecipeRepository(_context, _logger);
+        => _recipeRepository ??= new RedisCachedRecipeRepository(_context, _logger, _cacheService);
 
     public UnitOfWork(
         ProfitDbContext context,
-        ILogger<UnitOfWork> logger)
+        ILogger<UnitOfWork> logger,
+        IRedisCacheService cacheService)
     {
         _context = context;
         _logger = logger;
+        _cacheService = cacheService;        
     }
 
     /// <summary>
@@ -63,5 +70,10 @@ public sealed class UnitOfWork : IUnitOfWork
         var changesCount = await _context.SaveChangesAsync(cancellationToken);
         _logger.LogInformation($"{changesCount} changes were saved");
         return changesCount;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _context.DisposeAsync();
     }
 }

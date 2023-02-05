@@ -3,8 +3,8 @@
 public interface IBaseRepository<T> where T : Entity
 {
     public ValueTask Add(T entity, CancellationToken cancellationToken = default);
-    public void BulkAdd(IEnumerable<T> ingredients);
-    public void Update(T entity);
+    public Task BulkAdd(IEnumerable<T> ingredients);
+    public ValueTask Update(T entity);
     public void Delete(T entity);
     public ValueTask<int> CountAsync(CancellationToken cancellationToken = default);
     public ValueTask<bool> Exists(T entity, CancellationToken cancellationToken = default);

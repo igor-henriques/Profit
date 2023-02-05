@@ -1,4 +1,6 @@
-﻿namespace Profit.Infrastructure.Service.Services;
+﻿using Profit.Domain.Models.Authentication;
+
+namespace Profit.Infrastructure.Service.Services;
 
 public sealed class TokenGeneratorService : ITokenGeneratorService
 {

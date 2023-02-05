@@ -2,5 +2,5 @@
 
 public sealed record CreateUserCommand : BaseCommand, IRequest<Guid>
 {
-    public UserDTO UserDTO { get; init; }
+    public CreateUserDTO UserDTO { get; init; }
 }

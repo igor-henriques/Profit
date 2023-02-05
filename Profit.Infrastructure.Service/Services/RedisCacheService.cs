@@ -11,7 +11,7 @@ public sealed class RedisCacheService : IRedisCacheService
     }
 
     public async Task<T> GetAsync<T>(string key)
-    {
+    {        
         var database = _redis.GetDatabase();
         var keyValue = await database.StringGetAsync(key);
 
@@ -20,7 +20,7 @@ public sealed class RedisCacheService : IRedisCacheService
             : default;
     }
 
-    public async Task<bool> Set<T>(string key, T value, TimeSpan expirationTime)
+    public async Task<bool> SetAsync<T>(string key, T value, TimeSpan expirationTime)
     {
         var database = _redis.GetDatabase();
         return await database.StringSetAsync(key, JsonConvert.SerializeObject(value), expirationTime);

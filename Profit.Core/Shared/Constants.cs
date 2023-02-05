@@ -60,6 +60,7 @@ public static class Constants
         public const int MaxLengthDescriptions = 200;
         public const int MaxLengthImageThumbnail = 500;
         public const int MaxLengthName = 100;
+        public const int MaxLengthUsername = 36;
         public const int MaxLengthHashedPassword = 256;
         public const int MaxLengthEmail = 255;
     }

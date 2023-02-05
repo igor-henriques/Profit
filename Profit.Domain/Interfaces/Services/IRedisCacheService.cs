@@ -21,7 +21,7 @@ public interface IRedisCacheService
     /// <param name="value"></param>
     /// <param name="expirationTime"></param>
     /// <returns></returns>
-    Task<bool> Set<T>(string key, T value, TimeSpan expirationTime);
+    Task<bool> SetAsync<T>(string key, T value, TimeSpan expirationTime);
 
     /// <summary>
     /// Removes the value associated with the specified key.
