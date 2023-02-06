@@ -11,5 +11,5 @@ internal sealed class ProductRepository : BaseRepository<Product>, IProductRepos
     {
         this._context = context;
         this.logger = logger;
-    }        
+    }
 }

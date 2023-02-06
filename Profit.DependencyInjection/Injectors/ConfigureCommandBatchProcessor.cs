@@ -16,7 +16,17 @@ public static class ConfigureCommandBatchProcessor
         services.AddSingleton<ICommandBatchProcessorService<PutProductCommand>, CommandBatchProcessorService<PutProductCommand>>();
         services.AddSingleton<ICommandBatchProcessorService<CreateManyProductsCommand>, CommandBatchProcessorService<CreateManyProductsCommand>>();
 
+        services.AddSingleton<ICommandBatchProcessorService<CreateRecipeCommand>, CommandBatchProcessorService<CreateRecipeCommand>>();
+        services.AddSingleton<ICommandBatchProcessorService<DeleteRecipeCommand>, CommandBatchProcessorService<DeleteRecipeCommand>>();
+        services.AddSingleton<ICommandBatchProcessorService<PatchRecipeCommand>, CommandBatchProcessorService<PatchRecipeCommand>>();
+        services.AddSingleton<ICommandBatchProcessorService<PutRecipeCommand>, CommandBatchProcessorService<PutRecipeCommand>>();
+        services.AddSingleton<ICommandBatchProcessorService<CreateManyRecipesCommand>, CommandBatchProcessorService<CreateManyRecipesCommand>>();
+
         services.AddSingleton<ICommandBatchProcessorService<CreateUserCommand>, CommandBatchProcessorService<CreateUserCommand>>();
+        services.AddSingleton<ICommandBatchProcessorService<DeleteUserCommand>, CommandBatchProcessorService<DeleteUserCommand>>();
+        services.AddSingleton<ICommandBatchProcessorService<PatchUserCommand>, CommandBatchProcessorService<PatchUserCommand>>();
+        services.AddSingleton<ICommandBatchProcessorService<PutUserCommand>, CommandBatchProcessorService<PutUserCommand>>();
+        services.AddSingleton<ICommandBatchProcessorService<CreateManyUsersCommand>, CommandBatchProcessorService<CreateManyUsersCommand>>();
 
         return services;
     }

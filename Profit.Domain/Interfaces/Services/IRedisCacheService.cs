@@ -30,9 +30,17 @@ public interface IRedisCacheService
     void Remove(string key);
 
     /// <summary>
-    /// Removes all keys from the current database.
+    /// Removes all keys from the current data
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
     bool Exists(string key);
+
+    /// <summary>
+    /// Get all records with a specified prefix
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="prefix"></param>
+    /// <returns></returns>
+    Task<IEnumerable<T>> GetAllKeys<T>(string prefix);
 }

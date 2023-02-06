@@ -2,8 +2,8 @@
 
 public sealed class ProductDtoValidator : AbstractValidator<ProductDTO>
 {
-	public ProductDtoValidator()
-	{
+    public ProductDtoValidator()
+    {
         RuleFor(x => x.Id)
             .Must(x => !x.Equals(default))
             .WithMessage(x => $"{nameof(x.Id)} is required");

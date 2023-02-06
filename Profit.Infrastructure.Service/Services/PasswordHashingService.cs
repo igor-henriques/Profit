@@ -10,8 +10,8 @@ public sealed class PasswordHashingService : IPasswordHashingService
         var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
 
         return hashedPassword;
-    }        
-    
+    }
+
     public bool VerifyPassword(string hashedPassword, string providedPassword)
     {
         ArgumentValidator.ThrowIfNullOrEmpty(hashedPassword, nameof(hashedPassword));

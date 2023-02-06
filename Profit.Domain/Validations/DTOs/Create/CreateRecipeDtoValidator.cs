@@ -17,7 +17,7 @@ public sealed class CreateRecipeDtoValidator : AbstractValidator<CreateRecipeDTO
         RuleFor(x => x.TotalCost)
             .GreaterThan(0)
             .WithMessage(x => $"{nameof(x.TotalCost)} must be greater than 0");
-        
+
         RuleFor(x => x.IngredientRecipeRelations)
             .NotNull()
             .Must(collection => collection?.Count > 0)

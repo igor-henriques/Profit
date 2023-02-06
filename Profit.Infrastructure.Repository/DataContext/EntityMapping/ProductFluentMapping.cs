@@ -6,6 +6,7 @@ public sealed class ProductFluentMapping : IEntityTypeConfiguration<Product>
     {
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Id).ValueGeneratedOnAdd();
+        builder.Property(p => p.TotalPrice).IsRequired().HasPrecision(18, 2);
         builder.Property(p => p.Name).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthName);
         builder.Property(p => p.ImageThumbnailUrl).HasMaxLength(Constants.FieldsDefinitions.MaxLengthImageThumbnail);
         builder.Property(p => p.Description).HasMaxLength(Constants.FieldsDefinitions.MaxLengthDescriptions);

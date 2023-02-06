@@ -2,5 +2,5 @@
 
 public sealed record CreateManyIngredientsCommand : BaseCommand, IRequest<IEnumerable<Guid>>
 {
-    public IEnumerable<CreateRecipeDTO> Ingredients { get; init; }
+    public IEnumerable<CreateIngredientDTO> Ingredients { get; init; }
 }

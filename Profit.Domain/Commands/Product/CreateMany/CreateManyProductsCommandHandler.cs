@@ -23,7 +23,7 @@ public sealed class CreateManyProductsCommandHandler :
 
     public async ValueTask DisposeAsync()
     {
-        await base.ProcessBatchAsync();
+        await ProcessBatchAsync();
     }
 
     public async Task<IEnumerable<Guid>> Handle(CreateManyProductsCommand request, CancellationToken cancellationToken)
@@ -51,8 +51,8 @@ public sealed class CreateManyProductsCommandHandler :
             throw new ValidationException(string.Join("\n", errors));
         }
 
-        base.EnqueueCommandForStoraging(request);
-        await _unitOfWork.SaveAsync(cancellationToken);
+        EnqueueCommandForStoraging(request);
+        await _unitOfWork.Commit(cancellationToken);
         return response;
     }
 }

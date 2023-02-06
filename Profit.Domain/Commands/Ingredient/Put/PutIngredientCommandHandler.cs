@@ -23,17 +23,17 @@ public sealed class PutIngredientCommandHandler :
 
     public async ValueTask DisposeAsync()
     {
-        await base.ProcessBatchAsync();
+        await ProcessBatchAsync();
     }
 
     public async Task<Unit> Handle(PutIngredientCommand request, CancellationToken cancellationToken)
     {
         await _validator.ValidateAndThrowAsync(request.Ingredient, cancellationToken);
-        base.EnqueueCommandForStoraging(request);
+        EnqueueCommandForStoraging(request);
         var mappedIngredient = _mapper.Map<Entities.Ingredient>(request.Ingredient);
         _unitOfWork.IngredientRepository.Update(mappedIngredient);
 
-        if (await _unitOfWork.SaveAsync(cancellationToken) is 0)
+        if (await _unitOfWork.Commit(cancellationToken) is 0)
             throw new EntityNotFoundException(request.Ingredient.Id, nameof(Entities.Ingredient));
 
         return Unit.Value;

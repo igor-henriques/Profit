@@ -23,18 +23,18 @@ public sealed class CreateProductCommandHandler :
 
     public async ValueTask DisposeAsync()
     {
-        await base.ProcessBatchAsync();
+        await ProcessBatchAsync();
     }
 
     public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         await _validator.ValidateAndThrowAsync(request.Product, cancellationToken);
-        base.EnqueueCommandForStoraging(request);
+        EnqueueCommandForStoraging(request);
 
         var ingredient = _mapper.Map<Entities.Product>(request.Product);
 
         await _unitOfWork.ProductRepository.Add(ingredient, cancellationToken);
-        await _unitOfWork.SaveAsync(cancellationToken);
+        await _unitOfWork.Commit(cancellationToken);
 
         return ingredient.Id;
     }

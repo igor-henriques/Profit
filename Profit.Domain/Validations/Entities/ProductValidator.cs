@@ -2,8 +2,8 @@
 
 public sealed class ProductValidator : AbstractValidator<Product>
 {
-	public ProductValidator()
-	{
+    public ProductValidator()
+    {
         RuleFor(x => x.Id)
             .Must(x => !x.Equals(default))
             .WithMessage(x => $"{nameof(x.Id)} is required");

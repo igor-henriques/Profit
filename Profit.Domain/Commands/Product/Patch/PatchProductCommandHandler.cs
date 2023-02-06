@@ -22,13 +22,13 @@ public sealed class PatchProductCommandHandler :
     }
     public async ValueTask DisposeAsync()
     {
-        await base.ProcessBatchAsync();
+        await ProcessBatchAsync();
     }
 
     public async Task<Unit> Handle(PatchProductCommand request, CancellationToken cancellationToken)
     {
         await _validator.ValidateAndThrowAsync(request.Product, cancellationToken);
-        base.EnqueueCommandForStoraging(request);
+        EnqueueCommandForStoraging(request);
 
         var product = await _unitOfWork.ProductRepository.GetUniqueAsync(request.Product.Id, cancellationToken);
         if (product is null)
@@ -38,7 +38,7 @@ public sealed class PatchProductCommandHandler :
 
         product.Update(_mapper.Map<Entities.Product>(request.Product));
 
-        if (await _unitOfWork.SaveAsync(cancellationToken) is 0)
+        if (await _unitOfWork.Commit(cancellationToken) is 0)
             throw new EntityNotFoundException(request.Product.Id, nameof(Entities.Product));
 
         return Unit.Value;

@@ -17,11 +17,11 @@ public sealed class CreateProductDtoValidator : AbstractValidator<CreateProductD
         RuleFor(x => x.ImageThumbnailUrl)
             .MaximumLength(Constants.FieldsDefinitions.MaxLengthImageThumbnail)
             .WithMessage($"Maximum length is {Constants.FieldsDefinitions.MaxLengthImageThumbnail} characters");
-        
+
         RuleFor(x => x.TotalPrice)
             .GreaterThan(0)
             .WithMessage(x => $"{nameof(x.TotalPrice)} must be greater than 0");
-        
+
         RuleFor(x => x.RecipeId)
             .Must(id => !id.Equals(default))
             .WithMessage(x => $"{nameof(x.RecipeId)} is required");

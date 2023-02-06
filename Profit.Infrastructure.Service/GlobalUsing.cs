@@ -7,7 +7,6 @@ global using Newtonsoft.Json;
 global using Profit.Core.Shared;
 global using Profit.Domain.Commands.Base;
 global using Profit.Domain.Interfaces.Services;
-global using Profit.Domain.Models;
 global using StackExchange.Redis;
 global using System.Collections.Concurrent;
 global using System.IdentityModel.Tokens.Jwt;

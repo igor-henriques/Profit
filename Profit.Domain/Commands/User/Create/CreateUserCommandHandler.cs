@@ -1,4 +1,4 @@
-﻿namespace Profit.Domain.Commands.User;
+﻿namespace Profit.Domain.Commands.User.Create;
 
 public sealed class CreateUserCommandHandler :
     BaseCommandHandler<CreateUserCommand>,
@@ -25,7 +25,7 @@ public sealed class CreateUserCommandHandler :
 
     public async ValueTask DisposeAsync()
     {
-        await base.ProcessBatchAsync();
+        await ProcessBatchAsync();
     }
 
     public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -42,7 +42,7 @@ public sealed class CreateUserCommandHandler :
         });
 
         await _unitOfWork.UserRepository.Add(user, cancellationToken);
-        await _unitOfWork.SaveAsync(cancellationToken);
+        await _unitOfWork.Commit(cancellationToken);
         return user.Id;
     }
 }

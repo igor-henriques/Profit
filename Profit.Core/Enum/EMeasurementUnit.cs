@@ -7,4 +7,5 @@ public enum EMeasurementUnit : byte
     Kilogram = 2,
     Milliliter = 3,
     Liter = 4,
+    Unit = 5
 }

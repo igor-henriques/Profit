@@ -15,8 +15,8 @@ public sealed class GetManyIngredientsQueryHandler : IRequestHandler<GetManyIngr
 
     public async Task<IEnumerable<IngredientDTO>> Handle(GetManyIngredientsQuery request, CancellationToken cancellationToken)
     {
-        var ingredient = await _ingredientRepository.GetManyAsync(cancellationToken);
-        var ingredientDto = ingredient.Select(_mapper.Map<IngredientDTO>);
-        return ingredientDto;
+        var ingredients = await _ingredientRepository.GetManyAsync(cancellationToken);
+        var ingredientsDto = ingredients.Select(_mapper.Map<IngredientDTO>);
+        return ingredientsDto;
     }
 }

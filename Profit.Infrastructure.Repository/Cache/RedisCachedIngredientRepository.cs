@@ -4,29 +4,32 @@ internal sealed class RedisCachedIngredientRepository : IIngredientRepository
 {
     private readonly IRedisCacheService _cacheService;
     private readonly IngredientRepository _ingredientRepository;
+    private const string REDIS_INGREDIENT_PREFIX = "profit:ingredient:";
+    private readonly long _cacheExpirationInSeconds;
 
     public RedisCachedIngredientRepository(
         ProfitDbContext context,
         ILogger<UnitOfWork> logger,
-        IRedisCacheService cacheService)
+        IRedisCacheService cacheService,
+        IConfiguration configuration)
     {
         this._ingredientRepository = new IngredientRepository(context, logger);
         this._cacheService = cacheService;
+        this._cacheExpirationInSeconds = configuration.GetValue<long>("CacheSecondsDuration");
+    }
+
+    private static string GetRedisKey(Guid id)
+    {
+        return $"{REDIS_INGREDIENT_PREFIX}{id}";
     }
 
     public async ValueTask Add(Ingredient entity, CancellationToken cancellationToken = default)
     {
-        await _cacheService.SetAsync(entity.Id.ToString(), entity, TimeSpan.FromHours(1)); 
         await _ingredientRepository.Add(entity, cancellationToken);
     }
 
-    public async Task BulkAdd(IEnumerable<Ingredient> ingredients)
+    public void BulkAdd(IEnumerable<Ingredient> ingredients)
     {
-        foreach (var ingredient in ingredients)
-        {
-            await _cacheService.SetAsync(ingredient.Id.ToString(), ingredient, TimeSpan.FromHours(1));
-        }
-
         _ingredientRepository.BulkAdd(ingredients);
     }
 
@@ -43,43 +46,41 @@ internal sealed class RedisCachedIngredientRepository : IIngredientRepository
 
     public async ValueTask<bool> Exists(Ingredient entity, CancellationToken cancellationToken = default)
     {
-        var existsOnCache = _cacheService.Exists(entity.Id.ToString());
-
-        if (!existsOnCache)
-        {
-            return await _ingredientRepository.Exists(entity, cancellationToken);
-        }            
-
-        return existsOnCache;
+        return await _ingredientRepository.Exists(entity, cancellationToken); ;
     }
 
-    public ValueTask<IEnumerable<Ingredient>> GetManyAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IEnumerable<Ingredient>> GetManyAsync(CancellationToken cancellationToken = default)
     {
-        return _ingredientRepository.GetManyAsync(cancellationToken);
+        var response = await _cacheService.GetAllKeys<Ingredient>(REDIS_INGREDIENT_PREFIX);
+
+        if (!response.Any())
+        {
+            response = await _ingredientRepository.GetManyAsync(cancellationToken);
+
+            foreach (var item in response)
+            {
+                await _cacheService.SetAsync(GetRedisKey(item.Id), item, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
+            }
+        }
+
+        return response;
     }
 
     public async ValueTask<Ingredient> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var ingredient = await _cacheService.GetAsync<Ingredient>(id.ToString());
+        var ingredient = await _cacheService.GetAsync<Ingredient>(GetRedisKey(id));
 
         if (ingredient is null)
         {
             ingredient = await _ingredientRepository.GetUniqueAsync(id, cancellationToken);
-            await _cacheService.SetAsync(id.ToString(), ingredient, TimeSpan.FromHours(1));
+            await _cacheService.SetAsync(GetRedisKey(id), ingredient, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
         }
 
         return ingredient;
     }
 
-    public async ValueTask Update(Ingredient entity)
+    public void Update(Ingredient entity)
     {
-        var ingredient = await _cacheService.GetAsync<Ingredient>(entity.Id.ToString());
-
-        if (ingredient is not null)
-        {
-            await _cacheService.SetAsync(ingredient.Id.ToString(), entity, TimeSpan.FromHours(1));
-        }
-
-        await _ingredientRepository.Update(entity);
+        _ingredientRepository.Update(entity);
     }
 }

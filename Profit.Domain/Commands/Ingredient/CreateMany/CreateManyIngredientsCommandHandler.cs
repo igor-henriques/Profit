@@ -7,12 +7,12 @@ public sealed class CreateManyIngredientsCommandHandler :
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IValidator<CreateRecipeDTO> _validator;
+    private readonly IValidator<CreateIngredientDTO> _validator;
 
     public CreateManyIngredientsCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper,
-        IValidator<CreateRecipeDTO> validator,
+        IValidator<CreateIngredientDTO> validator,
         ICommandBatchProcessorService<CreateManyIngredientsCommand> commandBatchProcessor,
         IConfiguration configuration) : base(commandBatchProcessor, configuration)
     {
@@ -23,7 +23,7 @@ public sealed class CreateManyIngredientsCommandHandler :
 
     public async ValueTask DisposeAsync()
     {
-        await base.ProcessBatchAsync();
+        await ProcessBatchAsync();
     }
 
     public async Task<IEnumerable<Guid>> Handle(CreateManyIngredientsCommand request, CancellationToken cancellationToken)
@@ -51,8 +51,8 @@ public sealed class CreateManyIngredientsCommandHandler :
             throw new ValidationException(string.Join("\n", errors));
         }
 
-        base.EnqueueCommandForStoraging(request);
-        await _unitOfWork.SaveAsync(cancellationToken);
+        EnqueueCommandForStoraging(request);
+        await _unitOfWork.Commit(cancellationToken);
         return response;
     }
 }

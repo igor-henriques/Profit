@@ -1,12 +1,12 @@
 ﻿namespace Profit.Domain.Entities;
 
-public sealed record Ingredient : Entity
+public sealed record Ingredient : Entity<Ingredient>
 {
     public string Name { get; private set; }
     public decimal Price { get; private set; }
     public EMeasurementUnit MeasurementUnitType { get; private set; }
     public decimal Quantity { get; private set; }
-    public decimal UnitPrice { get => Price / Quantity; }
+    public decimal UnitPrice { get => Price is 0 ? 0 : Price / Quantity; }
     public string ImageThumbnailUrl { get; private set; }
     public string Description { get; private set; }
     public ICollection<IngredientRecipeRelation> IngredientRecipeRelations { get; init; }
@@ -27,13 +27,12 @@ public sealed record Ingredient : Entity
     }
 
     public Ingredient() { }
-        
+
     public override void Validate()
     {
-        ArgumentValidator.ThrowIfNullOrEmpty(Name);
-        ArgumentValidator.ThrowIfNegative(Price);
-        ArgumentValidator.ThrowIfZero(Quantity);
-        ArgumentValidator.ThrowIfNullOrEmpty(ImageThumbnailUrl);
+        ArgumentValidator.ThrowIfNullOrEmpty(Name, nameof(Name));
+        ArgumentValidator.ThrowIfNegative(Price, nameof(Price));
+        ArgumentValidator.ThrowIfZero(Quantity, nameof(Quantity));        
     }
 
     /// <summary>
@@ -43,13 +42,14 @@ public sealed record Ingredient : Entity
     /// </summary>
     /// <param name="ingredient"></param>
     /// <returns></returns>
-    public Ingredient Update(Ingredient ingredient)
+    public override Ingredient Update(Ingredient ingredient)
     {
         UpdateName(ingredient.Name);
         UpdatePrice(ingredient.Price);
         UpdateMeasurementUnitType(ingredient.MeasurementUnitType);
         UpdateQuantity(ingredient.Quantity);
         UpdateImageThumbnailUrl(ingredient.ImageThumbnailUrl);
+        UpdateDescription(ingredient.Description);
 
         return this;
     }
@@ -88,6 +88,16 @@ public sealed record Ingredient : Entity
         if (Price != price)
         {
             this.Price = price;
+        }
+
+        return this;
+    }
+
+    public Ingredient UpdateDescription(string description)
+    {
+        if (Description != description)
+        {
+            this.Description = description;
         }
 
         return this;

@@ -37,6 +37,7 @@ try
 
 	app.ConfigureIngredientEndpoints();
 	app.ConfigureProductEndpoints();
+	app.ConfigureRecipeEndpoints();
 	app.ConfigureUserEndpoints();
 
 	app.Run();

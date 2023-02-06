@@ -22,14 +22,14 @@ public sealed class PatchIngredientCommandHandler :
     }
     public async ValueTask DisposeAsync()
     {
-        await base.ProcessBatchAsync();
+        await ProcessBatchAsync();
     }
 
     public async Task<Unit> Handle(PatchIngredientCommand request, CancellationToken cancellationToken)
     {
         await _validator.ValidateAndThrowAsync(request.Ingredient, cancellationToken);
 
-        base.EnqueueCommandForStoraging(request);
+        EnqueueCommandForStoraging(request);
 
         var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.Ingredient.Id, cancellationToken);
         if (ingredient is null)
@@ -39,7 +39,7 @@ public sealed class PatchIngredientCommandHandler :
 
         ingredient.Update(_mapper.Map<Entities.Ingredient>(request.Ingredient));
 
-        if (await _unitOfWork.SaveAsync(cancellationToken) is 0)
+        if (await _unitOfWork.Commit(cancellationToken) is 0)
             throw new EntityNotFoundException(request.Ingredient.Id, nameof(Entities.Ingredient));
 
         return Unit.Value;

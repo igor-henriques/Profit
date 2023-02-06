@@ -2,8 +2,8 @@
 
 public sealed class RecipeDtoValidator : AbstractValidator<RecipeDTO>
 {
-	public RecipeDtoValidator()
-	{
+    public RecipeDtoValidator()
+    {
         RuleFor(x => x.Id)
             .Must(x => !x.Equals(default))
             .WithMessage(x => $"{nameof(x.Id)} is required");

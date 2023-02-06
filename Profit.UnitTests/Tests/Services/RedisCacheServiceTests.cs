@@ -1,5 +1,4 @@
-﻿using Profit.Domain.Interfaces.Services;
-using Profit.Infrastructure.Service.Services;
+﻿using Profit.Infrastructure.Service.Services;
 
 namespace Profit.UnitTests.Tests.Services;
 

@@ -4,29 +4,32 @@ internal sealed class RedisCachedProductRepository : IProductRepository
 {
     private readonly IRedisCacheService _cacheService;
     private readonly ProductRepository _productRepository;
+    private const string REDIS_PRODUCT_PREFIX = "profit:product:";
+    private readonly long _cacheExpirationInSeconds;
 
     public RedisCachedProductRepository(
         ProfitDbContext context,
         ILogger<UnitOfWork> logger,
-        IRedisCacheService cacheService)
+        IRedisCacheService cacheService,
+        IConfiguration configuration)
     {
         this._productRepository = new ProductRepository(context, logger);
         this._cacheService = cacheService;
+        this._cacheExpirationInSeconds = configuration.GetValue<long>("CacheSecondsDuration");
+    }
+
+    private static string GetRedisKey(Guid id)
+    {
+        return $"{REDIS_PRODUCT_PREFIX}{id}";
     }
 
     public async ValueTask Add(Product entity, CancellationToken cancellationToken = default)
-    {
-        await _cacheService.SetAsync(entity.Id.ToString(), entity, TimeSpan.FromHours(1));
+    {        
         await _productRepository.Add(entity, cancellationToken);
     }
 
-    public async Task BulkAdd(IEnumerable<Product> ingredients)
+    public void BulkAdd(IEnumerable<Product> ingredients)
     {
-        foreach (var ingredient in ingredients)
-        {
-            await _cacheService.SetAsync(ingredient.Id.ToString(), ingredient, TimeSpan.FromHours(1));
-        }
-
         _productRepository.BulkAdd(ingredients);
     }
 
@@ -53,33 +56,38 @@ internal sealed class RedisCachedProductRepository : IProductRepository
         return existsOnCache;
     }
 
-    public ValueTask<IEnumerable<Product>> GetManyAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IEnumerable<Product>> GetManyAsync(CancellationToken cancellationToken = default)
     {
-        return _productRepository.GetManyAsync(cancellationToken);
+        var response = await _cacheService.GetAllKeys<Product>(REDIS_PRODUCT_PREFIX);
+
+        if (!response.Any())
+        {
+            response = await _productRepository.GetManyAsync(cancellationToken);
+
+            foreach (var item in response)
+            {
+                await _cacheService.SetAsync(GetRedisKey(item.Id), item, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
+            }
+        }
+
+        return response;
     }
 
     public async ValueTask<Product> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var product = await _cacheService.GetAsync<Product>(id.ToString());
+        var product = await _cacheService.GetAsync<Product>(GetRedisKey(id));
 
         if (product is null)
         {
             product = await _productRepository.GetUniqueAsync(id, cancellationToken);
-            await _cacheService.SetAsync(id.ToString(), product, TimeSpan.FromHours(1));
+            await _cacheService.SetAsync(GetRedisKey(id), product, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
         }
 
         return product;
     }
 
-    public async ValueTask Update(Product entity)
+    public void Update(Product entity)
     {
-        var product = await _cacheService.GetAsync<Product>(entity.Id.ToString());
-
-        if (product is not null)
-        {
-            await _cacheService.SetAsync(product.Id.ToString(), entity, TimeSpan.FromHours(1));
-        }
-
-        await _productRepository.Update(entity);
+        _productRepository.Update(entity);
     }
 }

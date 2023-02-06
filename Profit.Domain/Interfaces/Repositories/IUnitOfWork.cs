@@ -27,12 +27,12 @@ public interface IUnitOfWork
     IRecipeRepository RecipeRepository { get; }
 
     /// <summary>
-    /// Save all changes in the transaction
+    /// Commit all changes in the transaction
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <exception cref="Core.Exceptions.DbUpdateException"></exception>
     /// <exception cref="Core.Exceptions.DbUpdateConcurrencyException"></exception>
     /// <exception cref="OperationCanceledException"></exception>
     /// <returns>Returns the change count</returns>
-    ValueTask<int> SaveAsync(CancellationToken cancellationToken = default);
+    ValueTask<int> Commit(CancellationToken cancellationToken = default);
 }

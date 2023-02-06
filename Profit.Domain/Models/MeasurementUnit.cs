@@ -45,13 +45,13 @@ public sealed record MeasurementUnit
         ArgumentValidator.ThrowIfNegative(quantity, nameof(quantity));
         return new MeasurementUnit(measurementUnitType, quantity);
     }
-    
+
     public static MeasurementUnit CreateFromIngredient(Ingredient ingredient)
     {
         ArgumentValidator.ThrowIfNullOrDefault(ingredient, nameof(ingredient));
         return new MeasurementUnit(ingredient.MeasurementUnitType, ingredient.Quantity);
-    }  
-    
+    }
+
     public static MeasurementUnit CreateFromIngredientRecipeRelation(IngredientRecipeRelation ingredientRecipeRelation)
     {
         ArgumentValidator.ThrowIfNullOrDefault(ingredientRecipeRelation, nameof(ingredientRecipeRelation));

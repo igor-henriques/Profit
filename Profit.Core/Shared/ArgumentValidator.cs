@@ -18,6 +18,14 @@ public static class ArgumentValidator
         }
     }
 
+    public static void ThrowIfZeroOrNegative<T>(T argument, string paramName = null) where T : INumber<T>
+    {
+        if (argument <= T.Zero)
+        {
+            throw new System.ArgumentException($"{paramName ?? "Argument"} cannot be zero or negative");
+        }
+    }
+
     public static void ThrowIfZero<T>(T argument, string paramName = null) where T : INumber<T>
     {
         if (argument == T.Zero)

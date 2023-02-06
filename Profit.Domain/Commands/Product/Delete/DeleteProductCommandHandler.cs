@@ -17,18 +17,18 @@ public sealed class DeleteProductCommandHandler :
 
     public async ValueTask DisposeAsync()
     {
-        await base.ProcessBatchAsync();
+        await ProcessBatchAsync();
     }
 
     public async Task<Unit> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        base.EnqueueCommandForStoraging(request);
+        EnqueueCommandForStoraging(request);
 
-        var ingredient = await _unitOfWork.ProductRepository.GetUniqueAsync(request.ProductId, cancellationToken);
-        _unitOfWork.ProductRepository.Delete(ingredient);
+        var product = await _unitOfWork.ProductRepository.GetUniqueAsync(request.ProductId, cancellationToken);
+        _unitOfWork.ProductRepository.Delete(product);
 
-        if (await _unitOfWork.SaveAsync(cancellationToken) is 0)
-            throw new EntityNotFoundException(request.ProductId, nameof(Entities.Ingredient));
+        if (await _unitOfWork.Commit(cancellationToken) is 0)
+            throw new EntityNotFoundException(request.ProductId, nameof(Entities.Product));
 
         return Unit.Value;
     }

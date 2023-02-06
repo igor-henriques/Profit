@@ -2,8 +2,8 @@
 
 public sealed class RecipeValidator : AbstractValidator<Recipe>
 {
-	public RecipeValidator()
-	{
+    public RecipeValidator()
+    {
         RuleFor(x => x.Id)
             .Must(x => !x.Equals(default))
             .WithMessage(x => $"{nameof(x.Id)} is required");

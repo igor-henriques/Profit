@@ -16,6 +16,10 @@ public static class ConfigureValidators
         services.AddSingleton<IValidator<RecipeDTO>, RecipeDtoValidator>();
         services.AddSingleton<IValidator<CreateRecipeDTO>, CreateRecipeDtoValidator>();
 
+        services.AddSingleton<IValidator<User>, UserValidator>();
+        services.AddSingleton<IValidator<UserDTO>, UserDtoValidator>();
+        services.AddSingleton<IValidator<CreateUserDTO>, CreateUserDtoValidator>();
+
         return services;
     }
 }
