@@ -1,29 +1,16 @@
 ﻿namespace Profit.Domain.Commands.Product.CreateMany;
 
-public sealed class CreateManyProductsCommandHandler :
-    BaseCommandHandler<CreateManyProductsCommand>,
-    IRequestHandler<CreateManyProductsCommand, IEnumerable<Guid>>,
-    IAsyncDisposable
+public sealed class CreateManyProductsCommandHandler : IRequestHandler<CreateManyProductsCommand, IEnumerable<Guid>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IValidator<CreateProductDTO> _validator;
 
     public CreateManyProductsCommandHandler(
         IUnitOfWork unitOfWork,
-        IMapper mapper,
-        IValidator<CreateProductDTO> validator,
-        ICommandBatchProcessorService<CreateManyProductsCommand> commandBatchProcessor,
-        IConfiguration configuration) : base(commandBatchProcessor, configuration)
+        IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _validator = validator;
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await ProcessBatchAsync();
     }
 
     public async Task<IEnumerable<Guid>> Handle(CreateManyProductsCommand request, CancellationToken cancellationToken)
@@ -33,14 +20,6 @@ public sealed class CreateManyProductsCommandHandler :
 
         foreach (var productDto in request.Products)
         {
-            var validation = await _validator.ValidateAsync(productDto, cancellationToken);
-
-            if (!validation.IsValid)
-            {
-                errors.AddRange(validation.Errors.Select(x => x.ErrorMessage));
-                continue;
-            }
-
             var ingredientEntity = _mapper.Map<Entities.Product>(productDto);
             await _unitOfWork.ProductRepository.Add(ingredientEntity, cancellationToken);
             response.Add(ingredientEntity.Id);
@@ -51,7 +30,6 @@ public sealed class CreateManyProductsCommandHandler :
             throw new ValidationException(string.Join("\n", errors));
         }
 
-        EnqueueCommandForStoraging(request);
         await _unitOfWork.Commit(cancellationToken);
         return response;
     }

@@ -5,6 +5,8 @@ public sealed class RecipeProfile : Profile
     public RecipeProfile()
     {
         CreateMap<RecipeDTO, Recipe>().ReverseMap();
-        CreateMap<CreateRecipeDTO, Recipe>();
+        CreateMap<CreateRecipeCommand, Recipe>();
+        CreateMap<PatchRecipeCommand, Recipe>();
+        CreateMap<PutRecipeCommand, Recipe>();
     }
 }

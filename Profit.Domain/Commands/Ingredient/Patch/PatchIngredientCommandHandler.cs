@@ -1,46 +1,30 @@
 ﻿namespace Profit.Domain.Commands.Ingredient.Patch;
 
-public sealed class PatchIngredientCommandHandler :
-    BaseCommandHandler<PatchIngredientCommand>,
-    IRequestHandler<PatchIngredientCommand, Unit>,
-    IAsyncDisposable
+public sealed class PatchIngredientCommandHandler : IRequestHandler<PatchIngredientCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IValidator<IngredientDTO> _validator;
 
     public PatchIngredientCommandHandler(
         IUnitOfWork unitOfWork,
-        IMapper mapper,
-        IValidator<IngredientDTO> validator,
-        ICommandBatchProcessorService<PatchIngredientCommand> commandBatchProcessor,
-        IConfiguration configuration) : base(commandBatchProcessor, configuration)
+        IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _validator = validator;
-    }
-    public async ValueTask DisposeAsync()
-    {
-        await ProcessBatchAsync();
     }
 
     public async Task<Unit> Handle(PatchIngredientCommand request, CancellationToken cancellationToken)
     {
-        await _validator.ValidateAndThrowAsync(request.Ingredient, cancellationToken);
-
-        EnqueueCommandForStoraging(request);
-
-        var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.Ingredient.Id, cancellationToken);
+        var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.Id, cancellationToken);
         if (ingredient is null)
         {
-            throw new EntityNotFoundException(request.Ingredient.Id, nameof(Entities.Ingredient));
+            throw new EntityNotFoundException(request.Id, nameof(Entities.Ingredient));
         }
 
-        ingredient.Update(_mapper.Map<Entities.Ingredient>(request.Ingredient));
+        ingredient.Update(_mapper.Map<Entities.Ingredient>(request));
 
         if (await _unitOfWork.Commit(cancellationToken) is 0)
-            throw new EntityNotFoundException(request.Ingredient.Id, nameof(Entities.Ingredient));
+            throw new EntityNotFoundException(request.Id, nameof(Entities.Ingredient));
 
         return Unit.Value;
     }

@@ -4,18 +4,16 @@ try
 
 	Log.Logger = new LoggerConfiguration()
 		.ReadFrom.Configuration(builder.Configuration)
-		  .Enrich.FromLogContext()
-		  .WriteTo.Console()
 		  .CreateLogger();
 
 	builder.Services.AddEndpointsApiExplorer();
 	builder.Services.AddSwaggerGen();
 	builder.Services.AddDbContext<ProfitDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProfitSqlServer")));
+	builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AuthSqlServer")));
 	builder.Services.AddMapperProfiles();
 	builder.Services.AddValidators();
 	builder.Services.AddCacheServices(builder.Configuration.GetConnectionString("Redis"));
 	builder.Services.AddCqrsHandlers();
-	builder.Services.AddCommandBatchProcessors();
 	builder.Services.AddGeneralDependencies();
 	builder.Services.AddCustomAuthentication(builder.Configuration.GetValue<string>("JwtAuthentication:Key"));
 	builder.Services.AddCustomAuthorization();
@@ -34,6 +32,7 @@ try
 	app.UseCors(c => c.AllowAnyOrigin());
 	app.UseHttpsRedirection();
 	app.UseMiddleware<ExceptionHandlerMiddleware>();
+	app.UseMiddleware<TenantResolverMiddleware>();
 
 	app.ConfigureIngredientEndpoints();
 	app.ConfigureProductEndpoints();

@@ -32,7 +32,7 @@ public sealed record Ingredient : Entity<Ingredient>
     {
         ArgumentValidator.ThrowIfNullOrEmpty(Name, nameof(Name));
         ArgumentValidator.ThrowIfNegative(Price, nameof(Price));
-        ArgumentValidator.ThrowIfZero(Quantity, nameof(Quantity));        
+        ArgumentValidator.ThrowIfZero(Quantity, nameof(Quantity));
     }
 
     /// <summary>

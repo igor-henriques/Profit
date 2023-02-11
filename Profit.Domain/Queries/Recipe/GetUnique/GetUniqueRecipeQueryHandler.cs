@@ -4,14 +4,11 @@ public sealed class GetUniqueRecipeQueryHandler : IRequestHandler<GetUniqueRecip
 {
     private readonly IRecipeRepository _recipeRepository;
     private readonly IMapper _mapper;
-    private readonly IRedisCacheService _cache;
 
     public GetUniqueRecipeQueryHandler(
         IUnitOfWork unitOfWork,
-        IMapper mapper,
-        IRedisCacheService cache)
+        IMapper mapper)
     {
-        _cache = cache;
         _recipeRepository = unitOfWork.RecipeRepository;
         _mapper = mapper;
     }

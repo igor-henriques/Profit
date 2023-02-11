@@ -1,29 +1,16 @@
 ﻿namespace Profit.Domain.Commands.Product.Delete;
 
-public sealed class DeleteProductCommandHandler :
-    BaseCommandHandler<DeleteProductCommand>,
-    IRequestHandler<DeleteProductCommand, Unit>,
-    IAsyncDisposable
+public sealed class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public DeleteProductCommandHandler(
-        IUnitOfWork unitOfWork,
-        ICommandBatchProcessorService<DeleteProductCommand> commandBatchProcessor,
-        IConfiguration configuration) : base(commandBatchProcessor, configuration)
+    public DeleteProductCommandHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        await ProcessBatchAsync();
-    }
-
     public async Task<Unit> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        EnqueueCommandForStoraging(request);
-
         var product = await _unitOfWork.ProductRepository.GetUniqueAsync(request.ProductId, cancellationToken);
         _unitOfWork.ProductRepository.Delete(product);
 

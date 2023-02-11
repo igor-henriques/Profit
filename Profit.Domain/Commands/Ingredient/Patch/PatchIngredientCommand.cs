@@ -1,6 +1,29 @@
 ﻿namespace Profit.Domain.Commands.Ingredient.Patch;
 
-public sealed record PatchIngredientCommand : BaseCommand, IRequest<Unit>
+public sealed record PatchIngredientCommand : IRequest<Unit>
 {
-    public IngredientDTO Ingredient { get; init; }
+    public Guid Id { get; init; }
+    public string Name { get; init; }
+    public decimal Price { get; init; }
+    public decimal Quantity { get; init; }
+    public EMeasurementUnit MeasurementUnitType { get; init; }
+    public string ImageThumbnailUrl { get; init; }
+    public string Description { get; init; }
+
+    public PatchIngredientCommand(Guid id,
+                         string name,
+                         decimal price,
+                         decimal quantity,
+                         string imageThumbnailUrl,
+                         EMeasurementUnit measurementUnitType,
+                         string description)
+    {
+        Id = id;
+        Name = name;
+        Price = price;
+        Quantity = quantity;
+        ImageThumbnailUrl = imageThumbnailUrl;
+        MeasurementUnitType = measurementUnitType;
+        Description = description;
+    }
 }

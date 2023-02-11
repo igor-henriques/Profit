@@ -35,4 +35,26 @@ public interface IUnitOfWork
     /// <exception cref="OperationCanceledException"></exception>
     /// <returns>Returns the change count</returns>
     ValueTask<int> Commit(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Creates a schema for the database
+    /// </summary>
+    /// <param name="tenantId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task CreateSchema(Guid tenantId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Set the schema for the database
+    /// </summary>
+    /// <param name="tenantId"></param>
+    void SetTenant(Guid tenantId);
+
+    /// <summary>
+    /// Drops a schema from the database
+    /// </summary>
+    /// <param name="tenantId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task DropSchema(Guid tenantId, CancellationToken cancellationToken = default);
 }

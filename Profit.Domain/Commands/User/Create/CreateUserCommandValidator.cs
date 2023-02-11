@@ -1,8 +1,8 @@
-﻿namespace Profit.Domain.Validations.DTOs.Create;
+﻿namespace Profit.Domain.Commands.User.Create;
 
-public sealed partial class CreateUserDtoValidator : AbstractValidator<CreateUserDTO>
+public sealed class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {
-    public CreateUserDtoValidator()
+    public CreateUserCommandValidator()
     {
         RuleFor(x => x.Username)
             .NotEmpty()
@@ -25,16 +25,15 @@ public sealed partial class CreateUserDtoValidator : AbstractValidator<CreateUse
             .WithMessage(x => $"{nameof(x.Password)} maximum length is {Constants.FieldsDefinitions.MaxLengthHashedPassword / 2} characters");
     }
 
-    public bool CheckForPasswordRequiredCharacters(string password)
+    public static bool CheckForPasswordRequiredCharacters(string password)
     {
         var hasNumber = password.Any(char.IsDigit);
         var hasUppercase = password.Any(char.IsUpper);
         var hasLowercase = password.Any(char.IsLower);
-        var hasSpecialCharacter = CheckSpecialCharacterRegex().IsMatch(password);
+        var hasSpecialCharacter = CheckSpecialCharacterRegex.IsMatch(password);
 
         return hasNumber && hasUppercase && hasLowercase && hasSpecialCharacter;
     }
 
-    [GeneratedRegex("[!@#$%^&*(),.?\":{ }|<>]")]
-    private static partial Regex CheckSpecialCharacterRegex();
+    private static Regex CheckSpecialCharacterRegex => new("[!@#$%^&*(),.?\":{ }|<>]");
 }

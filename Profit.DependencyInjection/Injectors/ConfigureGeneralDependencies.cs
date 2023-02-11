@@ -8,6 +8,7 @@ public static class ConfigureGeneralDependencies
         services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
         services.AddSingleton<IStorageQueueService, StorageQueueService>();
         services.AddSingleton<IPasswordHashingService, PasswordHashingService>();
+        services.AddSingleton(typeof(ICommandBatchProcessorService<>), typeof(CommandBatchProcessorService<>));
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
         return services;
     }

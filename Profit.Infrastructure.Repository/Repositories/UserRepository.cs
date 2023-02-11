@@ -1,15 +1,20 @@
 ﻿namespace Profit.Infrastructure.Repository.Repositories;
 
-internal sealed class UserRepository : BaseRepository<User>, IUserRepository
+internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUserRepository
 {
-    private readonly ProfitDbContext _context;
+    private readonly AuthDbContext _context;
     private readonly ILogger<UnitOfWork> _logger;
 
     public UserRepository(
-        ProfitDbContext context,
+        AuthDbContext context,
         ILogger<UnitOfWork> logger) : base(context, logger)
     {
         _context = context;
         _logger = logger;
+    }
+
+    public override void BulkAdd(IEnumerable<User> entities)
+    {
+        throw new NotImplementedException($"{nameof(BulkAdd)} is not implemented for {nameof(User)}");
     }
 }

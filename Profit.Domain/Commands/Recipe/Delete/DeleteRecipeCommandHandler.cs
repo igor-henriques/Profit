@@ -1,29 +1,16 @@
 ﻿namespace Profit.Domain.Commands.Recipe.Delete;
 
-public sealed class DeleteRecipeCommandHandler :
-    BaseCommandHandler<DeleteRecipeCommand>,
-    IRequestHandler<DeleteRecipeCommand, Unit>,
-    IAsyncDisposable
+public sealed class DeleteRecipeCommandHandler : IRequestHandler<DeleteRecipeCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public DeleteRecipeCommandHandler(
-        IUnitOfWork unitOfWork,
-        ICommandBatchProcessorService<DeleteRecipeCommand> commandBatchProcessor,
-        IConfiguration configuration) : base(commandBatchProcessor, configuration)
+    public DeleteRecipeCommandHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        await ProcessBatchAsync();
-    }
-
     public async Task<Unit> Handle(DeleteRecipeCommand request, CancellationToken cancellationToken)
     {
-        EnqueueCommandForStoraging(request);
-
         var recipe = await _unitOfWork.RecipeRepository.GetUniqueAsync(request.RecipeId, cancellationToken);
         _unitOfWork.RecipeRepository.Delete(recipe);
 

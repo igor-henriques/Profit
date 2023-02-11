@@ -1,22 +1,28 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace Profit.UnitTests.Fixtures.Data;
+﻿namespace Profit.UnitTests.Fixtures.Data;
 
 internal static class RepositoryFixtures
 {
     internal static IUnitOfWork GetUnitOfWork(
-        Mock<ILogger<UnitOfWork>> loggerMock, 
+        Mock<ILogger<UnitOfWork>> loggerMock,
         Mock<IRedisCacheService> redisMock,
         Mock<IConfiguration> configuration)
     {
         // Arrange        
-        var options = new DbContextOptionsBuilder<ProfitDbContext>()
+        var profitOptions = new DbContextOptionsBuilder<ProfitDbContext>()
             .EnableSensitiveDataLogging()
             .UseInMemoryDatabase(databaseName: "Ingredients")
             .Options;
 
-        var context = new ProfitDbContext(options);
-        var unitOfWork = new UnitOfWork(context, loggerMock.Object, redisMock.Object, configuration.Object);
+        var profitContext = new ProfitDbContext(profitOptions);
+
+        var authOptions = new DbContextOptionsBuilder<AuthDbContext>()
+            .EnableSensitiveDataLogging()
+            .UseInMemoryDatabase(databaseName: "Users")
+            .Options;
+
+        var authContext = new AuthDbContext(authOptions);
+
+        var unitOfWork = new UnitOfWork(profitContext, loggerMock.Object, redisMock.Object, configuration.Object, authContext);
 
         return unitOfWork;
     }

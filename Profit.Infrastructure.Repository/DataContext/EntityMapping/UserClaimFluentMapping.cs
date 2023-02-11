@@ -4,15 +4,15 @@ public sealed class UserClaimFluentMapping : IEntityTypeConfiguration<UserClaim>
 {
     public void Configure(EntityTypeBuilder<UserClaim> builder)
     {
-        builder.HasKey(x => x.Guid);
-        builder.Property(x => x.Guid).ValueGeneratedOnAdd();
-        builder.Property(x => x.ClaimType).IsRequired();
-        builder.Property(x => x.ClaimValue).IsRequired();
-        builder.Property(x => x.UserId).IsRequired();
+        builder.HasKey(uc => uc.Guid);
+        builder.Property(uc => uc.Guid).ValueGeneratedOnAdd();
+        builder.Property(uc => uc.ClaimType).IsRequired();
+        builder.Property(uc => uc.ClaimValue).IsRequired();
+        builder.Property(uc => uc.UserId).IsRequired();
 
-        builder.HasOne(x => x.User)
-            .WithMany(x => x.UserClaims)
-            .HasForeignKey(x => x.UserId)
+        builder.HasOne(uc => uc.User)
+            .WithMany(uc => uc.UserClaims)
+            .HasForeignKey(uc => uc.UserId)
             .IsRequired();
     }
 }

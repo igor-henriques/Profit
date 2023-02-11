@@ -24,13 +24,13 @@ internal sealed class RedisCachedProductRepository : IProductRepository
     }
 
     public async ValueTask Add(Product entity, CancellationToken cancellationToken = default)
-    {        
+    {
         await _productRepository.Add(entity, cancellationToken);
     }
 
-    public void BulkAdd(IEnumerable<Product> ingredients)
+    public void BulkAdd(IEnumerable<Product> products)
     {
-        _productRepository.BulkAdd(ingredients);
+        _productRepository.BulkAdd(products);
     }
 
     public async ValueTask<int> CountAsync(CancellationToken cancellationToken = default)

@@ -1,6 +1,6 @@
 ﻿namespace Profit.Infrastructure.Repository.Repositories;
 
-internal sealed class RecipeRepository : BaseRepository<Recipe>, IRecipeRepository
+internal sealed class RecipeRepository : BaseRepository<Recipe, ProfitDbContext>, IRecipeRepository
 {
     private readonly ProfitDbContext _context;
     private readonly ILogger<UnitOfWork> logger;

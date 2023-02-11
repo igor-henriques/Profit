@@ -1,8 +1,8 @@
-﻿namespace Profit.Domain.Validations.DTOs.Create;
+﻿namespace Profit.Domain.Commands.Ingredient.Create;
 
-public sealed class CreateIngredientDtoValidator : AbstractValidator<CreateIngredientDTO>
+public sealed class CreateIngredientCommandValidator : AbstractValidator<CreateIngredientCommand>
 {
-    public CreateIngredientDtoValidator()
+    public CreateIngredientCommandValidator()
     {
         RuleFor(x => x.Name)
             .NotEmpty()

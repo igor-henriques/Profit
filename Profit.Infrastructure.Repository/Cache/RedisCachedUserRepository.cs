@@ -8,7 +8,7 @@ internal sealed class RedisCachedUserRepository : IUserRepository
     private readonly long _cacheExpirationInSeconds;
 
     public RedisCachedUserRepository(
-        ProfitDbContext context,
+        AuthDbContext context,
         ILogger<UnitOfWork> logger,
         IRedisCacheService cacheService,
         IConfiguration configuration)
@@ -23,7 +23,7 @@ internal sealed class RedisCachedUserRepository : IUserRepository
     }
 
     public async ValueTask Add(User entity, CancellationToken cancellationToken = default)
-    {        
+    {
         await _userRepository.Add(entity, cancellationToken);
     }
 

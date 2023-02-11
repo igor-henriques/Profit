@@ -14,6 +14,14 @@ public interface IStorageQueueService
     Task EnqueueAsync<T>(T message) where T : class;
 
     /// <summary>
+    /// Enqueues a Command into a storage queue.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="message"></param>
+    /// <returns></returns>
+    Task EnqueueValueTypeAsync<T>(T message) where T : struct;
+
+    /// <summary>
     /// Enqueues a batch of Commands into a storage queue.
     /// </summary>
     /// <typeparam name="T"></typeparam>

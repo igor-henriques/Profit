@@ -1,28 +1,16 @@
 ﻿namespace Profit.Domain.Commands.Ingredient.Delete;
 
-public sealed class DeleteIngredientCommandHandler :
-    BaseCommandHandler<DeleteIngredientCommand>,
-    IRequestHandler<DeleteIngredientCommand, Unit>,
-    IAsyncDisposable
+public sealed class DeleteIngredientCommandHandler : IRequestHandler<DeleteIngredientCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public DeleteIngredientCommandHandler(
-        IUnitOfWork unitOfWork,
-        ICommandBatchProcessorService<DeleteIngredientCommand> commandBatchProcessor,
-        IConfiguration configuration) : base(commandBatchProcessor, configuration)
+    public DeleteIngredientCommandHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        await ProcessBatchAsync();
-    }
-
     public async Task<Unit> Handle(DeleteIngredientCommand request, CancellationToken cancellationToken)
     {
-        EnqueueCommandForStoraging(request);
         var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.IngredientId, cancellationToken);
         _unitOfWork.IngredientRepository.Delete(ingredient);
 

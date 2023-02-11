@@ -17,7 +17,7 @@ public sealed record Recipe : Entity<Recipe>
     {
         UpdateName(recipe.Name);
         UpdateTotalCost(recipe.TotalCost);
-        UpdateDescription(recipe.Description);        
+        UpdateDescription(recipe.Description);
 
         return this;
     }

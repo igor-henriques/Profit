@@ -4,16 +4,17 @@ public sealed class UserFluentMapping : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id).ValueGeneratedOnAdd();
-        builder.Property(x => x.Username).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthUsername);
-        builder.Property(x => x.HashedPassword).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthHashedPassword);
-        builder.Property(x => x.Email).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthEmail);
-        builder.Property(x => x.IsEmailVerified).IsRequired();
+        builder.HasKey(u => u.Id);        
+        builder.Property(u => u.Id).ValueGeneratedOnAdd();
+        builder.Property(u => u.TenantId).IsRequired().HasMaxLength(36);
+        builder.Property(u => u.Username).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthUsername);
+        builder.Property(u => u.HashedPassword).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthHashedPassword);
+        builder.Property(u => u.Email).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthEmail);
+        builder.Property(u => u.IsEmailVerified).IsRequired();
 
-        builder.HasMany(x => x.UserClaims)
-            .WithOne(x => x.User)
-            .HasForeignKey(x => x.UserId)
+        builder.HasMany(u => u.UserClaims)
+            .WithOne(u => u.User)
+            .HasForeignKey(u => u.UserId)
             .IsRequired();
     }
 }

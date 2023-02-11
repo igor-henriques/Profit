@@ -1,6 +1,9 @@
 ﻿namespace Profit.Domain.Commands.User.Patch;
 
-public sealed record PatchUserCommand : BaseCommand, IRequest<Unit>
+public sealed record PatchUserCommand : IRequest<Unit>
 {
-    public UserDTO User { get; init; }
+    public Guid Id { get; init; }
+    public string Username { get; init; }
+    public string Email { get; init; }
+    public string Password { get; init; }
 }

@@ -33,15 +33,6 @@ public static class UserEndpoints
             return Results.CreatedAtRoute(Routes.User.GetUnique, new { guid = response }, response);
         }).WithTags(SwaggerTags.USER);
 
-        app.MapPost(Routes.User.BulkCreate, async (
-            [FromBody] CreateManyUsersCommand command,
-            [FromServices] IMediator mediator,
-            CancellationToken cancellationToken) =>
-        {
-            var response = await mediator.Send(command, cancellationToken);
-            return response.Any() ? Results.Ok(response) : Results.NoContent();
-        }).WithTags(SwaggerTags.USER);
-
         app.MapPatch(Routes.User.Patch, async (
             [FromBody] PatchUserCommand patchUserCommand,
             [FromServices] IMediator mediator,

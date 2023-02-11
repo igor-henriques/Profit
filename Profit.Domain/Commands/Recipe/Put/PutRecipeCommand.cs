@@ -1,6 +1,10 @@
 ﻿namespace Profit.Domain.Commands.Recipe.Put;
 
-public sealed record PutRecipeCommand : BaseCommand, IRequest<Unit>
+public sealed record PutRecipeCommand : IRequest<Unit>
 {
-    public RecipeDTO Recipe { get; init; }
+    public Guid Id { get; init; }
+    public string Name { get; init; }
+    public decimal TotalCost { get; init; }
+    public string Description { get; init; }
+    public ICollection<IngredientRecipeRelation> IngredientRecipeRelations { get; init; }
 }

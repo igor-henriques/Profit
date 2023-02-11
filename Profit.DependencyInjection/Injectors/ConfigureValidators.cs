@@ -6,19 +6,19 @@ public static class ConfigureValidators
     {
         services.AddSingleton<IValidator<Ingredient>, IngredientValidator>();
         services.AddSingleton<IValidator<IngredientDTO>, IngredientDtoValidator>();
-        services.AddSingleton<IValidator<CreateIngredientDTO>, CreateIngredientDtoValidator>();
+        services.AddSingleton<IValidator<CreateIngredientCommand>, CreateIngredientCommandValidator>();
 
         services.AddSingleton<IValidator<Product>, ProductValidator>();
         services.AddSingleton<IValidator<ProductDTO>, ProductDtoValidator>();
-        services.AddSingleton<IValidator<CreateProductDTO>, CreateProductDtoValidator>();
+        services.AddSingleton<IValidator<CreateProductCommand>, CreateProductCommandValidator>();
 
         services.AddSingleton<IValidator<Recipe>, RecipeValidator>();
         services.AddSingleton<IValidator<RecipeDTO>, RecipeDtoValidator>();
-        services.AddSingleton<IValidator<CreateRecipeDTO>, CreateRecipeDtoValidator>();
+        services.AddSingleton<IValidator<CreateRecipeCommand>, CreateRecipeCommandValidator>();
 
         services.AddSingleton<IValidator<User>, UserValidator>();
         services.AddSingleton<IValidator<UserDTO>, UserDtoValidator>();
-        services.AddSingleton<IValidator<CreateUserDTO>, CreateUserDtoValidator>();
+        services.AddSingleton<IValidator<CreateUserCommand>, CreateUserCommandValidator>();
 
         return services;
     }

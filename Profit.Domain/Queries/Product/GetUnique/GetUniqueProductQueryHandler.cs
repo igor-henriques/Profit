@@ -1,22 +1,19 @@
 ﻿namespace Profit.Domain.Queries.Product.GetUnique;
 
-public sealed class GetUniqueProductQueryHandler : IRequestHandler<GetUniqueProductQuery, CreateProductDTO>
+public sealed class GetUniqueProductQueryHandler : IRequestHandler<GetUniqueProductQuery, ProductDTO>
 {
     private readonly IIngredientRepository _ingredientRepository;
     private readonly IMapper _mapper;
-    private readonly IRedisCacheService _cache;
 
     public GetUniqueProductQueryHandler(
         IUnitOfWork unitOfWork,
-        IMapper mapper,
-        IRedisCacheService cache)
+        IMapper mapper)
     {
-        _cache = cache;
         _ingredientRepository = unitOfWork.IngredientRepository;
         _mapper = mapper;
     }
 
-    public async Task<CreateProductDTO> Handle(GetUniqueProductQuery request, CancellationToken cancellationToken)
+    public async Task<ProductDTO> Handle(GetUniqueProductQuery request, CancellationToken cancellationToken)
     {
         ArgumentValidator.ThrowIfNullOrDefault(request.Id, nameof(request.Id));
 
@@ -26,7 +23,7 @@ public sealed class GetUniqueProductQueryHandler : IRequestHandler<GetUniqueProd
             throw new EntityNotFoundException(request.Id, nameof(Entities.Product));
         }
 
-        var ingredientDto = _mapper.Map<CreateProductDTO>(ingredient);
+        var ingredientDto = _mapper.Map<ProductDTO>(ingredient);
         return ingredientDto;
     }
 }

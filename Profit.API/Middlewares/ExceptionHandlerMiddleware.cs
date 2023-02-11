@@ -1,19 +1,19 @@
 ﻿namespace Profit.API.Middlewares;
 
-public class ExceptionHandlerMiddleware
+public sealed class ExceptionHandlerMiddleware
 {
-    private readonly RequestDelegate next;
+    private readonly RequestDelegate _next;
 
     public ExceptionHandlerMiddleware(RequestDelegate next)
     {
-        this.next = next;
+        this._next = next;
     }
 
     public async Task Invoke(HttpContext context)
     {
         try
         {
-            await next(context);
+            await _next(context);
         }
         catch (InvalidOperationException ex)
         {
@@ -31,7 +31,15 @@ public class ExceptionHandlerMiddleware
         {
             await Handle(context, ex);
         }
+        catch (ArgumentNullException ex)
+        {
+            await Handle(context, ex);
+        }
         catch (ArgumentException ex)
+        {
+            await Handle(context, ex);
+        }   
+        catch(InvalidTenantException ex)
         {
             await Handle(context, ex);
         }
@@ -53,9 +61,38 @@ public class ExceptionHandlerMiddleware
             });
 
         await context.Response.WriteAsync(errorMessage);
+    } 
+    private static async Task Handle(HttpContext context, InvalidTenantException ex)
+    {
+        context.Response.StatusCode = 400;
+        context.Response.ContentType = "application/json";
+
+        var errorMessage = JsonSerializer.Serialize(
+            new
+            {
+                Messages = ex.Message,
+                context.Response.StatusCode
+            });
+
+        await context.Response.WriteAsync(errorMessage);
     }
 
     private static async Task Handle(HttpContext context, ArgumentException ex)
+    {
+        context.Response.StatusCode = 400;
+        context.Response.ContentType = "application/json";
+
+        var errorMessage = JsonSerializer.Serialize(
+            new
+            {
+                Messages = ex.Message,
+                context.Response.StatusCode
+            });
+
+        await context.Response.WriteAsync(errorMessage);
+    }
+
+    private static async Task Handle(HttpContext context, ArgumentNullException ex)
     {
         context.Response.StatusCode = 400;
         context.Response.ContentType = "application/json";

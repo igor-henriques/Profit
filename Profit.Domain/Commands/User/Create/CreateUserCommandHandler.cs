@@ -1,48 +1,36 @@
 ﻿namespace Profit.Domain.Commands.User.Create;
 
-public sealed class CreateUserCommandHandler :
-    BaseCommandHandler<CreateUserCommand>,
-    IRequestHandler<CreateUserCommand, Guid>,
-    IAsyncDisposable
+public sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IPasswordHashingService _passwordHashingService;
-    private readonly IValidator<CreateUserDTO> _validator;
 
-    public CreateUserCommandHandler(ICommandBatchProcessorService<CreateUserCommand> commandBatchProcessor,
-                                    IConfiguration configuration,
-                                    IUnitOfWork unitOfWork,
+    public CreateUserCommandHandler(IUnitOfWork unitOfWork,
                                     IMapper mapper,
-                                    IPasswordHashingService passwordHashingService,
-                                    IValidator<CreateUserDTO> validator) : base(commandBatchProcessor, configuration)
+                                    IPasswordHashingService passwordHashingService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _passwordHashingService = passwordHashingService;
-        _validator = validator;
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await ProcessBatchAsync();
     }
 
     public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        await _validator.ValidateAndThrowAsync(request.UserDTO, cancellationToken);
-
-        EnqueueCommandForStoraging(request);
-
-        var user = _mapper.Map<Entities.User>(new CreateUserDTO
+        var user = _mapper.Map<Entities.User>(new CreateUserCommand
         {
-            Email = request.UserDTO.Email,
-            Password = _passwordHashingService.HashPassword(request.UserDTO.Password),
-            Username = request.UserDTO.Username,
+            Email = request.Email,
+            Password = _passwordHashingService.HashPassword(request.Password),
+            Username = request.Username,
         });
 
         await _unitOfWork.UserRepository.Add(user, cancellationToken);
-        await _unitOfWork.Commit(cancellationToken);
+        
+        if (await _unitOfWork.Commit(cancellationToken) > 0)
+        {
+            await _unitOfWork.CreateSchema(user.TenantId, cancellationToken);
+        }        
+        
         return user.Id;
     }
 }

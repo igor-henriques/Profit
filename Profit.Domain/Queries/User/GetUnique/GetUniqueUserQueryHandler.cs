@@ -4,14 +4,11 @@ public sealed class GetUniqueUserQueryHandler : IRequestHandler<GetUniqueUserQue
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
-    private readonly IRedisCacheService _cache;
 
     public GetUniqueUserQueryHandler(
         IUnitOfWork unitOfWork,
-        IMapper mapper,
-        IRedisCacheService cache)
+        IMapper mapper)
     {
-        _cache = cache;
         _userRepository = unitOfWork.UserRepository;
         _mapper = mapper;
     }

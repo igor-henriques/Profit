@@ -1,5 +1,6 @@
 ﻿global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.Logging;
 global using Profit.Core.Shared;
 global using Profit.Domain.Entities;
@@ -12,6 +13,6 @@ global using Profit.Infrastructure.Repository.Cache;
 global using Profit.Infrastructure.Repository.DataContext;
 global using Profit.Infrastructure.Repository.Repositories;
 global using Profit.Infrastructure.Repository.Repositories.Base;
-global using System.Reflection;
 global using System.Transactions;
-global using Microsoft.Extensions.Configuration;
+global using Profit.Infrastructure.Repository.DataContext.EntityMapping;
+global using System.Data;

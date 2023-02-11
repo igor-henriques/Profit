@@ -11,7 +11,7 @@ public sealed class RedisCacheService : IRedisCacheService
         ContractResolver = new PrivateResolver(),
         ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
     };
-    
+
     public RedisCacheService(string connectionString)
     {
         ArgumentValidator.ThrowIfNullOrEmpty(connectionString);
@@ -33,11 +33,11 @@ public sealed class RedisCacheService : IRedisCacheService
     {
         var response = new List<T>();
         var database = _redis.GetDatabase();
-                                       
+
         foreach (var key in _redisServer.Keys(pattern: $"{prefix}*").ToArray())
         {
             var keyValue = await database.StringGetAsync(key);
-            
+
             if (keyValue.HasValue)
             {
                 response.Add(JsonConvert.DeserializeObject<T>(keyValue.ToString(), _jsonSettings));

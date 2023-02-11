@@ -1,6 +1,9 @@
 ﻿namespace Profit.Domain.Commands.User.Put;
 
-public sealed record PutUserCommand : BaseCommand, IRequest<Unit>
+public sealed record PutUserCommand : IRequest<Unit>
 {
-    public UserDTO User { get; init; }
+    public Guid Id { get; init; }
+    public string Username { get; init; }
+    public string Email { get; init; }
+    public string Password { get; init; }
 }

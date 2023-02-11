@@ -2,7 +2,8 @@
 
 public sealed class ProfitDbContext : DbContext
 {
-    public ProfitDbContext(DbContextOptions<ProfitDbContext> options) : base(options) { }
+    private string _tenantId;
+    public ProfitDbContext(DbContextOptions<ProfitDbContext> options) : base(options) {}
     public ProfitDbContext() { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -12,13 +13,19 @@ public sealed class ProfitDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        modelBuilder.ApplyConfiguration(new IngredientFluentMapping());
+        modelBuilder.ApplyConfiguration(new IngredientRecipeRelationFluentMapping());
+        modelBuilder.ApplyConfiguration(new ProductFluentMapping());
+        modelBuilder.ApplyConfiguration(new RecipeFluentMapping());
+
+        modelBuilder.HasDefaultSchema(_tenantId);
+        
         base.OnModelCreating(modelBuilder);
     }
+    
+    public void SetTenant(Guid tenantId) => _tenantId = tenantId.ToString();
 
-    public DbSet<Ingredient> Ingredients { get; init; }
-    public DbSet<User> Users { get; init; }
-    public DbSet<UserClaim> Claims { get; init; }
+    public DbSet<Ingredient> Ingredients { get; init; }    
     public DbSet<IngredientRecipeRelation> IngredientRecipeRelations { get; init; }
     public DbSet<Recipe> Recipes { get; init; }
     public DbSet<Product> Products { get; init; }

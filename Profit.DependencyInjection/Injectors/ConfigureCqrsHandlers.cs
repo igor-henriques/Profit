@@ -27,12 +27,14 @@ public static class ConfigureCqrsHandlers
             typeof(GetManyProductsQueryHandler).Assembly,
             typeof(GetUniqueProductQueryHandler).Assembly,
             typeof(CreateUserCommandHandler).Assembly,
-            typeof(CreateManyUsersCommandHandler).Assembly,
             typeof(DeleteUserCommandHandler).Assembly,
             typeof(PatchUserCommandHandler).Assembly,
             typeof(PutUserCommandHandler).Assembly,
             typeof(GetManyUsersQueryHandler).Assembly,
-            typeof(GetUniqueUserQueryHandler).Assembly);
+            typeof(GetUniqueUserQueryHandler).Assembly)
+            .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
+            .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>))
+            .AddScoped(typeof(IPipelineBehavior<,>), typeof(CommitBehaviour<,>));
 
         return services;
     }

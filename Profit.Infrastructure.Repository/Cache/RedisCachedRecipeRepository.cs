@@ -23,7 +23,7 @@ internal sealed class RedisCachedRecipeRepository : IRecipeRepository
     }
 
     public async ValueTask Add(Recipe entity, CancellationToken cancellationToken = default)
-    {        
+    {
         await _recipeRepository.Add(entity, cancellationToken);
     }
 

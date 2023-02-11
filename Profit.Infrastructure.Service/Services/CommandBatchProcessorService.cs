@@ -7,7 +7,6 @@
 /// </summary>
 /// <typeparam name="T">A Command type</typeparam>
 public sealed class CommandBatchProcessorService<T> : ICommandBatchProcessorService<T>
-    where T : BaseCommand
 {
     private readonly IStorageQueueService _queueService;
     private readonly ILogger<CommandBatchProcessorService<T>> _logger;
@@ -25,7 +24,7 @@ public sealed class CommandBatchProcessorService<T> : ICommandBatchProcessorServ
     public void Enqueue(T command)
     {
         _bag.Add(command);
-        _logger.LogInformation($"Command ID {command.CommandId} was enqueued");
+        _logger.LogInformation("Command {command} was enqueued", command);
     }
 
     public int GetBatchSize() => _bag.Count;

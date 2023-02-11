@@ -24,10 +24,10 @@ public sealed class IngredientDtoValidator : AbstractValidator<IngredientDTO>
 
         RuleFor(x => x.ImageThumbnailUrl)
             .MaximumLength(Constants.FieldsDefinitions.MaxLengthImageThumbnail)
-            .WithMessage(x => $"{x.ImageThumbnailUrl} maximum length is {Constants.FieldsDefinitions.MaxLengthImageThumbnail} characters");
+            .WithMessage(x => $"{nameof(x.ImageThumbnailUrl)} maximum length is {Constants.FieldsDefinitions.MaxLengthImageThumbnail} characters");
 
         RuleFor(x => x.Description)
             .MaximumLength(Constants.FieldsDefinitions.MaxLengthDescriptions)
-            .WithMessage(x => $"{x.Description} maximum length is {Constants.FieldsDefinitions.MaxLengthDescriptions} characters");
+            .WithMessage(x => $"{nameof(x.Description)} maximum length is {Constants.FieldsDefinitions.MaxLengthDescriptions} characters");
     }
 }

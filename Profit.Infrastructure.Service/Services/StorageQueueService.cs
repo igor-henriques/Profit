@@ -16,6 +16,11 @@ public sealed class StorageQueueService : IStorageQueueService
         return Task.FromResult(_queueClient.SendMessageAsync(JsonConvert.SerializeObject(message)));
     }
 
+    public Task EnqueueValueTypeAsync<T>(T message) where T : struct
+    {
+        return Task.FromResult(_queueClient.SendMessageAsync(JsonConvert.SerializeObject(message)));
+    }
+
     public Task EnqueueAsync<T>(IEnumerable<T> messages) where T : class
     {
         foreach (var item in messages)

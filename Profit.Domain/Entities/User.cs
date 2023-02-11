@@ -2,6 +2,7 @@
 
 public sealed record User : Entity<User>
 {
+    public Guid TenantId { get; init; }
     public string Username { get; private set; }
     public string HashedPassword { get; private set; }
     public string Email { get; private set; }
@@ -25,7 +26,7 @@ public sealed record User : Entity<User>
         ArgumentValidator.ThrowIfNullOrEmpty(Email, nameof(Email));
         ArgumentValidator.ThrowIfNullOrEmpty(HashedPassword, nameof(HashedPassword));
     }
-             
+
     public User UpdateUsername(string username)
     {
         ArgumentValidator.ThrowIfNullOrEmpty(username, nameof(username));
@@ -36,34 +37,34 @@ public sealed record User : Entity<User>
         }
 
         return this;
-    } 
-             
+    }
+
     public User UpdateEmail(string email)
     {
         ArgumentValidator.ThrowIfNullOrEmpty(email, nameof(email));
-                    
+
         if (Email != email)
         {
             this.Email = email;
         }
 
         return this;
-    } 
-             
+    }
+
     public User UpdateHashedPassword(string hashedPassword)
     {
         ArgumentValidator.ThrowIfNullOrEmpty(hashedPassword, nameof(hashedPassword));
-                    
+
         if (HashedPassword != hashedPassword)
         {
             this.HashedPassword = hashedPassword;
         }
 
         return this;
-    }  
-             
+    }
+
     public User UpdateIsEmailVerified(bool isEmailVerified)
-    {         
+    {
         if (IsEmailVerified != isEmailVerified)
         {
             this.IsEmailVerified = isEmailVerified;

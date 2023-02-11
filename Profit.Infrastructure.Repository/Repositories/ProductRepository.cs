@@ -1,6 +1,6 @@
 ﻿namespace Profit.Infrastructure.Repository.Repositories;
 
-internal sealed class ProductRepository : BaseRepository<Product>, IProductRepository
+internal sealed class ProductRepository : BaseRepository<Product, ProfitDbContext>, IProductRepository
 {
     private readonly ProfitDbContext _context;
     private readonly ILogger<UnitOfWork> logger;

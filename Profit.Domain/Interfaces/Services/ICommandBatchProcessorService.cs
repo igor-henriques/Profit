@@ -6,7 +6,7 @@
 /// When processed, this batch is sent to a storage queue for observability.
 /// </summary>
 /// <typeparam name="T">A Command type</typeparam>
-public interface ICommandBatchProcessorService<T> where T : BaseCommand
+public interface ICommandBatchProcessorService<T>
 {
     /// <summary>
     /// Enqueues a command to the batch

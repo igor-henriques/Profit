@@ -16,7 +16,7 @@ public sealed class RecipeDtoValidator : AbstractValidator<RecipeDTO>
 
         RuleFor(x => x.Description)
             .MaximumLength(Constants.FieldsDefinitions.MaxLengthDescriptions)
-            .WithMessage(x => $"{x.Description} maximum length is {Constants.FieldsDefinitions.MaxLengthDescriptions} characters");
+            .WithMessage(x => $"{nameof(x.Description)} maximum length is {Constants.FieldsDefinitions.MaxLengthDescriptions} characters");
 
         RuleFor(x => x.TotalCost)
             .GreaterThan(0)

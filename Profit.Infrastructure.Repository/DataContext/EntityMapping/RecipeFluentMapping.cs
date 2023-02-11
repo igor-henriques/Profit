@@ -4,11 +4,11 @@ public sealed class RecipeFluentMapping : IEntityTypeConfiguration<Recipe>
 {
     public void Configure(EntityTypeBuilder<Recipe> builder)
     {
-        builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.HasKey(r => r.Id);
+        builder.Property(r => r.Id).ValueGeneratedOnAdd();
 
-        builder.Property(x => x.Name).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthName);
-        builder.Property(x => x.TotalCost).IsRequired().HasPrecision(18, 2);
-        builder.Property(x => x.Description).HasMaxLength(Constants.FieldsDefinitions.MaxLengthDescriptions);
+        builder.Property(r => r.Name).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthName);
+        builder.Property(r => r.TotalCost).IsRequired().HasPrecision(18, 2);
+        builder.Property(r => r.Description).HasMaxLength(Constants.FieldsDefinitions.MaxLengthDescriptions);
     }
 }

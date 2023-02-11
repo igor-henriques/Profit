@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Commands.Ingredient.CreateMany;
 
-public sealed record CreateManyIngredientsCommand : BaseCommand, IRequest<IEnumerable<Guid>>
+public sealed record CreateManyIngredientsCommand : IRequest<IEnumerable<Guid>>
 {
-    public IEnumerable<CreateIngredientDTO> Ingredients { get; init; }
+    public IEnumerable<CreateIngredientCommand> Ingredients { get; init; }
 }
