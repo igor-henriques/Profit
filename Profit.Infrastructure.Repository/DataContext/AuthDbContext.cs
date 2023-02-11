@@ -12,8 +12,8 @@ public sealed class AuthDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new UserFluentMapping());        
-        modelBuilder.ApplyConfiguration(new UserClaimFluentMapping());        
+        modelBuilder.ApplyConfiguration(new UserFluentMapping());
+        modelBuilder.ApplyConfiguration(new UserClaimFluentMapping());
         base.OnModelCreating(modelBuilder);
     }
 

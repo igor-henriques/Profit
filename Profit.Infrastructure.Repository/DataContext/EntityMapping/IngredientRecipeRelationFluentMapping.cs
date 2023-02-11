@@ -2,9 +2,17 @@
 
 public sealed class IngredientRecipeRelationFluentMapping : IEntityTypeConfiguration<IngredientRecipeRelation>
 {
+    private readonly string _schemaName;
+
+    public IngredientRecipeRelationFluentMapping(string schemaName)
+    {
+        this._schemaName = schemaName;
+    }
+
     public void Configure(EntityTypeBuilder<IngredientRecipeRelation> builder)
     {
         builder.HasKey(i => new { i.IngredientId, i.RecipeId });
+        builder.ToTable("IngredientRecipeRelations", _schemaName);
         builder.Property(i => i.IngredientId).IsRequired();
         builder.Property(i => i.RecipeId).IsRequired();
         builder.Property(i => i.MeasurementUnit).IsRequired();

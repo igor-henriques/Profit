@@ -2,7 +2,7 @@
 
 public sealed record User : Entity<User>
 {
-    public Guid TenantId { get; init; }
+    public Guid TenantId { get; init; } = Guid.NewGuid();
     public string Username { get; private set; }
     public string HashedPassword { get; private set; }
     public string Email { get; private set; }

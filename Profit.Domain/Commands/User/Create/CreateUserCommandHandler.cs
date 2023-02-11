@@ -25,12 +25,12 @@ public sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand
         });
 
         await _unitOfWork.UserRepository.Add(user, cancellationToken);
-        
+
         if (await _unitOfWork.Commit(cancellationToken) > 0)
         {
             await _unitOfWork.CreateSchema(user.TenantId, cancellationToken);
-        }        
-        
+        }
+
         return user.Id;
     }
 }

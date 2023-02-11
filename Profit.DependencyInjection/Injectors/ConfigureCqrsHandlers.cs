@@ -33,8 +33,7 @@ public static class ConfigureCqrsHandlers
             typeof(GetManyUsersQueryHandler).Assembly,
             typeof(GetUniqueUserQueryHandler).Assembly)
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(CommitBehaviour<,>));
+            .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
         return services;
     }

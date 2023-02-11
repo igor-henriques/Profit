@@ -6,6 +6,8 @@ public static class ConfigureSwagger
     {
         services.AddSwaggerGen(c =>
         {
+            c.OperationFilter<AddHeaderOperationFilter>("TenantId", "Defines the Tenant for this request", false);
+
             c.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "Profit API",

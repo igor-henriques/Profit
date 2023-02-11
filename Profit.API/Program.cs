@@ -7,7 +7,7 @@ try
 		  .CreateLogger();
 
 	builder.Services.AddEndpointsApiExplorer();
-	builder.Services.AddSwaggerGen();
+	builder.Services.AddSwagger();
 	builder.Services.AddDbContext<ProfitDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProfitSqlServer")));
 	builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AuthSqlServer")));
 	builder.Services.AddMapperProfiles();

@@ -1,6 +1,6 @@
 ﻿namespace Profit.Infrastructure.Repository.Repositories.Base;
 
-internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TEntity> 
+internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TEntity>
     where TEntity : Entity<TEntity>
     where TDbContext : DbContext
 {

@@ -6,7 +6,7 @@ public static class ArgumentValidator
     {
         if (string.IsNullOrEmpty(argument))
         {
-            throw new System.ArgumentException($"{paramName ?? "Argument"} cannot be null or empty", paramName);
+            throw new System.ArgumentNullException($"{paramName ?? "Argument"} cannot be null or empty", paramName);
         }
     }
 
@@ -38,7 +38,7 @@ public static class ArgumentValidator
     {
         if (obj.Equals(default(T)) | obj == null)
         {
-            throw new System.ArgumentException($"{paramName ?? "Argument"} cannot be null or default");
+            throw new System.ArgumentNullException($"{paramName ?? "Argument"} cannot be null or default");
         }
     }
 }

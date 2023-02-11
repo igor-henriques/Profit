@@ -11,6 +11,8 @@ public sealed class DeleteIngredientCommandHandler : IRequestHandler<DeleteIngre
 
     public async Task<Unit> Handle(DeleteIngredientCommand request, CancellationToken cancellationToken)
     {
+        ArgumentValidator.ThrowIfNullOrDefault(request.IngredientId, nameof(request.IngredientId));
+
         var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.IngredientId, cancellationToken);
         _unitOfWork.IngredientRepository.Delete(ingredient);
 

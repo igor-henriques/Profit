@@ -11,21 +11,21 @@ public sealed class StorageQueueService : IStorageQueueService
         _queueClient = new QueueClient(connectionString, queueName);
     }
 
-    public Task EnqueueAsync<T>(T message) where T : class
+    public Task EnqueueAsync<T>(T message, CancellationToken cancellationToken) where T : class
     {
-        return Task.FromResult(_queueClient.SendMessageAsync(JsonConvert.SerializeObject(message)));
+        return Task.FromResult(_queueClient.SendMessageAsync(JsonConvert.SerializeObject(message), cancellationToken));
     }
 
-    public Task EnqueueValueTypeAsync<T>(T message) where T : struct
+    public Task EnqueueValueTypeAsync<T>(T message, CancellationToken cancellationToken) where T : struct
     {
-        return Task.FromResult(_queueClient.SendMessageAsync(JsonConvert.SerializeObject(message)));
+        return Task.FromResult(_queueClient.SendMessageAsync(JsonConvert.SerializeObject(message), cancellationToken));
     }
 
-    public Task EnqueueAsync<T>(IEnumerable<T> messages) where T : class
+    public Task EnqueueAsync<T>(IEnumerable<T> messages, CancellationToken cancellationToken) where T : class
     {
         foreach (var item in messages)
         {
-            EnqueueAsync(item);
+            EnqueueAsync(item, cancellationToken);
         }
 
         return Task.CompletedTask;

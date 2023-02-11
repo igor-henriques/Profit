@@ -3,15 +3,15 @@
 public sealed class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    private readonly IStorageQueueService _storageQueueService;
+    private readonly ICommandBatchProcessorService<RequestCommandQueryLog> _commandBatchProcessor;
     private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
 
     public LoggingBehavior(
         ILogger<LoggingBehavior<TRequest, TResponse>> logger,
-        IStorageQueueService storageQueueService)
+        ICommandBatchProcessorService<RequestCommandQueryLog> commandBatchProcessor)
     {
         _logger = logger;
-        _storageQueueService = storageQueueService;
+        _commandBatchProcessor = commandBatchProcessor;
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -33,7 +33,7 @@ public sealed class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRe
         }
         finally
         {
-            var log = new RequestCommandQueryLog<TRequest>()
+            var log = new RequestCommandQueryLog()
             {
                 RequestId = requestId,
                 Timestamp = timestamp,
@@ -42,10 +42,10 @@ public sealed class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRe
                 Message = message
             };
 
-            await _storageQueueService.EnqueueValueTypeAsync(log);
+            _commandBatchProcessor.Enqueue(log);
 
             _logger.Log(
-                string.IsNullOrEmpty(log.Message) ? LogLevel.Error : LogLevel.Information,
+                string.IsNullOrEmpty(log.Message) ? LogLevel.Information : LogLevel.Error,
                 "{log}", log);
         }
     }

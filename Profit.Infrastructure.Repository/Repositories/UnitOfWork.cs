@@ -1,4 +1,6 @@
-﻿namespace Profit.Infrastructure.Repository.Repositories;
+﻿using System.Data.Common;
+
+namespace Profit.Infrastructure.Repository.Repositories;
 
 /// <summary>
 /// Provides a mechanism for working with the repository pattern, 
@@ -11,7 +13,6 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
     private readonly ILogger<UnitOfWork> _logger;
     private readonly IRedisCacheService _cacheService;
     private readonly IConfiguration _configuration;
-    private TransactionScope _transaction;
 
     private IIngredientRepository _ingredientRepository;
     private IUserRepository _userRepository;
@@ -90,15 +91,16 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
     /// <returns></returns>
     public async ValueTask<int> Commit(CancellationToken cancellationToken = default)
     {
-        _transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         var changesCount = await _profitContext.SaveChangesAsync(cancellationToken);
-        _transaction.Complete();
-        _logger.LogInformation("{changesCount} changes were saved", changesCount);
+        changesCount += await _authContext.SaveChangesAsync(cancellationToken);
+        _logger.LogInformation("{changesCount} changes were commited", changesCount);
         return changesCount;
     }
 
     public async Task CreateSchema(Guid tenantId, CancellationToken cancellationToken = default)
     {
+        using TransactionScope transaction = new(TransactionScopeAsyncFlowOption.Enabled);
+
         var connection = _profitContext.Database.GetDbConnection();
         if (connection.State is not ConnectionState.Open)
         {
@@ -107,10 +109,35 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
 
         using var command = connection.CreateCommand();
 
-        command.CommandText = $"CREATE SCHEMA {tenantId}";
+        command.CommandText = $"CREATE SCHEMA {tenantId.Format()}";
+        _logger.LogInformation(command.CommandText);
+
         await command.ExecuteNonQueryAsync(cancellationToken);
-    }  
-                 
+
+        await RunQuery(
+            connection,
+            string.Format(GetTableCreateDefinition.GetIngredientsDefinition, tenantId.Format()),
+            cancellationToken);
+
+        await RunQuery(
+            connection,
+            string.Format(GetTableCreateDefinition.GetRecipesDefinition, tenantId.Format()),
+            cancellationToken);
+
+        await RunQuery(
+            connection,
+            string.Format(GetTableCreateDefinition.GetProductsDefinition, tenantId.Format()),
+            cancellationToken);
+
+        await RunQuery(
+            connection,
+            string.Format(GetTableCreateDefinition.GetIngredientsRecipeDefinition, tenantId.Format()),
+            cancellationToken);
+
+        await connection.CloseAsync();
+        transaction.Complete();
+    }
+
     public async Task DropSchema(Guid tenantId, CancellationToken cancellationToken = default)
     {
         var connection = _profitContext.Database.GetDbConnection();
@@ -121,18 +148,30 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
 
         using var command = connection.CreateCommand();
 
-        command.CommandText = $"DROP SCHEMA {tenantId}";
+        command.CommandText = $"DROP SCHEMA db_{CompiledRegex.CheckSpecialCharacterRegex().Replace(tenantId.ToString(), string.Empty)}";
+        _logger.LogInformation(command.CommandText);
+        await command.ExecuteNonQueryAsync(cancellationToken);
+        await connection.CloseAsync();
+    }
+
+    private async Task RunQuery(DbConnection dbConnection, string query, CancellationToken cancellationToken = default)
+    {
+        using var command = dbConnection.CreateCommand();
+        command.CommandText = query;
+        _logger.LogInformation(command.CommandText);
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
     public async ValueTask DisposeAsync()
     {
-        _transaction?.Dispose();
         await _profitContext.DisposeAsync();
     }
 
-    public void SetTenant(Guid tenantId)
+    public async Task SetTenantEnsuringCreation(Guid tenantId, CancellationToken cancellationToken = default)
     {
         _profitContext.SetTenant(tenantId);
+        var result = await _profitContext.Database.EnsureCreatedAsync(cancellationToken);
+
+        _logger.LogInformation("EnsureDatabaseCreation result: {result}", result);
     }
 }

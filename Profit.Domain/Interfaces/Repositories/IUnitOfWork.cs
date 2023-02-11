@@ -48,7 +48,7 @@ public interface IUnitOfWork
     /// Set the schema for the database
     /// </summary>
     /// <param name="tenantId"></param>
-    void SetTenant(Guid tenantId);
+    Task SetTenantEnsuringCreation(Guid tenantId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Drops a schema from the database

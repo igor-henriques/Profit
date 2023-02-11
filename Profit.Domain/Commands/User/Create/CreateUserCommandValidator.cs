@@ -30,10 +30,8 @@ public sealed class CreateUserCommandValidator : AbstractValidator<CreateUserCom
         var hasNumber = password.Any(char.IsDigit);
         var hasUppercase = password.Any(char.IsUpper);
         var hasLowercase = password.Any(char.IsLower);
-        var hasSpecialCharacter = CheckSpecialCharacterRegex.IsMatch(password);
+        var hasSpecialCharacter = CompiledRegex.CheckSpecialCharacterRegex().IsMatch(password);
 
         return hasNumber && hasUppercase && hasLowercase && hasSpecialCharacter;
     }
-
-    private static Regex CheckSpecialCharacterRegex => new("[!@#$%^&*(),.?\":{ }|<>]");
 }

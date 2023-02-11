@@ -30,7 +30,7 @@ public static class UserEndpoints
             CancellationToken cancellationToken) =>
         {
             var response = await mediator.Send(command, cancellationToken);
-            return Results.CreatedAtRoute(Routes.User.GetUnique, new { guid = response }, response);
+            return Results.Ok(response);
         }).WithTags(SwaggerTags.USER);
 
         app.MapPatch(Routes.User.Patch, async (

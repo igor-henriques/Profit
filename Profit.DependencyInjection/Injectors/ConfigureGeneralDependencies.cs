@@ -9,6 +9,7 @@ public static class ConfigureGeneralDependencies
         services.AddSingleton<IStorageQueueService, StorageQueueService>();
         services.AddSingleton<IPasswordHashingService, PasswordHashingService>();
         services.AddSingleton(typeof(ICommandBatchProcessorService<>), typeof(CommandBatchProcessorService<>));
+        services.AddHostedService<CommandBatchProcessorWorker<RequestCommandQueryLog>>();
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
         return services;
     }

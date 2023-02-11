@@ -30,7 +30,7 @@ public static class IngredientEndpoints
             CancellationToken cancellationToken) =>
         {
             var response = await mediator.Send(command, cancellationToken);
-            return Results.CreatedAtRoute(Routes.Ingredient.GetUnique, new { guid = response }, response);
+            return Results.Ok(response);
         }).WithTags(SwaggerTags.INGREDIENT);
 
         app.MapPost(Routes.Ingredient.BulkCreate, async (

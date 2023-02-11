@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace Profit.UnitTests.Tests.Repository;
+﻿namespace Profit.UnitTests.Tests.Repository;
 
 public sealed class IngredientRepositoryTests
 {

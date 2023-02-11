@@ -39,14 +39,15 @@ public static class Constants
 
         public readonly struct User
         {
-            public const string GetUnique = "api/v1/user/get";
-            public const string GetMany = "api/v1/user/get-many";
-            public const string Create = "api/v1/user/create";
-            public const string BulkCreate = "api/v1/user/bulk-create";
-            public const string Put = "api/v1/user/put";
-            public const string Patch = "api/v1/user/patch";
-            public const string Delete = "api/v1/user/delete";
-            public const string Authenticate = "api/v1/user/authenticate";
+            public const string BaseUser = "api/v1/user";
+            public const string GetUnique = $"{BaseUser}/get";
+            public const string GetMany = $"{BaseUser}/get-many";
+            public const string Create = $"{BaseUser}/create";
+            public const string BulkCreate = $"{BaseUser}/bulk-create";
+            public const string Put = $"{BaseUser}/put";
+            public const string Patch = $"{BaseUser}/patch";
+            public const string Delete = $"{BaseUser}/delete";
+            public const string Authenticate = $"{BaseUser}/authenticate";
         }
     }
 

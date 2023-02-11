@@ -11,6 +11,8 @@ public sealed class DeleteRecipeCommandHandler : IRequestHandler<DeleteRecipeCom
 
     public async Task<Unit> Handle(DeleteRecipeCommand request, CancellationToken cancellationToken)
     {
+        ArgumentValidator.ThrowIfNullOrDefault(request.RecipeId, nameof(request.RecipeId));
+
         var recipe = await _unitOfWork.RecipeRepository.GetUniqueAsync(request.RecipeId, cancellationToken);
         _unitOfWork.RecipeRepository.Delete(recipe);
 

@@ -7,7 +7,7 @@ public sealed class UserDtoValidator : AbstractValidator<UserDTO>
         RuleFor(x => x.Id)
             .Must(x => !x.Equals(default))
             .WithMessage(x => $"{nameof(x.Id)} is required");
-        
+
         RuleFor(x => x.TenantId)
             .Must(x => !x.Equals(default))
             .WithMessage(x => $"{nameof(x.TenantId)} is required");

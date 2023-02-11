@@ -29,7 +29,7 @@ public sealed class CommandBatchProcessorService<T> : ICommandBatchProcessorServ
 
     public int GetBatchSize() => _bag.Count;
 
-    public async ValueTask Process()
+    public async ValueTask Process(CancellationToken cancellationToken)
     {
         if (_bag.Count < 0)
         {
@@ -37,7 +37,7 @@ public sealed class CommandBatchProcessorService<T> : ICommandBatchProcessorServ
             return;
         }
 
-        await _queueService.EnqueueAsync(_bag);
+        await _queueService.EnqueueAsync(_bag, cancellationToken);
     }
 
     public void ClearBatchProcessor()

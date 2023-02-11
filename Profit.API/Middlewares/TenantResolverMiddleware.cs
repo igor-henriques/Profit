@@ -3,26 +3,21 @@
 public sealed class TenantResolverMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public TenantResolverMiddleware(
-        RequestDelegate next,
-        IUnitOfWork unitOfWork)
+    public TenantResolverMiddleware(RequestDelegate next)
     {
         this._next = next;
-        _unitOfWork = unitOfWork;
     }
 
-    public async Task Invoke(HttpContext context)
+    public async Task Invoke(HttpContext context, IUnitOfWork _unitOfWork)
     {
-        if (context.Request.Path.Value?.StartsWith(Routes.User.Create, StringComparison.OrdinalIgnoreCase) ?? false
-            && context.Request.Method.Equals(HttpMethods.Post, StringComparison.OrdinalIgnoreCase))
+        if (context.Request.Path.Value?.Contains(Routes.User.BaseUser, StringComparison.OrdinalIgnoreCase) ?? false)
         {
             await _next(context);
             return;
         }
-        
-        var tenant = context.Request.Headers["TenantId"];
+
+        var tenant = context.Request.Headers["TenantId"].FirstOrDefault();
 
         if (string.IsNullOrEmpty(tenant))
         {
@@ -34,7 +29,7 @@ public sealed class TenantResolverMiddleware
             throw new InvalidTenantException("TenantId header is not in the correct format");
         }
 
-        _unitOfWork.SetTenant(tenantId);
+        await _unitOfWork.SetTenantEnsuringCreation(tenantId);
         await _next(context);
     }
 }

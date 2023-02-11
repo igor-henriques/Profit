@@ -11,6 +11,8 @@ public sealed class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand
 
     public async Task<Unit> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
+        ArgumentValidator.ThrowIfNullOrDefault(request.UserId, nameof(request.UserId));
+
         var user = await _unitOfWork.UserRepository.GetUniqueAsync(request.UserId, cancellationToken);
         _unitOfWork.UserRepository.Delete(user);
 

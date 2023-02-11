@@ -24,7 +24,7 @@ public interface ICommandBatchProcessorService<T>
     /// Process the batch
     /// </summary>
     /// <returns></returns>
-    ValueTask Process();
+    ValueTask Process(CancellationToken cancellationToken);
 
     /// <summary>
     /// Clears the batch

@@ -11,7 +11,7 @@ public interface IStorageQueueService
     /// <typeparam name="T"></typeparam>
     /// <param name="message"></param>
     /// <returns></returns>
-    Task EnqueueAsync<T>(T message) where T : class;
+    Task EnqueueAsync<T>(T message, CancellationToken cancellationToken) where T : class;
 
     /// <summary>
     /// Enqueues a Command into a storage queue.
@@ -19,7 +19,7 @@ public interface IStorageQueueService
     /// <typeparam name="T"></typeparam>
     /// <param name="message"></param>
     /// <returns></returns>
-    Task EnqueueValueTypeAsync<T>(T message) where T : struct;
+    Task EnqueueValueTypeAsync<T>(T message, CancellationToken cancellationToken) where T : struct;
 
     /// <summary>
     /// Enqueues a batch of Commands into a storage queue.
@@ -27,5 +27,5 @@ public interface IStorageQueueService
     /// <typeparam name="T"></typeparam>
     /// <param name="messages"></param>
     /// <returns></returns>
-    Task EnqueueAsync<T>(IEnumerable<T> messages) where T : class;
+    Task EnqueueAsync<T>(IEnumerable<T> messages, CancellationToken cancellationToken) where T : class;
 }

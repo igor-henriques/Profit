@@ -30,7 +30,7 @@ public static class ProductEndpoints
             CancellationToken cancellationToken) =>
         {
             var response = await mediator.Send(command, cancellationToken);
-            return Results.CreatedAtRoute(Routes.Product.GetUnique, new { guid = response }, response);
+            return Results.Ok(response);
         }).WithTags(SwaggerTags.PRODUCT);
 
         app.MapPost(Routes.Product.BulkCreate, async (

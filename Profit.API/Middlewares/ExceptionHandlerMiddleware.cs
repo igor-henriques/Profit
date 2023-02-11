@@ -38,8 +38,8 @@ public sealed class ExceptionHandlerMiddleware
         catch (ArgumentException ex)
         {
             await Handle(context, ex);
-        }   
-        catch(InvalidTenantException ex)
+        }
+        catch (InvalidTenantException ex)
         {
             await Handle(context, ex);
         }
@@ -61,7 +61,7 @@ public sealed class ExceptionHandlerMiddleware
             });
 
         await context.Response.WriteAsync(errorMessage);
-    } 
+    }
     private static async Task Handle(HttpContext context, InvalidTenantException ex)
     {
         context.Response.StatusCode = 400;
