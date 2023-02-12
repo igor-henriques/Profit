@@ -18,4 +18,18 @@ public interface ITokenGeneratorService
     /// <param name="claims"></param>
     /// <returns></returns>
     JwtToken GenerateToken(IEnumerable<Claim> claims = null);
+
+    /// <summary>
+    /// Generate <see cref="Claim"/> from <see cref="UserClaim"/>
+    /// </summary>
+    /// <param name="userClaim"></param>
+    /// <returns></returns>
+    Claim GenerateClaim(UserClaim userClaim);
+
+    /// <summary>
+    /// Generate <see cref="Claim"/> from <see cref="UserClaim"/>
+    /// </summary>
+    /// <param name="userClaim"></param>
+    /// <returns></returns>
+    IEnumerable<Claim> GenerateClaim(IEnumerable<UserClaim> userClaims);
 }

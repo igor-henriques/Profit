@@ -18,7 +18,6 @@ public sealed class TenantResolverMiddleware
         }
 
         var tenant = context.Request.Headers["TenantId"].FirstOrDefault();
-
         if (string.IsNullOrEmpty(tenant))
         {
             throw new InvalidTenantException("TenantId header is required");
@@ -29,7 +28,42 @@ public sealed class TenantResolverMiddleware
             throw new InvalidTenantException("TenantId header is not in the correct format");
         }
 
+        var username = GetUsernameFromAuthorizationHeader(context);
+
+        try
+        {            
+            var user = await _unitOfWork.UserRepository.GetByUsername(username);
+            
+            if (!tenantId.Format().Equals(user.TenantId.Format()))
+            {
+                throw new InvalidTenantException("TenantId header does not match the user's tenant");
+            }
+        }
+        catch (EntityNotFoundException)
+        {
+            throw new InvalidTenantException("TenantId header does not match the user's tenant");
+        }
+
         await _unitOfWork.SetTenantEnsuringCreation(tenantId);
         await _next(context);
+    }
+
+    private static string GetUsernameFromAuthorizationHeader(HttpContext context)
+    {
+        var authorizationClaims = context.Request.Headers["Authorization"].FirstOrDefault();
+        if (string.IsNullOrEmpty(authorizationClaims))
+        {
+            throw new InvalidCredentialsException("Authentication is required");
+        }
+
+        var encodedPayload = authorizationClaims.Split(".").Skip(1).FirstOrDefault();
+        if (string.IsNullOrEmpty(encodedPayload))
+        {
+            throw new InvalidCredentialsException("Authentication is required");
+        }
+
+        var username = Helper.DecodeJwtPayload(encodedPayload)?.FirstOrDefault().Value;
+
+        return username.ToString();
     }
 }

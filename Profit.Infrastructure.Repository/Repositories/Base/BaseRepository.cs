@@ -19,7 +19,7 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
 
         if (entityExists)
         {
-            throw new InvalidOperationException("Entity already exists");
+            throw new InvalidOperationException($"{typeof(TEntity).Name} already exists");
         }
 
         _context.Set<TEntity>().Add(entity);

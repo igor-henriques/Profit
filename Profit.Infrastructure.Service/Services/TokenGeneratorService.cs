@@ -60,4 +60,14 @@ public sealed class TokenGeneratorService : ITokenGeneratorService
             ExpiresAt = expiresAt
         };
     }
+
+    public Claim GenerateClaim(UserClaim userClaim)
+    {
+        return new Claim(userClaim.ClaimType, userClaim.ClaimValue);
+    }
+
+    public IEnumerable<Claim> GenerateClaim(IEnumerable<UserClaim> userClaims)
+    {
+        return userClaims.Select(GenerateClaim);
+    }
 }

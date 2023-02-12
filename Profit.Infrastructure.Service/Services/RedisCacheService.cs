@@ -9,7 +9,8 @@ public sealed class RedisCacheService : IRedisCacheService
     private readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings()
     {
         ContractResolver = new PrivateResolver(),
-        ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
+        ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
     };
 
     public RedisCacheService(string connectionString)
@@ -50,7 +51,7 @@ public sealed class RedisCacheService : IRedisCacheService
     public async Task<bool> SetAsync<T>(string key, T value, TimeSpan expirationTime)
     {
         var database = _redis.GetDatabase();
-        return await database.StringSetAsync(key, JsonConvert.SerializeObject(value), expirationTime);
+        return await database.StringSetAsync(key, JsonConvert.SerializeObject(value, _jsonSettings), expirationTime);
     }
 
     public void Remove(string key)

@@ -13,6 +13,6 @@ public sealed class UserProfile : Profile
             .ForMember(dest => dest.HashedPassword, opt => opt.MapFrom(src => src.Password));
 
         CreateMap<PutUserCommand, User>()
-            .ForMember(dest => dest.HashedPassword, opt => opt.MapFrom(src => src.Password));
+            .ForMember(dest => dest.HashedPassword, opt => opt.MapFrom(src => src.Password));  
     }
 }

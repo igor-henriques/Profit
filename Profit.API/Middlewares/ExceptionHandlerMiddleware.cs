@@ -42,6 +42,10 @@ public sealed class ExceptionHandlerMiddleware
         catch (InvalidTenantException ex)
         {
             await Handle(context, ex);
+        } 
+        catch (InvalidCredentialsException ex)
+        {
+            await Handle(context, ex);
         }
         catch (Exception ex)
         {
@@ -64,7 +68,7 @@ public sealed class ExceptionHandlerMiddleware
     }
     private static async Task Handle(HttpContext context, InvalidTenantException ex)
     {
-        context.Response.StatusCode = 400;
+        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
         context.Response.ContentType = "application/json";
 
         var errorMessage = JsonSerializer.Serialize(
@@ -152,6 +156,21 @@ public sealed class ExceptionHandlerMiddleware
     private static async Task Handle(HttpContext context, Exception ex)
     {
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        context.Response.ContentType = "application/json";
+
+        var errorMessage = JsonSerializer.Serialize(
+            new
+            {
+                Messages = ex.Message.Split("\n"),
+                context.Response.StatusCode
+            });
+
+        await context.Response.WriteAsync(errorMessage);
+    } 
+
+    private static async Task Handle(HttpContext context, InvalidCredentialsException ex)
+    {
+        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
         context.Response.ContentType = "application/json";
 
         var errorMessage = JsonSerializer.Serialize(

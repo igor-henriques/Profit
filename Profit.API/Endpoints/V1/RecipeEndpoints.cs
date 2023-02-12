@@ -12,7 +12,7 @@ public static class RecipeEndpoints
             var response = await mediator.Send(query, cancellationToken);
 
             return response.Any() ? Results.Ok(response) : Results.NoContent();
-        }).WithTags(SwaggerTags.RECIPE);
+        }).WithTags(SwaggerTags.RECIPE).RequireAuthorization();
 
         app.MapGet(Routes.Recipe.GetUnique, async (
             [FromQuery] Guid guid,
@@ -22,7 +22,7 @@ public static class RecipeEndpoints
             var query = new GetUniqueRecipeQuery(guid);
             var response = await mediator.Send(query, cancellationToken);
             return Results.Ok(response);
-        }).WithTags(SwaggerTags.RECIPE);
+        }).WithTags(SwaggerTags.RECIPE).RequireAuthorization();
 
         app.MapPost(Routes.Recipe.Create, async (
             [FromBody] CreateRecipeCommand command,
@@ -31,7 +31,7 @@ public static class RecipeEndpoints
         {
             var response = await mediator.Send(command, cancellationToken);
             return Results.Ok(response);
-        }).WithTags(SwaggerTags.RECIPE);
+        }).WithTags(SwaggerTags.RECIPE).RequireAuthorization();
 
         app.MapPost(Routes.Recipe.BulkCreate, async (
             [FromBody] CreateManyRecipesCommand command,
@@ -40,7 +40,7 @@ public static class RecipeEndpoints
         {
             var response = await mediator.Send(command, cancellationToken);
             return response.Any() ? Results.Ok(response) : Results.NoContent();
-        }).WithTags(SwaggerTags.RECIPE);
+        }).WithTags(SwaggerTags.RECIPE).RequireAuthorization();
 
         app.MapPatch(Routes.Recipe.Patch, async (
             [FromBody] PatchRecipeCommand patchRecipeCommand,
@@ -49,7 +49,7 @@ public static class RecipeEndpoints
         {
             var response = await mediator.Send(patchRecipeCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(SwaggerTags.RECIPE);
+        }).WithTags(SwaggerTags.RECIPE).RequireAuthorization();
 
         app.MapPut(Routes.Recipe.Put, async (
             [FromBody] PutRecipeCommand putRecipeCommand,
@@ -58,7 +58,7 @@ public static class RecipeEndpoints
         {
             var response = await mediator.Send(putRecipeCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(SwaggerTags.RECIPE);
+        }).WithTags(SwaggerTags.RECIPE).RequireAuthorization();
 
         app.MapDelete(Routes.Recipe.Delete, async (
             [FromBody] DeleteRecipeCommand deleteRecipeCommand,
@@ -67,6 +67,6 @@ public static class RecipeEndpoints
         {
             var response = await mediator.Send(deleteRecipeCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(SwaggerTags.RECIPE);
+        }).WithTags(SwaggerTags.RECIPE).RequireAuthorization();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Profit.Infrastructure.Repository.Repositories;
+﻿using Profit.Domain.Entities.Base;
+
+namespace Profit.Infrastructure.Repository.Repositories;
 
 internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUserRepository
 {
@@ -16,5 +18,43 @@ internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUse
     public override void BulkAdd(IEnumerable<User> entities)
     {
         throw new NotImplementedException($"{nameof(BulkAdd)} is not implemented for {nameof(User)}");
+    }
+                                   
+    public override async ValueTask<bool> Exists(User entity, CancellationToken cancellationToken = default)
+    {
+        return await _context.Users.AnyAsync(
+            x => x.Username == entity.Username | x.Email == entity.Email, cancellationToken);
+    }
+
+    public override async ValueTask Add(User entity, CancellationToken cancellationToken = default)
+    {
+        var entityExists = await Exists(entity, cancellationToken);
+
+        if (entityExists)
+        {
+            throw new InvalidOperationException($"User already exists");
+        }
+
+        _context.Users.Add(entity);
+        _context.Claims.Add(new UserClaim()
+        {
+            ClaimType = "Username",
+            ClaimValue = entity.Username
+        });
+        _logger.LogInformation("{entity} was added", entity);
+    }
+
+    public async Task<User> GetByUsername(string username)
+    {
+        ArgumentValidator.ThrowIfNullOrEmpty(username, nameof(username));
+
+         var user = await _context.Users
+            .AsNoTracking()
+            .Include(x => x.UserClaims)
+            .FirstOrDefaultAsync(x => x.Username.Equals(username));
+        
+        _ = user ?? throw new EntityNotFoundException(nameof(User));
+                                                                       
+        return user;
     }
 }

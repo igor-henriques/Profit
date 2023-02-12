@@ -21,6 +21,10 @@ internal sealed class RedisCachedUserRepository : IUserRepository
     {
         return $"{REDIS_USER_PREFIX}{id}";
     }
+    private static string GetRedisKey(string key)
+    {
+        return $"{REDIS_USER_PREFIX}{key}";
+    }
 
     public async ValueTask Add(User entity, CancellationToken cancellationToken = default)
     {
@@ -88,5 +92,19 @@ internal sealed class RedisCachedUserRepository : IUserRepository
     public void Update(User entity)
     {
         _userRepository.Update(entity);
+    }
+
+    public async Task<User> GetByUsername(string username)
+    {
+        var redisKey = GetRedisKey(username);
+        var user = await _cacheService.GetAsync<User>(redisKey);
+
+        if (user is null)
+        {
+            user = await _userRepository.GetByUsername(username);
+            await _cacheService.SetAsync(redisKey, user, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
+        }
+
+        return await _userRepository.GetByUsername(username);
     }
 }

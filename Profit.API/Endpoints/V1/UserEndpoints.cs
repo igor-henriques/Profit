@@ -12,7 +12,7 @@ public static class UserEndpoints
             var response = await mediator.Send(query, cancellationToken);
 
             return response.Any() ? Results.Ok(response) : Results.NoContent();
-        }).WithTags(SwaggerTags.USER);
+        }).WithTags(SwaggerTags.USER).RequireAuthorization();
 
         app.MapGet(Routes.User.GetUnique, async (
             [FromQuery] Guid guid,
@@ -22,7 +22,7 @@ public static class UserEndpoints
             var query = new GetUniqueUserQuery(guid);
             var response = await mediator.Send(query, cancellationToken);
             return Results.Ok(response);
-        }).WithTags(SwaggerTags.USER);
+        }).WithTags(SwaggerTags.USER).RequireAuthorization();
 
         app.MapPost(Routes.User.Create, async (
             [FromBody] CreateUserCommand command,
@@ -40,7 +40,7 @@ public static class UserEndpoints
         {
             var response = await mediator.Send(patchUserCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(SwaggerTags.USER);
+        }).WithTags(SwaggerTags.USER).RequireAuthorization();
 
         app.MapPut(Routes.User.Put, async (
             [FromBody] PutUserCommand putUserCommand,
@@ -49,7 +49,7 @@ public static class UserEndpoints
         {
             var response = await mediator.Send(putUserCommand, cancellationToken);
             return Results.NoContent();
-        }).WithTags(SwaggerTags.USER);
+        }).WithTags(SwaggerTags.USER).RequireAuthorization();
 
         app.MapDelete(Routes.User.Delete, async (
             [FromBody] DeleteUserCommand deleteUserCommand,
@@ -58,6 +58,15 @@ public static class UserEndpoints
         {
             var response = await mediator.Send(deleteUserCommand, cancellationToken);
             return Results.NoContent();
+        }).WithTags(SwaggerTags.USER).RequireAuthorization();
+
+        app.MapPost(Routes.User.Authenticate, async (
+            [FromBody] AuthenticateUserCommand authenticateUserCommand,
+            [FromServices] IMediator mediator,
+            CancellationToken cancellationToken) =>
+        {
+            var response = await mediator.Send(authenticateUserCommand, cancellationToken);
+            return Results.Ok(response);
         }).WithTags(SwaggerTags.USER);
     }
 }

@@ -32,3 +32,4 @@ global using Profit.Infrastructure.Repository.Repositories;
 global using System.Collections.Immutable;
 global using System.Diagnostics;
 global using System.Security.Claims;
+global using Profit.Domain.Commands.User.Authenticate;

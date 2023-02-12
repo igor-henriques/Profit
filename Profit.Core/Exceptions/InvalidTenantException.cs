@@ -2,5 +2,5 @@
 
 public sealed class InvalidTenantException : Exception
 {
-    public InvalidTenantException(string description) : base(description) { }
+    public InvalidTenantException(string description = null) : base(description) { }
 }

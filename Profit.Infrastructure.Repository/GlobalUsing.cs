@@ -18,3 +18,4 @@ global using Profit.Infrastructure.Repository.Repositories.Scripts;
 global using System.Data;
 global using System.Threading;
 global using System.Transactions;
+global using Profit.Domain.Exceptions;

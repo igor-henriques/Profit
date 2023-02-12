@@ -43,7 +43,6 @@ public static class Constants
             public const string GetUnique = $"{BaseUser}/get";
             public const string GetMany = $"{BaseUser}/get-many";
             public const string Create = $"{BaseUser}/create";
-            public const string BulkCreate = $"{BaseUser}/bulk-create";
             public const string Put = $"{BaseUser}/put";
             public const string Patch = $"{BaseUser}/patch";
             public const string Delete = $"{BaseUser}/delete";
