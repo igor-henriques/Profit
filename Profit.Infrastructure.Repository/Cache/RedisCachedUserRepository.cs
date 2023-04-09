@@ -94,17 +94,31 @@ internal sealed class RedisCachedUserRepository : IUserRepository
         _userRepository.Update(entity);
     }
 
-    public async Task<User> GetByUsername(string username)
+    public async Task<User> GetByUsername(string username, CancellationToken cancellationToken = default)
     {
         var redisKey = GetRedisKey(username);
         var user = await _cacheService.GetAsync<User>(redisKey);
 
         if (user is null)
         {
-            user = await _userRepository.GetByUsername(username);
+            user = await _userRepository.GetByUsername(username, cancellationToken);
             await _cacheService.SetAsync(redisKey, user, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
         }
 
-        return await _userRepository.GetByUsername(username);
+        return await _userRepository.GetByUsername(username, cancellationToken);
+    }
+
+    public async Task<Guid> GetTenantIdByUsername(string username, CancellationToken cancellationToken = default)
+    {
+        var redisKey = GetRedisKey(username);
+        var user = await _cacheService.GetAsync<User>(redisKey);
+
+        if (user is null)
+        {
+            user = await _userRepository.GetByUsername(username, cancellationToken);
+            await _cacheService.SetAsync(redisKey, user, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
+        }
+
+        return user.TenantId;
     }
 }

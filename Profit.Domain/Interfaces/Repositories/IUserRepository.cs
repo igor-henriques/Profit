@@ -2,6 +2,6 @@
 
 public interface IUserRepository : IBaseRepository<User>
 {
-    Task<User> GetByUsername(string username);
-    
+    Task<User> GetByUsername(string username, CancellationToken cancellationToken = default);
+    Task<Guid> GetTenantIdByUsername(string username, CancellationToken cancellationToken = default);
 }

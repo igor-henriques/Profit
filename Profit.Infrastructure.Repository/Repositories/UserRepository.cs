@@ -1,6 +1,4 @@
-﻿using Profit.Domain.Entities.Base;
-
-namespace Profit.Infrastructure.Repository.Repositories;
+﻿namespace Profit.Infrastructure.Repository.Repositories;
 
 internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUserRepository
 {
@@ -45,17 +43,30 @@ internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUse
         _logger.LogInformation("{entity} was added", entity);
     }
 
-    public async Task<User> GetByUsername(string username)
+    public async Task<User> GetByUsername(string username, CancellationToken cancellationToken = default)
     {
         ArgumentValidator.ThrowIfNullOrEmpty(username, nameof(username));
 
         var user = await _context.Users
            .AsNoTracking()
            .Include(x => x.UserClaims)
-           .FirstOrDefaultAsync(x => x.Username.Equals(username));
+           .FirstOrDefaultAsync(x => x.Username.Equals(username), cancellationToken);
 
         _ = user ?? throw new EntityNotFoundException(nameof(User));
 
         return user;
+    }
+
+    public async Task<Guid> GetTenantIdByUsername(string username, CancellationToken cancellationToken = default)
+    {
+        ArgumentValidator.ThrowIfNullOrEmpty(username, nameof(username));
+
+        var tenant = await _context.Users
+           .AsNoTracking()
+           .Where(x => x.Username.Equals(username))
+           .Select(u => u.TenantId)
+           .FirstOrDefaultAsync(cancellationToken);
+
+        return tenant;
     }
 }

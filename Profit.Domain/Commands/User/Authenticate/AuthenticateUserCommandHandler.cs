@@ -20,7 +20,7 @@ public sealed class AuthenticateUserCommandHandler : IRequestHandler<Authenticat
     {
         try
         {
-            var user = await _unitOfWork.UserRepository.GetByUsername(request.Username);
+            var user = await _unitOfWork.UserRepository.GetByUsername(request.Username, cancellationToken);
 
             var isPasswordMatch = _passwordHashingService.VerifyPassword(request.Password, user.HashedPassword);
             if (!isPasswordMatch)

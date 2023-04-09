@@ -28,7 +28,7 @@ try
 	builder.Services.AddCors();
 
 	var app = builder.Build();
-    app.UseMiddleware<ExceptionHandlerMiddleware>();
+    app.UseMiddleware<ExceptionHandlerMiddleware>();    
     if (app.Environment.IsDevelopment())
 	{
 		app.UseSwagger();
@@ -36,8 +36,8 @@ try
 	}
 	app.MapHealthChecks("/health");
 	app.UseCors(c => c.AllowAnyOrigin());
-	app.UseHttpsRedirection();	
-	app.UseMiddleware<TenantResolverMiddleware>();
+    app.UseMiddleware<TenantResolverMiddleware>();
+    app.UseHttpsRedirection();		
 
 	app.ConfigureIngredientEndpoints();
 	app.ConfigureProductEndpoints();

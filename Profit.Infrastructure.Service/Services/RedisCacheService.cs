@@ -6,7 +6,7 @@ public sealed class RedisCacheService : IRedisCacheService
 {
     private readonly ConnectionMultiplexer _redis;
     private readonly IServer _redisServer;
-    private readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings()
+    private readonly JsonSerializerSettings _jsonSettings = new()
     {
         ContractResolver = new PrivateResolver(),
         ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,

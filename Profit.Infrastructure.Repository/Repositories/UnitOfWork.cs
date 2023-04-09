@@ -153,7 +153,7 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
 
         using var command = connection.CreateCommand();
 
-        command.CommandText = $"DROP SCHEMA db_{CompiledRegex.CheckSpecialCharacterRegex().Replace(tenantId.ToString(), string.Empty)}";
+        command.CommandText = $"DROP SCHEMA {tenantId.Format()}";
         _logger.LogInformation(command.CommandText);
         await command.ExecuteNonQueryAsync(cancellationToken);
         await connection.CloseAsync();
