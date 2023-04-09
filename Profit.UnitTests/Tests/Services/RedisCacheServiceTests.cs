@@ -12,6 +12,4 @@ public class RedisCacheServiceTests
         _redisConnectionString = "localhost:6379";
         _cacheService = new RedisCacheService(_redisConnectionString);
     }
-
-
 }

@@ -2,17 +2,10 @@
 
 public sealed class IngredientFluentMapping : IEntityTypeConfiguration<Ingredient>
 {
-    private readonly string _schemaName;
-
-    public IngredientFluentMapping(string schemaName)
-    {
-        this._schemaName = schemaName;
-    }
-
     public void Configure(EntityTypeBuilder<Ingredient> builder)
     {
         builder.HasKey(i => i.Id);
-        builder.ToTable("Ingredients", _schemaName);
+        builder.ToTable("Ingredients");
         builder.Property(i => i.Id).ValueGeneratedOnAdd();
         builder.Property(i => i.Name).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthName);
         builder.Property(i => i.Price).IsRequired().HasPrecision(18, 2);

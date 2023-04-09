@@ -6,8 +6,7 @@
 		<Nullable>disable</Nullable>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="EntityFramework" Version="6.4.4" />
+	<ItemGroup>		
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.2" />
 		<PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.2" />

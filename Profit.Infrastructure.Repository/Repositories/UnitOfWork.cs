@@ -110,7 +110,7 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
         using var command = connection.CreateCommand();
 
         command.CommandText = $"CREATE SCHEMA {tenantId.Format()}";
-        _logger.LogInformation(command.CommandText);
+        _logger.LogInformation("{information}", command.CommandText);
 
         await command.ExecuteNonQueryAsync(cancellationToken);
 
@@ -132,6 +132,11 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
         await RunQuery(
             connection,
             string.Format(GetTableCreateDefinition.GetIngredientsRecipeDefinition, tenantId.Format()),
+            cancellationToken);
+
+        await RunQuery(
+            connection,
+            string.Format(GetTableCreateDefinition.GetIndexesQuery, tenantId.Format()),
             cancellationToken);
 
         await connection.CloseAsync();
@@ -165,13 +170,5 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         await _profitContext.DisposeAsync();
-    }
-
-    public async Task SetTenantEnsuringCreation(Guid tenantId, CancellationToken cancellationToken = default)
-    {
-        _profitContext.SetTenant(tenantId);
-        var result = await _profitContext.Database.EnsureCreatedAsync(cancellationToken);
-
-        _logger.LogInformation("EnsureDatabaseCreation result: {result}", result);
     }
 }

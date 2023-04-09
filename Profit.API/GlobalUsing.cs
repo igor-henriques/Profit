@@ -41,5 +41,7 @@ global using Serilog;
 global using System.Net;
 global using System.Text.Json;
 global using Profit.Core.Shared;
+global using Profit.Infrastructure.Repository.EFInterceptors;
+global using Profit.Domain.Models;
 global using static Profit.Core.Shared.Constants;
 global using ExceptionHandlerMiddleware = Profit.API.Middlewares.ExceptionHandlerMiddleware;

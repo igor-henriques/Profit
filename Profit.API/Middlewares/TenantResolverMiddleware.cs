@@ -2,14 +2,14 @@
 
 public sealed class TenantResolverMiddleware
 {
-    private readonly RequestDelegate _next;
+    private readonly RequestDelegate _next;    
 
     public TenantResolverMiddleware(RequestDelegate next)
     {
         this._next = next;
     }
 
-    public async Task Invoke(HttpContext context, IUnitOfWork _unitOfWork)
+    public async Task Invoke(HttpContext context, IUnitOfWork _unitOfWork, TenantInfo _tenantInfo)
     {
         if (context.Request.Path.Value?.Contains(Routes.User.BaseUser, StringComparison.OrdinalIgnoreCase) ?? false)
         {
@@ -44,7 +44,8 @@ public sealed class TenantResolverMiddleware
             throw new InvalidTenantException("TenantId header does not match the user's tenant");
         }
 
-        await _unitOfWork.SetTenantEnsuringCreation(tenantId);
+        _tenantInfo.SetTenantId(tenantId);
+
         await _next(context);
     }
 

@@ -45,12 +45,6 @@ public interface IUnitOfWork
     Task CreateSchema(Guid tenantId, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Set the schema for the database
-    /// </summary>
-    /// <param name="tenantId"></param>
-    Task SetTenantEnsuringCreation(Guid tenantId, CancellationToken cancellationToken = default);
-
-    /// <summary>
     /// Drops a schema from the database
     /// </summary>
     /// <param name="tenantId"></param>

@@ -19,3 +19,6 @@ global using System.Data;
 global using System.Threading;
 global using System.Transactions;
 global using Profit.Domain.Exceptions;
+global using Microsoft.EntityFrameworkCore.Diagnostics;
+global using System.Data.Common;
+global using Profit.Domain.Models;

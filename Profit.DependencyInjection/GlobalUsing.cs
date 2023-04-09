@@ -46,3 +46,4 @@ global using Profit.Infrastructure.Service.Services;
 global using Serilog;
 global using System.Security.Claims;
 global using System.Text;
+global using Profit.Infrastructure.Repository.EFInterceptors;

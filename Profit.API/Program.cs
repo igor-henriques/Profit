@@ -8,13 +8,19 @@ try
 
 	builder.Services.AddEndpointsApiExplorer();
 	builder.Services.AddSwagger();
-	builder.Services.AddDbContext<ProfitDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProfitSqlServer")));
+    builder.Services.AddGeneralDependencies();
+    builder.Services.AddDbContext<ProfitDbContext>((serviceProvider, options) =>
+	{
+        var schemaInterceptor = serviceProvider.GetRequiredService<SchemaInterceptor>();
+        options.UseSqlServer(builder.Configuration.GetConnectionString("ProfitSqlServer"))
+			   .AddInterceptors(schemaInterceptor);
+    });	
+
 	builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AuthSqlServer")));
 	builder.Services.AddMapperProfiles();
 	builder.Services.AddValidators();
 	builder.Services.AddCacheServices(builder.Configuration.GetConnectionString("Redis"));
-	builder.Services.AddCqrsHandlers();
-	builder.Services.AddGeneralDependencies();
+	builder.Services.AddCqrsHandlers();	
 	builder.Services.AddCustomAuthentication(builder.Configuration.GetValue<string>("JwtAuthentication:Key"));
 	builder.Services.AddCustomAuthorization();
 	builder.Services.AddHealthChecks();
@@ -22,16 +28,15 @@ try
 	builder.Services.AddCors();
 
 	var app = builder.Build();
-
-	if (app.Environment.IsDevelopment())
+    app.UseMiddleware<ExceptionHandlerMiddleware>();
+    if (app.Environment.IsDevelopment())
 	{
 		app.UseSwagger();
 		app.UseSwaggerUI();
 	}
 	app.MapHealthChecks("/health");
 	app.UseCors(c => c.AllowAnyOrigin());
-	app.UseHttpsRedirection();
-	app.UseMiddleware<ExceptionHandlerMiddleware>();
+	app.UseHttpsRedirection();	
 	app.UseMiddleware<TenantResolverMiddleware>();
 
 	app.ConfigureIngredientEndpoints();
