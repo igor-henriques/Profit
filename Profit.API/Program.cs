@@ -35,7 +35,7 @@ try
 		app.UseSwaggerUI();
 	}
 	app.MapHealthChecks("/health");
-	app.UseCors(c => c.AllowAnyOrigin());
+	app.UseCors(c => c.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
     app.UseMiddleware<TenantResolverMiddleware>();
     app.UseHttpsRedirection();		
 

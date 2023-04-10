@@ -22,6 +22,6 @@ public sealed class SchemaInterceptor : DbCommandInterceptor
 
     private string ReplaceSchema(string commandText)
     {
-        return commandText.Replace("[dbo].", $"[{_tenantInfo.TenantId.Format()}].");
+        return commandText.Replace("[dbo].", $"[{_tenantInfo.FormattedTenantId}].");
     }
 }
