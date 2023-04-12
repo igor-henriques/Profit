@@ -12,6 +12,7 @@ public sealed class ProfitDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         modelBuilder.HasDefaultSchema("dbo");
 
         base.OnModelCreating(modelBuilder);

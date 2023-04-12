@@ -5,6 +5,7 @@ public sealed class UserFluentMapping : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(u => u.Id);
+        builder.ToTable(Constants.TableNames.User);
         builder.Property(u => u.TenantId).ValueGeneratedOnAdd();
         builder.Property(u => u.Id).ValueGeneratedOnAdd();
         builder.Property(u => u.Username).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthUsername);

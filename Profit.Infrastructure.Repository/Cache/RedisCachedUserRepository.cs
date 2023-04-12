@@ -42,9 +42,9 @@ internal sealed class RedisCachedUserRepository : IUserRepository
     }
 
     public void Delete(User entity)
-    {
-        _cacheService.Remove(entity.Id.ToString());
+    {        
         _userRepository.Delete(entity);
+        _cacheService.Remove(entity.Id.ToString());
     }
 
     public async ValueTask<bool> Exists(User entity, CancellationToken cancellationToken = default)
@@ -105,7 +105,7 @@ internal sealed class RedisCachedUserRepository : IUserRepository
             await _cacheService.SetAsync(redisKey, user, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
         }
 
-        return await _userRepository.GetByUsername(username, cancellationToken);
+        return user;
     }
 
     public async Task<Guid> GetTenantIdByUsername(string username, CancellationToken cancellationToken = default)

@@ -45,10 +45,10 @@ public interface IUnitOfWork
     Task CreateSchema(Guid tenantId, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Drops a schema from the database
+    /// Drops a schema and its tables from the database
     /// </summary>
     /// <param name="tenantId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task DropSchema(Guid tenantId, CancellationToken cancellationToken = default);
+    Task DropTablesAndSchema(Guid tenantId, CancellationToken cancellationToken = default);
 }

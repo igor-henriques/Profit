@@ -5,7 +5,7 @@ public sealed class IngredientRecipeRelationFluentMapping : IEntityTypeConfigura
     public void Configure(EntityTypeBuilder<IngredientRecipeRelation> builder)
     {
         builder.HasKey(i => new { i.IngredientId, i.RecipeId });
-        builder.ToTable("IngredientRecipeRelations");
+        builder.ToTable(Constants.TableNames.IngredientRecipeRelation);
         builder.Property(i => i.IngredientId).IsRequired();
         builder.Property(i => i.RecipeId).IsRequired();
         builder.Property(i => i.MeasurementUnit).IsRequired();

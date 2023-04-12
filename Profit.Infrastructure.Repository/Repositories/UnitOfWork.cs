@@ -1,6 +1,4 @@
-﻿using System.Data.Common;
-
-namespace Profit.Infrastructure.Repository.Repositories;
+﻿namespace Profit.Infrastructure.Repository.Repositories;
 
 /// <summary>
 /// Provides a mechanism for working with the repository pattern, 
@@ -109,54 +107,77 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
 
         using var command = connection.CreateCommand();
 
-        command.CommandText = $"CREATE SCHEMA {tenantId.Format()}";
+        command.CommandText = $"CREATE SCHEMA {tenantId.FormatToSchema()}";
         _logger.LogInformation("{information}", command.CommandText);
 
         await command.ExecuteNonQueryAsync(cancellationToken);
 
         await RunQuery(
             connection,
-            string.Format(GetTableCreateDefinition.GetIngredientsDefinition, tenantId.Format()),
+            string.Format(TablesDDLQueries.GetIngredientsDefinition, tenantId.FormatToSchema()),
             cancellationToken);
 
         await RunQuery(
             connection,
-            string.Format(GetTableCreateDefinition.GetRecipesDefinition, tenantId.Format()),
+            string.Format(TablesDDLQueries.GetRecipesDefinition, tenantId.FormatToSchema()),
             cancellationToken);
 
         await RunQuery(
             connection,
-            string.Format(GetTableCreateDefinition.GetProductsDefinition, tenantId.Format()),
+            string.Format(TablesDDLQueries.GetProductsDefinition, tenantId.FormatToSchema()),
             cancellationToken);
 
         await RunQuery(
             connection,
-            string.Format(GetTableCreateDefinition.GetIngredientsRecipeDefinition, tenantId.Format()),
+            string.Format(TablesDDLQueries.GetIngredientsRecipeDefinition, tenantId.FormatToSchema()),
             cancellationToken);
 
         await RunQuery(
             connection,
-            string.Format(GetTableCreateDefinition.GetIndexesQuery, tenantId.Format()),
+            string.Format(TablesDDLQueries.GetIndexesQuery, tenantId.FormatToSchema()),
             cancellationToken);
 
         await connection.CloseAsync();
         transaction.Complete();
     }
 
-    public async Task DropSchema(Guid tenantId, CancellationToken cancellationToken = default)
+    public async Task DropTablesAndSchema(Guid tenantId, CancellationToken cancellationToken = default)
     {
+        using TransactionScope transaction = new(TransactionScopeAsyncFlowOption.Enabled);
+
         var connection = _profitContext.Database.GetDbConnection();
         if (connection.State is not ConnectionState.Open)
         {
             await connection.OpenAsync(cancellationToken);
         }
 
-        using var command = connection.CreateCommand();
+        await RunQuery(
+            connection,
+            TablesDDLQueries.GetDropTableQuery(Constants.TableNames.IngredientRecipeRelation, tenantId.FormatToSchema()),
+            cancellationToken);
 
-        command.CommandText = $"DROP SCHEMA {tenantId.Format()}";
-        _logger.LogInformation(command.CommandText);
-        await command.ExecuteNonQueryAsync(cancellationToken);
+        await RunQuery(
+            connection,
+            TablesDDLQueries.GetDropTableQuery(Constants.TableNames.Ingredient, tenantId.FormatToSchema()),
+            cancellationToken);
+
+        await RunQuery(
+            connection,
+            TablesDDLQueries.GetDropTableQuery(Constants.TableNames.Product, tenantId.FormatToSchema()),
+            cancellationToken);
+
+        await RunQuery(
+            connection,
+            TablesDDLQueries.GetDropTableQuery(Constants.TableNames.Recipe, tenantId.FormatToSchema()),
+            cancellationToken);        
+
+        await RunQuery(
+            connection,
+            $"DROP SCHEMA {tenantId.FormatToSchema()}",
+            cancellationToken);
+
         await connection.CloseAsync();
+        transaction.Complete();
     }
 
     private async Task RunQuery(DbConnection dbConnection, string query, CancellationToken cancellationToken = default)

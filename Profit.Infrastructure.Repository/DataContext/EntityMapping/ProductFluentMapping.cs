@@ -5,7 +5,7 @@ public sealed class ProductFluentMapping : IEntityTypeConfiguration<Product>
     public void Configure(EntityTypeBuilder<Product> builder)
     {
         builder.HasKey(p => p.Id);
-        builder.ToTable("Products");
+        builder.ToTable(Constants.TableNames.Product);
         builder.Property(p => p.Id).ValueGeneratedOnAdd();
         builder.Property(p => p.TotalPrice).IsRequired().HasPrecision(18, 2);
         builder.Property(p => p.Name).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthName);

@@ -20,11 +20,8 @@ public sealed class GetUniqueIngredientQueryHandler : IRequestHandler<GetUniqueI
     {
         ArgumentValidator.ThrowIfNullOrDefault(request.Guid);
 
-        var ingredient = await _ingredientRepository.GetUniqueAsync(request.Guid, cancellationToken);
-        if (ingredient is null)
-        {
-            throw new EntityNotFoundException(request.Guid, nameof(Entities.Ingredient));
-        }
+        var ingredient = await _ingredientRepository.GetUniqueAsync(request.Guid, cancellationToken)
+            ?? throw new EntityNotFoundException(request.Guid, nameof(Entities.Ingredient));
 
         var ingredientDto = _mapper.Map<IngredientDTO>(ingredient);
         return ingredientDto;

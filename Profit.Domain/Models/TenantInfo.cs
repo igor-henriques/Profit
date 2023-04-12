@@ -18,7 +18,7 @@ public sealed record TenantInfo
             return _tenantId;
         }
     }
-    public string FormattedTenantId => TenantId.Format();
+    public string FormattedTenantId => TenantId.FormatToSchema();
     
     public void SetTenantId(Guid tenantId)
     {

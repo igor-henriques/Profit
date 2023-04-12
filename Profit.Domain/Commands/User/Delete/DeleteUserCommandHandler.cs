@@ -14,12 +14,13 @@ public sealed class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand
         ArgumentValidator.ThrowIfNullOrDefault(request.UserId, nameof(request.UserId));
 
         var user = await _unitOfWork.UserRepository.GetUniqueAsync(request.UserId, cancellationToken);
+
         _unitOfWork.UserRepository.Delete(user);
 
         if (await _unitOfWork.Commit(cancellationToken) is 0)
             throw new EntityNotFoundException(request.UserId, nameof(Entities.User));
 
-        await _unitOfWork.DropSchema(user.TenantId, cancellationToken);
+        await _unitOfWork.DropTablesAndSchema(user.TenantId, cancellationToken);
 
         return Unit.Value;
     }

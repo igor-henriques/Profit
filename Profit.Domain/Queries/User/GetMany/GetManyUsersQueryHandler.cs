@@ -15,8 +15,8 @@ public sealed class GetManyUsersQueryHandler : IRequestHandler<GetManyUsersQuery
 
     public async Task<IEnumerable<UserDTO>> Handle(GetManyUsersQuery request, CancellationToken cancellationToken)
     {
-        var recipes = await _userRepository.GetManyAsync(cancellationToken);
-        var recipesDto = recipes.Select(_mapper.Map<UserDTO>);
-        return recipesDto;
+        var users = await _userRepository.GetManyAsync(cancellationToken);
+        var usersDto = users.Select(_mapper.Map<UserDTO>);
+        return usersDto;
     }
 }

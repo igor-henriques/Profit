@@ -21,7 +21,19 @@ internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUse
     public override async ValueTask<bool> Exists(User entity, CancellationToken cancellationToken = default)
     {
         return await _context.Users.AnyAsync(
-            x => x.Username == entity.Username | x.Email == entity.Email, cancellationToken);
+            x => x.Username == entity.Username || x.Email == entity.Email, cancellationToken);
+    }
+
+    public override void Delete(User entity)
+    {
+        var userClaims = _context.Claims.Where(x => x.UserId == entity.Id);
+
+        if (userClaims.Any())
+        {
+            _context.Claims.RemoveRange(userClaims);
+        }
+        
+        _context.Users.Remove(entity);        
     }
 
     public override async ValueTask Add(User entity, CancellationToken cancellationToken = default)

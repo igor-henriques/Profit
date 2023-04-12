@@ -5,7 +5,7 @@ public sealed class IngredientFluentMapping : IEntityTypeConfiguration<Ingredien
     public void Configure(EntityTypeBuilder<Ingredient> builder)
     {
         builder.HasKey(i => i.Id);
-        builder.ToTable("Ingredients");
+        builder.ToTable(Constants.TableNames.Ingredient);
         builder.Property(i => i.Id).ValueGeneratedOnAdd();
         builder.Property(i => i.Name).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthName);
         builder.Property(i => i.Price).IsRequired().HasPrecision(18, 2);

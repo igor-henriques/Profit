@@ -1,6 +1,6 @@
 ﻿namespace Profit.Infrastructure.Repository.Repositories.Scripts;
 
-internal static class GetTableCreateDefinition
+internal static class TablesDDLQueries
 {
     private const string INGREDIENTS_QUERY = """
             CREATE TABLE [dbo].[Ingredients] (
@@ -51,10 +51,17 @@ internal static class GetTableCreateDefinition
             CREATE INDEX [IX_IngredientRecipeRelations_RecipeId] ON [dbo].[IngredientRecipeRelations] ([RecipeId]);
             CREATE INDEX [IX_Products_RecipeId] ON [dbo].[Products] ([RecipeId]);
         """;
+    private const string DropTableQuery = """
+            IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{0}' AND TABLE_SCHEMA = '{1}')
+        BEGIN
+            DROP TABLE [{1}].[{0}];
+        END
+        """;
 
     public static string GetIngredientsDefinition => INGREDIENTS_QUERY.Replace("dbo", "{0}");
     public static string GetIngredientsRecipeDefinition => INGREDIENTS_RECIPE_QUERY.Replace("dbo", "{0}");
     public static string GetProductsDefinition => PRODUCTS_QUERY.Replace("dbo", "{0}");
     public static string GetRecipesDefinition => RECIPES_QUERY.Replace("dbo", "{0}");
     public static string GetIndexesQuery => INDEXES_QUERY.Replace("dbo", "{0}");
+    public static string GetDropTableQuery(string tableName, string schemaName) => string.Format(DropTableQuery, tableName, schemaName);
 }

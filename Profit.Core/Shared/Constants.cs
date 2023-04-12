@@ -67,4 +67,14 @@ public static class Constants
         public const int MaxLengthHashedPassword = 256;
         public const int MaxLengthEmail = 255;
     }
+
+    public readonly struct TableNames
+    {
+        public const string Ingredient = "Ingredients";
+        public const string Product = "Products";
+        public const string Recipe = "Recipes";        
+        public const string IngredientRecipeRelation = "IngredientRecipeRelations";
+        public const string User = "Users";
+        public const string UserClaim = "Claims";
+    }
 }

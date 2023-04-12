@@ -17,13 +17,10 @@ public sealed class GetUniqueUserQueryHandler : IRequestHandler<GetUniqueUserQue
     {
         ArgumentValidator.ThrowIfNullOrDefault(request.Id, nameof(request.Id));
 
-        var recipe = await _userRepository.GetUniqueAsync(request.Id, cancellationToken);
-        if (recipe is null)
-        {
-            throw new EntityNotFoundException(request.Id, nameof(Entities.User));
-        }
+        var user = await _userRepository.GetUniqueAsync(request.Id, cancellationToken)
+            ?? throw new EntityNotFoundException(request.Id, nameof(Entities.User));
 
-        var recipeDto = _mapper.Map<UserDTO>(recipe);
-        return recipeDto;
+        var userDto = _mapper.Map<UserDTO>(user);
+        return userDto;
     }
 }

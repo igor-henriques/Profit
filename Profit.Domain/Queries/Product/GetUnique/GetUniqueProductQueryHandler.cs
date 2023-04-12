@@ -17,11 +17,8 @@ public sealed class GetUniqueProductQueryHandler : IRequestHandler<GetUniqueProd
     {
         ArgumentValidator.ThrowIfNullOrDefault(request.Id, nameof(request.Id));
 
-        var ingredient = await _ingredientRepository.GetUniqueAsync(request.Id, cancellationToken);
-        if (ingredient is null)
-        {
-            throw new EntityNotFoundException(request.Id, nameof(Entities.Product));
-        }
+        var ingredient = await _ingredientRepository.GetUniqueAsync(request.Id, cancellationToken)
+            ?? throw new EntityNotFoundException(request.Id, nameof(Entities.Product));
 
         var ingredientDto = _mapper.Map<ProductDTO>(ingredient);
         return ingredientDto;
