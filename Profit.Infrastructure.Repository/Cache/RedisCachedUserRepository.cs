@@ -92,6 +92,7 @@ internal sealed class RedisCachedUserRepository : IUserRepository
     public void Update(User entity)
     {
         _userRepository.Update(entity);
+        _cacheService.SetAsync(GetRedisKey(entity.Id), entity, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
     }
 
     public async Task<User> GetByUsername(string username, CancellationToken cancellationToken = default)

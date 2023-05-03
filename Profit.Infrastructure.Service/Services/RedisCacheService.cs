@@ -1,23 +1,24 @@
-﻿using Profit.Core.JsonResolvers;
-
-namespace Profit.Infrastructure.Service.Services;
+﻿namespace Profit.Infrastructure.Service.Services;
 
 public sealed class RedisCacheService : IRedisCacheService
 {
     private readonly ConnectionMultiplexer _redis;
     private readonly IServer _redisServer;
-    private readonly JsonSerializerSettings _jsonSettings = new()
-    {
-        ContractResolver = new PrivateResolver(),
-        ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-    };
+    private readonly JsonSerializerSettings _jsonSettings;
 
-    public RedisCacheService(string connectionString)
+    public RedisCacheService(
+        string connectionString,
+        JsonSerializerSettings jsonSettings = null)
     {
         ArgumentValidator.ThrowIfNullOrEmpty(connectionString);
         _redis = ConnectionMultiplexer.Connect(connectionString);
         _redisServer = _redis.GetServer(connectionString);
+        _jsonSettings = jsonSettings ?? new()
+        {
+            ContractResolver = new PrivateResolver(),
+            ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        };
     }
 
     public async Task<T> GetAsync<T>(string key)

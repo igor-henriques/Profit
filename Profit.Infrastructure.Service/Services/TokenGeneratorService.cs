@@ -38,27 +38,7 @@ public sealed class TokenGeneratorService : ITokenGeneratorService
 
     public JwtToken GenerateToken(Claim claim = null)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_tokenKey);
-        var expiresAt = DateTime.UtcNow.AddHours(tokenHoursDuration);
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Expires = expiresAt,
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
-
-        if (claim != null)
-            tokenDescriptor.Subject = new ClaimsIdentity(new List<Claim>() { claim });
-
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-
-        var jwt = tokenHandler.WriteToken(token);
-
-        return new JwtToken
-        {
-            Token = jwt,
-            ExpiresAt = expiresAt
-        };
+        return GenerateToken(claim != null ? new List<Claim>() { claim } : null);
     }
 
     public Claim GenerateClaim(UserClaim userClaim)
