@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 try
 {
 	var builder = WebApplication.CreateBuilder(args);
@@ -6,7 +8,12 @@ try
 		.ReadFrom.Configuration(builder.Configuration)
 		  .CreateLogger();
 
-	builder.Services.AddEndpointsApiExplorer();
+    builder.Services.Configure<JsonOptions>(options =>
+    {
+		options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;     
+    });
+
+    builder.Services.AddEndpointsApiExplorer();
 	builder.Services.AddSwagger();
     builder.Services.AddGeneralDependencies();
     builder.Services.AddDbContext<ProfitDbContext>((serviceProvider, options) =>

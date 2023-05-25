@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Entities;
 
-public sealed record IngredientRecipeRelation : Entity<IngredientRecipeRelation>
+public sealed record IngredientRecipeRelation
 {
     public Guid IngredientId { get; private set; }
     public Ingredient Ingredient { get; init; }
@@ -10,16 +10,16 @@ public sealed record IngredientRecipeRelation : Entity<IngredientRecipeRelation>
     public decimal IngredientCount { get; private set; }
 
     public IngredientRecipeRelation(
-        Guid ingredientId,
-        Ingredient ingredient,
-        Guid recipeId,
-        Recipe recipe,
+        Guid ingredientId,                
         EMeasurementUnit measurementUnit,
-        decimal ingredientCount)
+        decimal ingredientCount,
+        Guid? recipeId = null,
+        Recipe recipe = null,
+        Ingredient ingredient = null)
     {
         IngredientId = ingredientId;
         Ingredient = ingredient;
-        RecipeId = recipeId;
+        RecipeId = recipeId ?? Guid.Empty;
         Recipe = recipe;
         MeasurementUnit = measurementUnit;
         IngredientCount = ingredientCount;
@@ -29,7 +29,7 @@ public sealed record IngredientRecipeRelation : Entity<IngredientRecipeRelation>
 
     public IngredientRecipeRelation() { }
 
-    public override IngredientRecipeRelation Update(IngredientRecipeRelation entity)
+    public IngredientRecipeRelation Update(IngredientRecipeRelation entity)
     {
         UpdateIngredientId(entity.IngredientId);
         UpdateIngredientCount(entity.IngredientCount);
@@ -39,7 +39,7 @@ public sealed record IngredientRecipeRelation : Entity<IngredientRecipeRelation>
         return this;
     }
 
-    public void UpdateIngredientId(Guid ingredientId)
+    public IngredientRecipeRelation UpdateIngredientId(Guid ingredientId)
     {
         ArgumentValidator.ThrowIfNullOrDefault(ingredientId, nameof(ingredientId));
 
@@ -47,19 +47,17 @@ public sealed record IngredientRecipeRelation : Entity<IngredientRecipeRelation>
         {
             IngredientId = ingredientId;
         }
+
+        return this;
     }
 
-    public void UpdateRecipeId(Guid recipeId)
+    public IngredientRecipeRelation UpdateRecipeId(Guid recipeId)
     {
-        ArgumentValidator.ThrowIfNullOrDefault(recipeId, nameof(recipeId));
-
-        if (RecipeId != recipeId)
-        {
-            RecipeId = recipeId;
-        }
+        RecipeId = recipeId;
+        return this;
     }
 
-    public void UpdateIngredientCount(decimal ingredientCount)
+    public IngredientRecipeRelation UpdateIngredientCount(decimal ingredientCount)
     {
         ArgumentValidator.ThrowIfNegative(ingredientCount, nameof(ingredientCount));
         ArgumentValidator.ThrowIfZero(ingredientCount, nameof(ingredientCount));
@@ -68,21 +66,23 @@ public sealed record IngredientRecipeRelation : Entity<IngredientRecipeRelation>
         {
             IngredientCount = ingredientCount;
         }
+
+        return this;
     }
 
-    public void UpdateMeasurementUnit(EMeasurementUnit measurementUnit)
+    public IngredientRecipeRelation UpdateMeasurementUnit(EMeasurementUnit measurementUnit)
     {
         if (MeasurementUnit != measurementUnit)
         {
             MeasurementUnit = measurementUnit;
         }
+
+        return this;
     }
 
-    public override void Validate()
-    {
-        ArgumentValidator.ThrowIfNegative(IngredientCount, nameof(IngredientCount));
-        ArgumentValidator.ThrowIfZero(IngredientCount, nameof(IngredientCount));
-        ArgumentValidator.ThrowIfNullOrDefault(IngredientId, nameof(IngredientId));
-        ArgumentValidator.ThrowIfNullOrDefault(RecipeId, nameof(RecipeId));
+    public void Validate()
+    {        
+        ArgumentValidator.ThrowIfZeroOrNegative(IngredientCount, nameof(IngredientCount));
+        ArgumentValidator.ThrowIfNullOrDefault(IngredientId, nameof(IngredientId));        
     }
 }

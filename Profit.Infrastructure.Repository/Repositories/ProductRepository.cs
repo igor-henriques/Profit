@@ -12,4 +12,12 @@ internal sealed class ProductRepository : BaseRepository<Product, ProfitDbContex
         this._context = context;
         this.logger = logger;
     }
+
+    public async Task<IEnumerable<Product>> GetProductsByRecipeId(Guid recipeId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Products
+            .Include(x => x.Recipe)
+            .Where(x => x.RecipeId == recipeId)
+            .ToListAsync(cancellationToken);
+    }
 }

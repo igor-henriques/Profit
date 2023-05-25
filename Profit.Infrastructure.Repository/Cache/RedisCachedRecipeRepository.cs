@@ -89,4 +89,9 @@ internal sealed class RedisCachedRecipeRepository : IRecipeRepository
     {
         _recipeRepository.Update(entity);
     }
+
+    public async Task<IEnumerable<IngredientRecipeRelation>> GetIngredientRecipeRelationByIngredientId(Guid ingredientId, CancellationToken cancellationToken = default)
+    {
+        return await _recipeRepository.GetIngredientRecipeRelationByIngredientId(ingredientId, cancellationToken);
+    }
 }

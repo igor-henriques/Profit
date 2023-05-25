@@ -11,7 +11,7 @@ public static class UserEndpoints
             var query = new GetManyUsersQuery();
             var response = await mediator.Send(query, cancellationToken);
 
-            return response.Any() ? Results.Ok(response) : Results.NoContent();
+            return Results.Ok(response);
         }).WithTags(SwaggerTags.USER).RequireAuthorization();
 
         app.MapGet(Routes.User.GetUnique, async (

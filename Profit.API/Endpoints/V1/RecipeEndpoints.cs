@@ -11,7 +11,7 @@ public static class RecipeEndpoints
             var query = new GetManyRecipesQuery();
             var response = await mediator.Send(query, cancellationToken);
 
-            return response.Any() ? Results.Ok(response) : Results.NoContent();
+            return Results.Ok(response);
         }).WithTags(SwaggerTags.RECIPE).RequireAuthorization();
 
         app.MapGet(Routes.Recipe.GetUnique, async (
@@ -39,7 +39,7 @@ public static class RecipeEndpoints
             CancellationToken cancellationToken) =>
         {
             var response = await mediator.Send(command, cancellationToken);
-            return response.Any() ? Results.Ok(response) : Results.NoContent();
+            return Results.Ok(response);
         }).WithTags(SwaggerTags.RECIPE).RequireAuthorization();
 
         app.MapPatch(Routes.Recipe.Patch, async (

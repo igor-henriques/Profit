@@ -6,6 +6,7 @@ public sealed class IngredientTests
     [AutoDomainData]
     public void Mapping_Ingredient_To_DTO_Should_Returns_Success_When_Valid_Entity(Ingredient ingredient)
     {
+        // Arrange
         var ingredientDto = new IngredientDTO(
             ingredient.Id,
             ingredient.Name,
@@ -18,46 +19,54 @@ public sealed class IngredientTests
         var config = new MapperConfiguration(cfg => cfg.AddProfile<IngredientProfile>());
         var mapper = new Mapper(config);
 
+        // Act
         var ingredientDtoMapped = mapper.Map<IngredientDTO>(ingredient);
         var ingredientMapped = mapper.Map<Ingredient>(ingredientDto);
 
+        // Assert
         ingredientDtoMapped.Should().Be(ingredientDto);
         ingredient.Should().BeEquivalentTo(ingredientMapped, options => options.Excluding(x => x.UnitPrice));
     }
 
     [Theory]
     [AutoDomainData]
-    public void Update_Ingredient_Name_Should_Throw_Exception_When_Invalid(Ingredient ingredient)
+    public void Update_Ingredient_Name_Should_Throw_Exception_When_Empty(Ingredient ingredient)
     {
-        string validName = "anything not null or empty";
+        // Arrange
         string invalidEmptyName = "";
-        string invalidNullName = null;
 
-        var validUpdateExpected = () => ingredient.UpdateName(validName);
-        var invalidUpdateExpected = () => ingredient.UpdateName(invalidEmptyName);
-        var invalidUpdateExpected2 = () => ingredient.UpdateName(invalidNullName);
+        // Act
+        Action invalidUpdateExpected = () => ingredient.UpdateName(invalidEmptyName);
 
-        invalidUpdateExpected.Should().ThrowExactly<ArgumentException>("Because empty name isn't allowed");
-        invalidUpdateExpected2.Should().ThrowExactly<ArgumentException>("Because null name isn't allowed");
-        validUpdateExpected.Should().NotThrow("Because it's a valid name");
+        //Assert
+        invalidUpdateExpected.Should().ThrowExactly<ArgumentNullException>("Because empty name isn't allowed");
     }
 
-    [Fact]
-    public void Create_Invalid_Ingredient_Should_Throw_Exception()
+    [Theory]
+    [AutoDomainData]
+    public void Update_Ingredient_Name_Should_Throw_Exception_When_Null(Ingredient ingredient)
     {
-        //var invalidIngredientData = DomainFixtures.GetInvalidIngredientData;
-        //var validIngredientData = DomainFixtures.GetValidIngredientData;
+        // Arrange
+        string invalidNullName = null;
 
-        //var validCreateExpected = () => new Ingredient(validIngredientData.Item1, validIngredientData.Item3, validIngredientData.Item2, validIngredientData.Item4, "");
-        //var invalidNameCreateExpected = () => new Ingredient(invalidIngredientData.Item1, validIngredientData.Item2, validIngredientData.Item3, validIngredientData.Item4);
-        //var invalidPriceCreateExpected = () => new Ingredient(validIngredientData.Item1, invalidIngredientData.Item2, validIngredientData.Item3, validIngredientData.Item4);
-        //var invalidQuantityCreateExpected = () => new Ingredient(validIngredientData.Item1, validIngredientData.Item2, invalidIngredientData.Item3, validIngredientData.Item4);
-        //var invalidThumbnailCreateExpected = () => new Ingredient(validIngredientData.Item1, validIngredientData.Item2, validIngredientData.Item3, invalidIngredientData.Item4);
+        // Act
+        Action invalidUpdateExpected = () => ingredient.UpdateName(invalidNullName);
 
-        //invalidNameCreateExpected.Should().ThrowExactly<ArgumentException>("Because empty name isn't allowed");
-        //invalidPriceCreateExpected.Should().ThrowExactly<ArgumentException>("Because negative price isn't allowed");
-        //invalidQuantityCreateExpected.Should().ThrowExactly<ArgumentException>("Because negative quantity isn't allowed");
-        //invalidThumbnailCreateExpected.Should().ThrowExactly<ArgumentException>("Because empty image thumbnail url isn't allowed");
-        //validCreateExpected.Should().NotThrow("Because it's a valid ingredient");
+        // Assert
+        invalidUpdateExpected.Should().ThrowExactly<ArgumentNullException>("Because null name isn't allowed");
+    }
+
+    [Theory]
+    [AutoDomainData]
+    public void Update_Ingredient_Name_Should_Not_Throw_Exception_When_Valid(Ingredient ingredient)
+    {
+        // Arrange
+        string validName = "anything not null or empty";
+
+        // Act
+        Action validUpdateExpected = () => ingredient.UpdateName(validName);
+
+        // Assert
+        validUpdateExpected.Should().NotThrow("Because it's a valid name");
     }
 }

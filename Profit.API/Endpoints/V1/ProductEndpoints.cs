@@ -11,7 +11,7 @@ public static class ProductEndpoints
             var query = new GetManyProductsQuery();
             var response = await mediator.Send(query, cancellationToken);
 
-            return response.Any() ? Results.Ok(response) : Results.NoContent();
+            return Results.Ok(response);
         }).WithTags(SwaggerTags.PRODUCT).RequireAuthorization();
 
         app.MapGet(Routes.Product.GetUnique, async (
@@ -39,7 +39,7 @@ public static class ProductEndpoints
             CancellationToken cancellationToken) =>
         {
             var response = await mediator.Send(command, cancellationToken);
-            return response.Any() ? Results.Ok(response) : Results.NoContent();
+            return Results.Ok(response);
         }).WithTags(SwaggerTags.PRODUCT).RequireAuthorization();
 
         app.MapPatch(Routes.Product.Patch, async (

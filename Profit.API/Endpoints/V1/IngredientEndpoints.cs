@@ -11,7 +11,7 @@ public static class IngredientEndpoints
             var query = new GetManyIngredientsQuery();
             var response = await mediator.Send(query, cancellationToken);
 
-            return response.Any() ? Results.Ok(response) : Results.NoContent();
+            return Results.Ok(response);
         }).WithTags(SwaggerTags.INGREDIENT).RequireAuthorization();
 
         app.MapGet(Routes.Ingredient.GetUnique, async (
@@ -39,7 +39,7 @@ public static class IngredientEndpoints
             CancellationToken cancellationToken) =>
         {
             var response = await mediator.Send(command, cancellationToken);
-            return response.Any() ? Results.Ok(response) : Results.NoContent();
+            return Results.Ok(response);
         }).WithTags(SwaggerTags.INGREDIENT).RequireAuthorization();
 
         app.MapPatch(Routes.Ingredient.Patch, async (

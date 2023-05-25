@@ -12,13 +12,13 @@ public sealed record TenantInfo
         {
             if (_tenantId == Guid.Empty)
             {
-                throw new InvalidOperationException($"TenantId is empty. Set a value for it by using {nameof(SetTenantId)}");
+                throw new InvalidOperationException($"{nameof(TenantId)} is empty. Set a value for it by using {nameof(SetTenantId)}");
             }
 
             return _tenantId;
         }
     }
-    public string FormattedTenantId => TenantId.FormatToSchema();
+    public string FormattedTenantId => TenantId.FormatTenantToSchema();
     
     public void SetTenantId(Guid tenantId)
     {

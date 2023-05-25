@@ -107,34 +107,34 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
 
         using var command = connection.CreateCommand();
 
-        command.CommandText = $"CREATE SCHEMA {tenantId.FormatToSchema()}";
+        command.CommandText = $"CREATE SCHEMA {tenantId.FormatTenantToSchema()}";
         _logger.LogInformation("{information}", command.CommandText);
 
         await command.ExecuteNonQueryAsync(cancellationToken);
 
         await RunQuery(
             connection,
-            string.Format(TablesDDLQueries.GetIngredientsDefinition, tenantId.FormatToSchema()),
+            string.Format(TablesDDLQueries.GetIngredientsDefinition, tenantId.FormatTenantToSchema()),
             cancellationToken);
 
         await RunQuery(
             connection,
-            string.Format(TablesDDLQueries.GetRecipesDefinition, tenantId.FormatToSchema()),
+            string.Format(TablesDDLQueries.GetRecipesDefinition, tenantId.FormatTenantToSchema()),
             cancellationToken);
 
         await RunQuery(
             connection,
-            string.Format(TablesDDLQueries.GetProductsDefinition, tenantId.FormatToSchema()),
+            string.Format(TablesDDLQueries.GetProductsDefinition, tenantId.FormatTenantToSchema()),
             cancellationToken);
 
         await RunQuery(
             connection,
-            string.Format(TablesDDLQueries.GetIngredientsRecipeDefinition, tenantId.FormatToSchema()),
+            string.Format(TablesDDLQueries.GetIngredientsRecipeDefinition, tenantId.FormatTenantToSchema()),
             cancellationToken);
 
         await RunQuery(
             connection,
-            string.Format(TablesDDLQueries.GetIndexesQuery, tenantId.FormatToSchema()),
+            string.Format(TablesDDLQueries.GetIndexesQuery, tenantId.FormatTenantToSchema()),
             cancellationToken);
 
         await connection.CloseAsync();
@@ -153,27 +153,27 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
 
         await RunQuery(
             connection,
-            TablesDDLQueries.GetDropTableQuery(Constants.TableNames.IngredientRecipeRelation, tenantId.FormatToSchema()),
+            TablesDDLQueries.GetDropTableQuery(Constants.TableNames.IngredientRecipeRelation, tenantId.FormatTenantToSchema()),
             cancellationToken);
 
         await RunQuery(
             connection,
-            TablesDDLQueries.GetDropTableQuery(Constants.TableNames.Ingredient, tenantId.FormatToSchema()),
+            TablesDDLQueries.GetDropTableQuery(Constants.TableNames.Ingredient, tenantId.FormatTenantToSchema()),
             cancellationToken);
 
         await RunQuery(
             connection,
-            TablesDDLQueries.GetDropTableQuery(Constants.TableNames.Product, tenantId.FormatToSchema()),
+            TablesDDLQueries.GetDropTableQuery(Constants.TableNames.Product, tenantId.FormatTenantToSchema()),
             cancellationToken);
 
         await RunQuery(
             connection,
-            TablesDDLQueries.GetDropTableQuery(Constants.TableNames.Recipe, tenantId.FormatToSchema()),
+            TablesDDLQueries.GetDropTableQuery(Constants.TableNames.Recipe, tenantId.FormatTenantToSchema()),
             cancellationToken);        
 
         await RunQuery(
             connection,
-            $"DROP SCHEMA {tenantId.FormatToSchema()}",
+            $"DROP SCHEMA {tenantId.FormatTenantToSchema()}",
             cancellationToken);
 
         await connection.CloseAsync();

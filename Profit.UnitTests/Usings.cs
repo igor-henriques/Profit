@@ -17,3 +17,5 @@ global using Profit.Infrastructure.Repository.DataContext;
 global using Profit.Infrastructure.Repository.Repositories;
 global using Profit.UnitTests.Fixtures.Data;
 global using Xunit;
+global using Profit.UnitTests.Fixtures.Customizations;
+global using Profit.Domain.Commands.Ingredient.Put;

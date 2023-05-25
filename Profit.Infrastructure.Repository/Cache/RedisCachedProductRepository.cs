@@ -90,4 +90,9 @@ internal sealed class RedisCachedProductRepository : IProductRepository
     {
         _productRepository.Update(entity);
     }
+
+    public async Task<IEnumerable<Product>> GetProductsByRecipeId(Guid recipeId, CancellationToken cancellationToken = default)
+    {
+        return await _productRepository.GetProductsByRecipeId(recipeId, cancellationToken);
+    }
 }
