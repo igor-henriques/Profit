@@ -13,7 +13,7 @@ internal sealed class MigratorApplication : IMigratorApplication
         _authContext = authContext;
     }
 
-    public async Task RunMigrationsForAllTenantsAsync()
+    internal async Task RunMigrationsForAllTenantsAsync()
     {
         var tenants = await _authContext.Users
             .AsNoTracking()
@@ -25,7 +25,14 @@ internal sealed class MigratorApplication : IMigratorApplication
 
         foreach (var tenant in tenants)
         {
-            await RunMigrationsToSingleTenantAsync(tenant);
+            try
+            {
+                await RunMigrationsToSingleTenantAsync(tenant);
+            }
+            catch (Exception)
+            {
+                //Ignore exception to be able to try running to the next tenant
+            }
         }
     }
 
@@ -40,8 +47,7 @@ internal sealed class MigratorApplication : IMigratorApplication
 
             var contextOptions = new DbContextOptionsBuilder<ProfitDbContext>()
                      .UseSqlServer(_configuration.GetConnectionString("ProfitSqlServer"),
-                         x => x.MigrationsHistoryTable("__EFMigrationsHistory", tenantInfo.FormattedTenantId))
-                     .AddInterceptors(new SchemaInterceptor(tenantInfo))
+                         x => x.MigrationsHistoryTable("__EFMigrationsHistory", tenantInfo.FormattedTenantId))                     
                      .ReplaceService<IMigrationsAssembly, DbSchemaAwareMigrationAssembly>()
                      .Options;
 
@@ -52,6 +58,10 @@ internal sealed class MigratorApplication : IMigratorApplication
             {
                 await context.Database.MigrateAsync(cancellationToken);
                 _logger.LogInformation("MIGRATION FOR TENANT {tenant} APPLIED", tenantId);
+            }
+            else
+            {
+                _logger.LogInformation("NO MIGRATIONS PENDING FOR TENANT {tenant}", tenantId);
             }
         }
         catch (Exception ex)
