@@ -23,11 +23,11 @@ public sealed class PutIngredientCommandHandlerTests
         // Arrange           
         _mapperMock.Setup(m => m.Map<Profit.Domain.Entities.Ingredient>(command)).Returns(ingredient);
 
-        var ingredientRecipeRelations = new List<IngredientRecipeRelation>() { /* Adicione suas instâncias aqui */ };
+        var ingredientRecipeRelations = new List<Recipe>() { /* Adicione suas instâncias aqui */ };
 
         _unitOfWorkMock.Setup(u => u.IngredientRepository.Update(It.IsAny<Profit.Domain.Entities.Ingredient>()));
 
-        _unitOfWorkMock.Setup(u => u.RecipeRepository.GetIngredientRecipeRelationByIngredientId(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+        _unitOfWorkMock.Setup(u => u.RecipeRepository.GetRecipesAndRelationsByIngredientId(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ingredientRecipeRelations);
 
         var products = new List<Product>() { /* Adicione suas instâncias aqui */ };

@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Profit.Infrastructure.Repository.DataContext;
+using Profit.Infrastructure.Migrator.Data;
 
 #nullable disable
 
-namespace Profit.Infrastructure.Repository.Migrations
+namespace Profit.Infrastructure.Migrator.Migrations
 {
-    [DbContext(typeof(ProfitDbContext))]
-    [Migration("20230204023139_Create")]
-    partial class Create
+    [DbContext(typeof(ProfitDbContextOverride))]
+    partial class ProfitDbContextOverrideModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,11 +33,10 @@ namespace Profit.Infrastructure.Repository.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ImageThumbnailUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<byte>("MeasurementUnitType")
+                    b.Property<byte>("MeasurementUnit")
                         .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
@@ -58,7 +54,7 @@ namespace Profit.Infrastructure.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ingredients");
+                    b.ToTable("Ingredients", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.IngredientRecipeRelation", b =>
@@ -69,9 +65,6 @@ namespace Profit.Infrastructure.Repository.Migrations
                     b.Property<Guid>("RecipeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("IngredientCount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -79,11 +72,15 @@ namespace Profit.Infrastructure.Repository.Migrations
                     b.Property<byte>("MeasurementUnit")
                         .HasColumnType("tinyint");
 
+                    b.Property<decimal>("RelationCost")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("IngredientId", "RecipeId");
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("IngredientRecipeRelations");
+                    b.ToTable("IngredientRecipeRelations", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.Product", b =>
@@ -97,7 +94,6 @@ namespace Profit.Infrastructure.Repository.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ImageThumbnailUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -110,13 +106,14 @@ namespace Profit.Infrastructure.Repository.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("TotalPrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.Recipe", b =>
@@ -131,8 +128,8 @@ namespace Profit.Infrastructure.Repository.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("TotalCost")
                         .HasPrecision(18, 2)
@@ -140,7 +137,7 @@ namespace Profit.Infrastructure.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Recipes");
+                    b.ToTable("Recipes", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.User", b =>
@@ -151,22 +148,29 @@ namespace Profit.Infrastructure.Repository.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("HashedPassword")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("IsEmailVerified")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("TenantId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(36)
+                        .HasColumnType("nvarchar(36)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Models.Authentication.UserClaim", b =>
@@ -190,7 +194,7 @@ namespace Profit.Infrastructure.Repository.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Claims");
+                    b.ToTable("Claims", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.IngredientRecipeRelation", b =>

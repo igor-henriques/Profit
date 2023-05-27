@@ -15,17 +15,26 @@ public sealed class PutIngredientCommandHandler : IRequestHandler<PutIngredientC
 
     public async Task<Unit> Handle(PutIngredientCommand request, CancellationToken cancellationToken)
     {
-        var mappedIngredient = _mapper.Map<Entities.Ingredient>(request);
-        _unitOfWork.IngredientRepository.Update(mappedIngredient);
+        var incomingIngredient = _mapper.Map<Entities.Ingredient>(request);
 
-        var recipesAffected = await _unitOfWork.RecipeRepository.GetIngredientRecipeRelationByIngredientId(
-            mappedIngredient.Id, 
+        _unitOfWork.IngredientRepository.Update(incomingIngredient);
+
+        var recipesAffected = await _unitOfWork.RecipeRepository.GetRecipesAndRelationsByIngredientId(
+            incomingIngredient.Id,
             cancellationToken);
 
-        foreach (var recipes in recipesAffected)
+        foreach (var recipe in recipesAffected)
         {
-            recipes.UpdateIngredientCount(mappedIngredient.Quantity);
-            recipes.UpdateMeasurementUnit(mappedIngredient.MeasurementUnitType);                     
+            foreach (var relation in recipe.IngredientRecipeRelations)
+            {
+                if (relation.IngredientId != incomingIngredient.Id)
+                {
+                    continue;
+                }
+
+                relation.UpdateMeasurementUnit(incomingIngredient.MeasurementUnit);
+                relation.UpdateIngredientCount(incomingIngredient.Quantity);
+            }
         }
 
         var productsAffected = await _unitOfWork.ProductRepository.GetProductsByRecipeId(request.Id, cancellationToken);
@@ -38,7 +47,7 @@ public sealed class PutIngredientCommandHandler : IRequestHandler<PutIngredientC
         if (await _unitOfWork.Commit(cancellationToken) is 0)
         {
             throw new EntityNotFoundException(request.Id, nameof(Entities.Ingredient));
-        }            
+        }
 
         return Unit.Value;
     }

@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.DTOs;
 
-public readonly record struct ClaimDTO
+public readonly record struct ClaimDto
 {
     public Guid Guid { get; init; }
     public string ClaimType { get; init; }

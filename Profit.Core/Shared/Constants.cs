@@ -72,9 +72,10 @@ public static class Constants
     {
         public const string Ingredient = "Ingredients";
         public const string Product = "Products";
-        public const string Recipe = "Recipes";        
+        public const string Recipe = "Recipes";
         public const string IngredientRecipeRelation = "IngredientRecipeRelations";
         public const string User = "Users";
         public const string UserClaim = "Claims";
+        public const string MigrationsHistory = "__MigrationsHistory";
     }
 }

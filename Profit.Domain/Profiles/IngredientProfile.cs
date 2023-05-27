@@ -2,11 +2,11 @@
 
 public sealed class IngredientProfile : Profile
 {
-	public IngredientProfile()
-	{
-		CreateMap<IngredientDTO, Ingredient>().ReverseMap();
-		CreateMap<CreateIngredientCommand, Ingredient>();
-		CreateMap<PatchIngredientCommand, Ingredient>();
-		CreateMap<PutIngredientCommand, Ingredient>();
-	}
+    public IngredientProfile()
+    {
+        CreateMap<IngredientDto, Ingredient>().ReverseMap();
+        CreateMap<CreateIngredientCommand, Ingredient>();
+        CreateMap<PatchIngredientCommand, Ingredient>();
+        CreateMap<PutIngredientCommand, Ingredient>();
+    }
 }

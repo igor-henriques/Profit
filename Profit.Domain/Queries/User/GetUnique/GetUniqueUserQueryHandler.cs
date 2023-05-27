@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Queries.User.GetUnique;
 
-public sealed class GetUniqueUserQueryHandler : IRequestHandler<GetUniqueUserQuery, UserDTO>
+public sealed class GetUniqueUserQueryHandler : IRequestHandler<GetUniqueUserQuery, UserDto>
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
@@ -13,14 +13,14 @@ public sealed class GetUniqueUserQueryHandler : IRequestHandler<GetUniqueUserQue
         _mapper = mapper;
     }
 
-    public async Task<UserDTO> Handle(GetUniqueUserQuery request, CancellationToken cancellationToken)
+    public async Task<UserDto> Handle(GetUniqueUserQuery request, CancellationToken cancellationToken)
     {
         ArgumentValidator.ThrowIfNullOrDefault(request.Id, nameof(request.Id));
 
         var user = await _userRepository.GetUniqueAsync(request.Id, cancellationToken)
             ?? throw new EntityNotFoundException(request.Id, nameof(Entities.User));
 
-        var userDto = _mapper.Map<UserDTO>(user);
+        var userDto = _mapper.Map<UserDto>(user);
         return userDto;
     }
 }

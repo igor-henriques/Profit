@@ -8,9 +8,10 @@ public sealed class IngredientRepositoryTests
         Ingredient ingredient,
         Mock<ILogger<UnitOfWork>> loggerMock,
         Mock<IRedisCacheService> redisMock,
-        Mock<IConfiguration> configuration)
+        Mock<IConfiguration> configuration,
+        Mock<IMigratorApplication> migrator)
     {
-        var unitOfWork = RepositoryFixtures.GetUnitOfWork(loggerMock, redisMock, configuration);
+        var unitOfWork = RepositoryFixtures.GetUnitOfWork(loggerMock, redisMock, configuration, migrator);
 
         await unitOfWork.IngredientRepository.Add(ingredient);
         await unitOfWork.Commit();

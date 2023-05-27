@@ -2,7 +2,7 @@
 
 public sealed class TenantResolverMiddleware
 {
-    private readonly RequestDelegate _next;    
+    private readonly RequestDelegate _next;
 
     public TenantResolverMiddleware(RequestDelegate next)
     {
@@ -13,13 +13,13 @@ public sealed class TenantResolverMiddleware
     {
         if (context.Request.Path.Value?.Contains(Routes.User.BaseUser, StringComparison.OrdinalIgnoreCase) ?? false)
         {
-            await _next(context);         
+            await _next(context);
             return;
         }
 
         var username = GetUsernameFromAuthorizationHeader(context);
         var userTenant = await _unitOfWork.UserRepository.GetTenantIdByUsername(username);
-        _tenantInfo.SetTenantId(userTenant);               
+        _tenantInfo.SetTenantId(userTenant);
 
         await _next(context);
     }

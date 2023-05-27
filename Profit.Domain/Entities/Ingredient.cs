@@ -4,7 +4,7 @@ public sealed record Ingredient : Entity<Ingredient>
 {
     public string Name { get; private set; }
     public decimal Price { get; private set; }
-    public EMeasurementUnit MeasurementUnitType { get; private set; }
+    public EMeasurementUnit MeasurementUnit { get; private set; }
     public decimal Quantity { get; private set; }
     public decimal UnitPrice { get => Price is 0 ? 0 : Price / Quantity; }
     public string ImageThumbnailUrl { get; private set; }
@@ -13,13 +13,13 @@ public sealed record Ingredient : Entity<Ingredient>
 
     public Ingredient(string name,
                       decimal price,
-                      EMeasurementUnit measurementUnitType,
+                      EMeasurementUnit measurementUnit,
                       decimal quantity,
                       string imageThumbnailUrl)
     {
         Name = name;
         Price = price;
-        MeasurementUnitType = measurementUnitType;
+        MeasurementUnit = measurementUnit;
         Quantity = quantity;
         ImageThumbnailUrl = imageThumbnailUrl;
 
@@ -46,7 +46,7 @@ public sealed record Ingredient : Entity<Ingredient>
     {
         UpdateName(ingredient.Name);
         UpdatePrice(ingredient.Price);
-        UpdateMeasurementUnitType(ingredient.MeasurementUnitType);
+        UpdateMeasurementUnitType(ingredient.MeasurementUnit);
         UpdateQuantity(ingredient.Quantity);
         UpdateImageThumbnailUrl(ingredient.ImageThumbnailUrl);
         UpdateDescription(ingredient.Description);
@@ -54,9 +54,14 @@ public sealed record Ingredient : Entity<Ingredient>
         return this;
     }
 
-    public Ingredient UpdateMeasurementUnitType(EMeasurementUnit measurementUnitType)
+    public Ingredient UpdateMeasurementUnitType(EMeasurementUnit incomingMeasurementUnit)
     {
-        this.MeasurementUnitType = measurementUnitType;
+        if (MeasurementUnit != incomingMeasurementUnit)
+        {
+            MeasurementUnit.CheckForInvalidConversions(incomingMeasurementUnit);
+            this.MeasurementUnit = incomingMeasurementUnit;
+        }
+
         return this;
     }
 

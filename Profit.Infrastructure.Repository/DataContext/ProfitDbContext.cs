@@ -1,6 +1,6 @@
 ﻿namespace Profit.Infrastructure.Repository.DataContext;
 
-public sealed class ProfitDbContext : DbContext
+public class ProfitDbContext : DbContext
 {
     public ProfitDbContext(DbContextOptions<ProfitDbContext> options) : base(options) { }
     public ProfitDbContext() { }
@@ -17,6 +17,7 @@ public sealed class ProfitDbContext : DbContext
 
         base.OnModelCreating(modelBuilder);
     }
+
     public DbSet<Ingredient> Ingredients { get; init; }
     public DbSet<IngredientRecipeRelation> IngredientRecipeRelations { get; init; }
     public DbSet<Recipe> Recipes { get; init; }

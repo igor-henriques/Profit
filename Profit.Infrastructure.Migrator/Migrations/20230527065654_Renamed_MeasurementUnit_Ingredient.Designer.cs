@@ -5,22 +5,21 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Profit.Infrastructure.Repository.DataContext;
+using Profit.Infrastructure.Migrator.Data;
 
 #nullable disable
 
-namespace Profit.Infrastructure.Repository.Migrations
+namespace Profit.Infrastructure.Migrator.Migrations
 {
-    [DbContext(typeof(ProfitDbContext))]
-    [Migration("20230525052228_RemoveId_IngredientRecipeRelation")]
-    partial class RemoveIdIngredientRecipeRelation
+    [DbContext(typeof(ProfitDbContextOverride))]
+    [Migration("20230527065654_Renamed_MeasurementUnit_Ingredient")]
+    partial class RenamedMeasurementUnitIngredient
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("dbo")
                 .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -40,7 +39,7 @@ namespace Profit.Infrastructure.Repository.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<byte>("MeasurementUnitType")
+                    b.Property<byte>("MeasurementUnit")
                         .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
@@ -58,7 +57,7 @@ namespace Profit.Infrastructure.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ingredients", "dbo");
+                    b.ToTable("Ingredients", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.IngredientRecipeRelation", b =>
@@ -76,11 +75,15 @@ namespace Profit.Infrastructure.Repository.Migrations
                     b.Property<byte>("MeasurementUnit")
                         .HasColumnType("tinyint");
 
+                    b.Property<decimal>("RelationCost")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("IngredientId", "RecipeId");
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("IngredientRecipeRelations", "dbo");
+                    b.ToTable("IngredientRecipeRelations", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.Product", b =>
@@ -113,7 +116,7 @@ namespace Profit.Infrastructure.Repository.Migrations
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("Products", "dbo");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.Recipe", b =>
@@ -137,7 +140,7 @@ namespace Profit.Infrastructure.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Recipes", "dbo");
+                    b.ToTable("Recipes", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.User", b =>
@@ -170,7 +173,7 @@ namespace Profit.Infrastructure.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", "dbo");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Models.Authentication.UserClaim", b =>
@@ -194,7 +197,7 @@ namespace Profit.Infrastructure.Repository.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Claims", "dbo");
+                    b.ToTable("Claims", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.IngredientRecipeRelation", b =>

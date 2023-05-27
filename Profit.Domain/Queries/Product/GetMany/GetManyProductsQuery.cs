@@ -1,5 +1,5 @@
 ﻿namespace Profit.Domain.Queries.Product.GetMany;
 
-public readonly record struct GetManyProductsQuery : IQuery<IEnumerable<ProductDTO>>
+public readonly record struct GetManyProductsQuery : IQuery<IEnumerable<ProductDto>>
 {
 }

@@ -90,8 +90,17 @@ internal sealed class RedisCachedRecipeRepository : IRecipeRepository
         _recipeRepository.Update(entity);
     }
 
-    public async Task<IEnumerable<IngredientRecipeRelation>> GetIngredientRecipeRelationByIngredientId(Guid ingredientId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Recipe>> GetRecipesAndRelationsByIngredientId(Guid ingredientId, CancellationToken cancellationToken = default)
     {
-        return await _recipeRepository.GetIngredientRecipeRelationByIngredientId(ingredientId, cancellationToken);
+        var specificRedisKey = $"{nameof(GetRecipesAndRelationsByIngredientId)}{ingredientId}".ToLower();
+        var recipes = await _cacheService.GetAsync<IEnumerable<Recipe>>(specificRedisKey);
+
+        if (recipes is null)
+        {
+            recipes = await _recipeRepository.GetRecipesAndRelationsByIngredientId(ingredientId, cancellationToken);
+            await _cacheService.SetAsync(specificRedisKey, recipes, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
+        }
+
+        return recipes;
     }
 }

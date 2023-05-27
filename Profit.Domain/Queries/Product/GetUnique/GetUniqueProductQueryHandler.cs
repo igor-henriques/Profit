@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Queries.Product.GetUnique;
 
-public sealed class GetUniqueProductQueryHandler : IRequestHandler<GetUniqueProductQuery, ProductDTO>
+public sealed class GetUniqueProductQueryHandler : IRequestHandler<GetUniqueProductQuery, ProductDto>
 {
     private readonly IIngredientRepository _ingredientRepository;
     private readonly IMapper _mapper;
@@ -13,14 +13,14 @@ public sealed class GetUniqueProductQueryHandler : IRequestHandler<GetUniqueProd
         _mapper = mapper;
     }
 
-    public async Task<ProductDTO> Handle(GetUniqueProductQuery request, CancellationToken cancellationToken)
+    public async Task<ProductDto> Handle(GetUniqueProductQuery request, CancellationToken cancellationToken)
     {
         ArgumentValidator.ThrowIfNullOrDefault(request.Id, nameof(request.Id));
 
         var ingredient = await _ingredientRepository.GetUniqueAsync(request.Id, cancellationToken)
             ?? throw new EntityNotFoundException(request.Id, nameof(Entities.Product));
 
-        var ingredientDto = _mapper.Map<ProductDTO>(ingredient);
+        var ingredientDto = _mapper.Map<ProductDto>(ingredient);
         return ingredientDto;
     }
 }

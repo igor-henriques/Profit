@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Validations.DTOs;
 
-public sealed class ProductDtoValidator : AbstractValidator<ProductDTO>
+public sealed class ProductDtoValidator : AbstractValidator<ProductDto>
 {
     public ProductDtoValidator()
     {

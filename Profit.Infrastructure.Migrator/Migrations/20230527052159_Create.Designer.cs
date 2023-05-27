@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Profit.Infrastructure.Repository.DataContext;
+using Profit.Infrastructure.Migrator.Data;
 
 #nullable disable
 
-namespace Profit.Infrastructure.Repository.Migrations
+namespace Profit.Infrastructure.Migrator.Migrations
 {
-    [DbContext(typeof(ProfitDbContext))]
-    [Migration("20230211181158_FirstImplementationMultiTenancy")]
-    partial class FirstImplementationMultiTenancy
+    [DbContext(typeof(ProfitDbContextOverride))]
+    [Migration("20230527052159_Create")]
+    partial class Create
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,7 +57,7 @@ namespace Profit.Infrastructure.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ingredients");
+                    b.ToTable("Ingredients", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.IngredientRecipeRelation", b =>
@@ -68,9 +68,6 @@ namespace Profit.Infrastructure.Repository.Migrations
                     b.Property<Guid>("RecipeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("IngredientCount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -78,11 +75,15 @@ namespace Profit.Infrastructure.Repository.Migrations
                     b.Property<byte>("MeasurementUnit")
                         .HasColumnType("tinyint");
 
+                    b.Property<decimal>("RelationCost")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("IngredientId", "RecipeId");
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("IngredientRecipeRelations");
+                    b.ToTable("IngredientRecipeRelations", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.Product", b =>
@@ -115,7 +116,7 @@ namespace Profit.Infrastructure.Repository.Migrations
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.Recipe", b =>
@@ -139,7 +140,64 @@ namespace Profit.Infrastructure.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Recipes");
+                    b.ToTable("Recipes", (string)null);
+                });
+
+            modelBuilder.Entity("Profit.Domain.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("HashedPassword")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("IsEmailVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("TenantId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("nvarchar(36)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("Profit.Domain.Models.Authentication.UserClaim", b =>
+                {
+                    b.Property<Guid>("Guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ClaimType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Guid");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Claims", (string)null);
                 });
 
             modelBuilder.Entity("Profit.Domain.Entities.IngredientRecipeRelation", b =>
@@ -172,6 +230,17 @@ namespace Profit.Infrastructure.Repository.Migrations
                     b.Navigation("Recipe");
                 });
 
+            modelBuilder.Entity("Profit.Domain.Models.Authentication.UserClaim", b =>
+                {
+                    b.HasOne("Profit.Domain.Entities.User", "User")
+                        .WithMany("UserClaims")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Profit.Domain.Entities.Ingredient", b =>
                 {
                     b.Navigation("IngredientRecipeRelations");
@@ -180,6 +249,11 @@ namespace Profit.Infrastructure.Repository.Migrations
             modelBuilder.Entity("Profit.Domain.Entities.Recipe", b =>
                 {
                     b.Navigation("IngredientRecipeRelations");
+                });
+
+            modelBuilder.Entity("Profit.Domain.Entities.User", b =>
+                {
+                    b.Navigation("UserClaims");
                 });
 #pragma warning restore 612, 618
         }

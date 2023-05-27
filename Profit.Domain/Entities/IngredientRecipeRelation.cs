@@ -8,11 +8,13 @@ public sealed record IngredientRecipeRelation
     public Recipe Recipe { get; init; }
     public EMeasurementUnit MeasurementUnit { get; private set; }
     public decimal IngredientCount { get; private set; }
+    public decimal RelationCost { get; private set; }
 
     public IngredientRecipeRelation(
-        Guid ingredientId,                
+        Guid ingredientId,
         EMeasurementUnit measurementUnit,
         decimal ingredientCount,
+        decimal relationCost,
         Guid? recipeId = null,
         Recipe recipe = null,
         Ingredient ingredient = null)
@@ -23,66 +25,86 @@ public sealed record IngredientRecipeRelation
         Recipe = recipe;
         MeasurementUnit = measurementUnit;
         IngredientCount = ingredientCount;
+        RelationCost = relationCost;
 
         Validate();
     }
 
     public IngredientRecipeRelation() { }
 
-    public IngredientRecipeRelation Update(IngredientRecipeRelation entity)
+    public IngredientRecipeRelation Update(IngredientRecipeRelation incomingEntity)
     {
-        UpdateIngredientId(entity.IngredientId);
-        UpdateIngredientCount(entity.IngredientCount);
-        UpdateMeasurementUnit(entity.MeasurementUnit);
-        UpdateRecipeId(entity.RecipeId);
+        UpdateIngredientId(incomingEntity.IngredientId);
+        UpdateIngredientCount(incomingEntity.IngredientCount);
+        UpdateMeasurementUnit(incomingEntity.MeasurementUnit);
+        UpdateRecipeId(incomingEntity.RecipeId);
 
         return this;
     }
 
-    public IngredientRecipeRelation UpdateIngredientId(Guid ingredientId)
+    public IngredientRecipeRelation UpdateIngredientId(Guid incomingIngredientId)
     {
-        ArgumentValidator.ThrowIfNullOrDefault(ingredientId, nameof(ingredientId));
+        ArgumentValidator.ThrowIfNullOrDefault(incomingIngredientId, nameof(incomingIngredientId));
 
-        if (IngredientId != ingredientId)
+        if (IngredientId != incomingIngredientId)
         {
-            IngredientId = ingredientId;
+            IngredientId = incomingIngredientId;
         }
 
         return this;
     }
 
-    public IngredientRecipeRelation UpdateRecipeId(Guid recipeId)
+    public IngredientRecipeRelation UpdateRecipeId(Guid incomingRecipeId)
     {
-        RecipeId = recipeId;
-        return this;
-    }
+        ArgumentValidator.ThrowIfNullOrDefault(incomingRecipeId, nameof(incomingRecipeId));
 
-    public IngredientRecipeRelation UpdateIngredientCount(decimal ingredientCount)
-    {
-        ArgumentValidator.ThrowIfNegative(ingredientCount, nameof(ingredientCount));
-        ArgumentValidator.ThrowIfZero(ingredientCount, nameof(ingredientCount));
-
-        if (IngredientCount != ingredientCount)
+        if (RecipeId != incomingRecipeId)
         {
-            IngredientCount = ingredientCount;
+            RecipeId = incomingRecipeId;
         }
 
         return this;
     }
 
-    public IngredientRecipeRelation UpdateMeasurementUnit(EMeasurementUnit measurementUnit)
+    public IngredientRecipeRelation UpdateIngredientCount(decimal incomingIngredientCount)
     {
-        if (MeasurementUnit != measurementUnit)
+        ArgumentValidator.ThrowIfNegative(incomingIngredientCount, nameof(incomingIngredientCount));
+        ArgumentValidator.ThrowIfZero(incomingIngredientCount, nameof(incomingIngredientCount));
+
+        if (IngredientCount != incomingIngredientCount)
         {
-            MeasurementUnit = measurementUnit;
+            IngredientCount = incomingIngredientCount;
+        }
+
+        return this;
+    }
+
+    public IngredientRecipeRelation UpdateMeasurementUnit(EMeasurementUnit incomingMeasurementUnit)
+    {
+        if (MeasurementUnit != incomingMeasurementUnit)
+        {
+            MeasurementUnit.CheckForInvalidConversions(incomingMeasurementUnit);
+            MeasurementUnit = incomingMeasurementUnit;
+        }
+
+        return this;
+    }
+
+    public IngredientRecipeRelation UpdateRelationCost(decimal incomingRelationCost)
+    {
+        ArgumentValidator.ThrowIfNegative(incomingRelationCost, nameof(incomingRelationCost));
+
+        if (RelationCost != incomingRelationCost)
+        {
+            RelationCost = incomingRelationCost;
         }
 
         return this;
     }
 
     public void Validate()
-    {        
+    {
         ArgumentValidator.ThrowIfZeroOrNegative(IngredientCount, nameof(IngredientCount));
-        ArgumentValidator.ThrowIfNullOrDefault(IngredientId, nameof(IngredientId));        
+        ArgumentValidator.ThrowIfNullOrDefault(IngredientId, nameof(IngredientId));
     }
 }

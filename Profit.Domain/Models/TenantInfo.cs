@@ -6,9 +6,9 @@
 public sealed record TenantInfo
 {
     private Guid _tenantId;
-    public Guid TenantId 
-    { 
-        get 
+    public Guid TenantId
+    {
+        get
         {
             if (_tenantId == Guid.Empty)
             {
@@ -19,7 +19,7 @@ public sealed record TenantInfo
         }
     }
     public string FormattedTenantId => TenantId.FormatTenantToSchema();
-    
+
     public void SetTenantId(Guid tenantId)
     {
         if (tenantId == Guid.Empty)

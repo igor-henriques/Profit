@@ -23,7 +23,7 @@ public sealed class CreateRecipeCommandHandler : IRequestHandler<CreateRecipeCom
         {
             var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(relation.IngredientId, cancellationToken);
             ArgumentValidator.ThrowIfNullOrDefault(ingredient, nameof(ingredient));
-            recipeTotalCost += ingredient.UnitPrice * relation.IngredientCount;            
+            recipeTotalCost += ingredient.UnitPrice * relation.IngredientCount;
         }
 
         recipe.UpdateTotalCost(recipeTotalCost);

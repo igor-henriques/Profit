@@ -2,8 +2,8 @@
 
 public sealed class AuthenticateUserValidator : AbstractValidator<AuthenticateUserCommand>
 {
-	public AuthenticateUserValidator()
-	{
+    public AuthenticateUserValidator()
+    {
         RuleFor(x => x.Username)
             .NotEmpty()
             .WithMessage(x => $"{nameof(x.Username)} is required")
@@ -17,6 +17,5 @@ public sealed class AuthenticateUserValidator : AbstractValidator<AuthenticateUs
             .WithMessage(x => $"{nameof(x.Password)} must have at least one uppercase letter, one lowercase letter, one number and one special character")
             .MaximumLength(Constants.FieldsDefinitions.MaxLengthHashedPassword / 2)
             .WithMessage(x => $"{nameof(x.Password)} maximum length is {Constants.FieldsDefinitions.MaxLengthHashedPassword / 2} characters");
-    }		
+    }
 }
-																		   

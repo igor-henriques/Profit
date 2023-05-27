@@ -32,8 +32,8 @@ internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUse
         {
             _context.Claims.RemoveRange(userClaims);
         }
-        
-        _context.Users.Remove(entity);        
+
+        _context.Users.Remove(entity);
     }
 
     public override async ValueTask Add(User entity, CancellationToken cancellationToken = default)

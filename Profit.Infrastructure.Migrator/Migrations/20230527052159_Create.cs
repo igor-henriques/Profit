@@ -1,12 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿#nullable disable
 
-#nullable disable
-
-namespace Profit.Infrastructure.Repository.Migrations
+namespace Profit.Infrastructure.Migrator.Migrations
 {
     /// <inheritdoc />
     public partial class Create : Migration
     {
+        private readonly IDbContextSchema _schema;
+
+        public Create(IDbContextSchema schema)
+        {
+            _schema = schema ?? throw new ArgumentNullException(nameof(schema));
+        }
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -19,42 +24,29 @@ namespace Profit.Infrastructure.Repository.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     MeasurementUnitType = table.Column<byte>(type: "tinyint", nullable: false),
                     Quantity = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    ImageThumbnailUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    ImageThumbnailUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ingredients", x => x.Id);
-                });
+                },
+                schema: _schema.Schema);
 
             migrationBuilder.CreateTable(
                 name: "Recipes",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     TotalCost = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Recipes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    HashedPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsEmailVerified = table.Column<bool>(type: "bit", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                });
+                schema: _schema.Schema);
 
             migrationBuilder.CreateTable(
                 name: "IngredientRecipeRelations",
@@ -64,7 +56,7 @@ namespace Profit.Infrastructure.Repository.Migrations
                     RecipeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MeasurementUnit = table.Column<byte>(type: "tinyint", nullable: false),
                     IngredientCount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    RelationCost = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -74,14 +66,17 @@ namespace Profit.Infrastructure.Repository.Migrations
                         column: x => x.IngredientId,
                         principalTable: "Ingredients",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        principalSchema: _schema.Schema);
                     table.ForeignKey(
                         name: "FK_IngredientRecipeRelations_Recipes_RecipeId",
                         column: x => x.RecipeId,
                         principalTable: "Recipes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade,
+                        principalSchema: _schema.Schema);
+                },
+                schema: _schema.Schema);
 
             migrationBuilder.CreateTable(
                 name: "Products",
@@ -89,8 +84,8 @@ namespace Profit.Infrastructure.Repository.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ImageThumbnailUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    ImageThumbnailUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     RecipeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -102,65 +97,42 @@ namespace Profit.Infrastructure.Repository.Migrations
                         column: x => x.RecipeId,
                         principalTable: "Recipes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Claims",
-                columns: table => new
-                {
-                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                        onDelete: ReferentialAction.Cascade,
+                        principalSchema: _schema.Schema);
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Claims", x => x.Guid);
-                    table.ForeignKey(
-                        name: "FK_Claims_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Claims_UserId",
-                table: "Claims",
-                column: "UserId");
+                schema: _schema.Schema);
 
             migrationBuilder.CreateIndex(
                 name: "IX_IngredientRecipeRelations_RecipeId",
                 table: "IngredientRecipeRelations",
-                column: "RecipeId");
+                column: "RecipeId",
+                schema: _schema.Schema);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_RecipeId",
                 table: "Products",
-                column: "RecipeId");
+                column: "RecipeId",
+                schema: _schema.Schema);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Claims");
+                name: "IngredientRecipeRelations",
+                schema: _schema.Schema);
 
             migrationBuilder.DropTable(
-                name: "IngredientRecipeRelations");
+                name: "Products",
+                schema: _schema.Schema);
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Ingredients",
+                schema: _schema.Schema);
 
             migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Ingredients");
-
-            migrationBuilder.DropTable(
-                name: "Recipes");
+                name: "Recipes",
+                schema: _schema.Schema);
         }
     }
 }

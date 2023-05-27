@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Queries.User.GetMany;
 
-public sealed class GetManyUsersQueryHandler : IRequestHandler<GetManyUsersQuery, IEnumerable<UserDTO>>
+public sealed class GetManyUsersQueryHandler : IRequestHandler<GetManyUsersQuery, IEnumerable<UserDto>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
@@ -13,10 +13,10 @@ public sealed class GetManyUsersQueryHandler : IRequestHandler<GetManyUsersQuery
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<UserDTO>> Handle(GetManyUsersQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<UserDto>> Handle(GetManyUsersQuery request, CancellationToken cancellationToken)
     {
         var users = await _userRepository.GetManyAsync(cancellationToken);
-        var usersDto = users.Select(_mapper.Map<UserDTO>);
+        var usersDto = users.Select(_mapper.Map<UserDto>);
         return usersDto;
     }
 }

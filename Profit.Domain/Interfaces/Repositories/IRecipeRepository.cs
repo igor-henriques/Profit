@@ -2,7 +2,7 @@
 
 public interface IRecipeRepository : IBaseRepository<Recipe>
 {
-    Task<IEnumerable<IngredientRecipeRelation>> GetIngredientRecipeRelationByIngredientId(
+    Task<IEnumerable<Recipe>> GetRecipesAndRelationsByIngredientId(
        Guid ingredientId,
        CancellationToken cancellationToken = default);
 }

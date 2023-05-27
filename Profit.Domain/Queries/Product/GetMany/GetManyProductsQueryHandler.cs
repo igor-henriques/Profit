@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Queries.Product.GetMany;
 
-public sealed class GetManyProductsQueryHandler : IRequestHandler<GetManyProductsQuery, IEnumerable<ProductDTO>>
+public sealed class GetManyProductsQueryHandler : IRequestHandler<GetManyProductsQuery, IEnumerable<ProductDto>>
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
@@ -13,10 +13,10 @@ public sealed class GetManyProductsQueryHandler : IRequestHandler<GetManyProduct
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<ProductDTO>> Handle(GetManyProductsQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<ProductDto>> Handle(GetManyProductsQuery request, CancellationToken cancellationToken)
     {
         var ingredient = await _productRepository.GetManyAsync(cancellationToken);
-        var ingredientDto = ingredient.Select(_mapper.Map<ProductDTO>);
+        var ingredientDto = ingredient.Select(_mapper.Map<ProductDto>);
         return ingredientDto;
     }
 }

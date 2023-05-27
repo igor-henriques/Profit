@@ -11,6 +11,7 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
     private readonly ILogger<UnitOfWork> _logger;
     private readonly IRedisCacheService _cacheService;
     private readonly IConfiguration _configuration;
+    private readonly IMigratorApplication _migratorApplication;
 
     private IIngredientRepository _ingredientRepository;
     private IUserRepository _userRepository;
@@ -70,13 +71,15 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
         ILogger<UnitOfWork> logger,
         IRedisCacheService cacheService,
         IConfiguration configuration,
-        AuthDbContext authContext)
+        AuthDbContext authContext,
+        IMigratorApplication migratorApplication)
     {
         _profitContext = context;
         _logger = logger;
         _cacheService = cacheService;
         _configuration = configuration;
         _authContext = authContext;
+        _migratorApplication = migratorApplication;
     }
 
     /// <summary>
@@ -97,8 +100,6 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
 
     public async Task CreateSchema(Guid tenantId, CancellationToken cancellationToken = default)
     {
-        using TransactionScope transaction = new(TransactionScopeAsyncFlowOption.Enabled);
-
         var connection = _profitContext.Database.GetDbConnection();
         if (connection.State is not ConnectionState.Open)
         {
@@ -111,34 +112,8 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
         _logger.LogInformation("{information}", command.CommandText);
 
         await command.ExecuteNonQueryAsync(cancellationToken);
-
-        await RunQuery(
-            connection,
-            string.Format(TablesDDLQueries.GetIngredientsDefinition, tenantId.FormatTenantToSchema()),
-            cancellationToken);
-
-        await RunQuery(
-            connection,
-            string.Format(TablesDDLQueries.GetRecipesDefinition, tenantId.FormatTenantToSchema()),
-            cancellationToken);
-
-        await RunQuery(
-            connection,
-            string.Format(TablesDDLQueries.GetProductsDefinition, tenantId.FormatTenantToSchema()),
-            cancellationToken);
-
-        await RunQuery(
-            connection,
-            string.Format(TablesDDLQueries.GetIngredientsRecipeDefinition, tenantId.FormatTenantToSchema()),
-            cancellationToken);
-
-        await RunQuery(
-            connection,
-            string.Format(TablesDDLQueries.GetIndexesQuery, tenantId.FormatTenantToSchema()),
-            cancellationToken);
-
+        await _migratorApplication.RunMigrationsToSingleTenantAsync(tenantId, cancellationToken);
         await connection.CloseAsync();
-        transaction.Complete();
     }
 
     public async Task DropTablesAndSchema(Guid tenantId, CancellationToken cancellationToken = default)
@@ -169,7 +144,12 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
         await RunQuery(
             connection,
             TablesDDLQueries.GetDropTableQuery(Constants.TableNames.Recipe, tenantId.FormatTenantToSchema()),
-            cancellationToken);        
+            cancellationToken);
+
+        await RunQuery(
+            connection,
+            TablesDDLQueries.GetDropTableQuery(Constants.TableNames.MigrationsHistory, tenantId.FormatTenantToSchema()),
+            cancellationToken);
 
         await RunQuery(
             connection,

@@ -10,6 +10,7 @@ public sealed class IngredientRecipeRelationFluentMapping : IEntityTypeConfigura
         builder.Property(i => i.RecipeId).IsRequired();
         builder.Property(i => i.MeasurementUnit).IsRequired();
         builder.Property(i => i.IngredientCount).IsRequired().HasPrecision(18, 2);
+        builder.Property(i => i.RelationCost).IsRequired().HasPrecision(18, 2);
 
         builder.HasOne(i => i.Ingredient)
             .WithMany(i => i.IngredientRecipeRelations)

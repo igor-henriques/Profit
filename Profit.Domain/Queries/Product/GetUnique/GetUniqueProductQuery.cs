@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Queries.Product.GetUnique;
 
-public readonly record struct GetUniqueProductQuery : IQuery<ProductDTO>
+public readonly record struct GetUniqueProductQuery : IQuery<ProductDto>
 {
     public Guid Id { get; }
 

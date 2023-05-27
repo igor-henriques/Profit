@@ -42,7 +42,7 @@ internal sealed class RedisCachedUserRepository : IUserRepository
     }
 
     public void Delete(User entity)
-    {        
+    {
         _userRepository.Delete(entity);
         _cacheService.Remove(entity.Id.ToString());
     }

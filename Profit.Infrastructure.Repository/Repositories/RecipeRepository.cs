@@ -1,6 +1,4 @@
-﻿using Profit.Domain.Entities.Base;
-
-namespace Profit.Infrastructure.Repository.Repositories;
+﻿namespace Profit.Infrastructure.Repository.Repositories;
 
 internal sealed class RecipeRepository : BaseRepository<Recipe, ProfitDbContext>, IRecipeRepository
 {
@@ -36,14 +34,13 @@ internal sealed class RecipeRepository : BaseRepository<Recipe, ProfitDbContext>
         _logger.LogInformation("{entity} was added", entity);
     }
 
-    public async Task<IEnumerable<IngredientRecipeRelation>> GetIngredientRecipeRelationByIngredientId(
+    public async Task<IEnumerable<Recipe>> GetRecipesAndRelationsByIngredientId(
         Guid ingredientId,
         CancellationToken cancellationToken = default)
     {
-        var response = await _context.IngredientRecipeRelations
-            .Include(x => x.Recipe)
-            .Include(x => x.Ingredient)
-            .Where(x => x.IngredientId == ingredientId)
+        var response = await _context.Recipes
+            .Include(x => x.IngredientRecipeRelations)
+            .Where(x => x.IngredientRecipeRelations.Any(y => y.IngredientId == ingredientId))
             .ToListAsync(cancellationToken);
 
         _logger.LogInformation("{response} records were retrieved", response.Count);
@@ -55,10 +52,19 @@ internal sealed class RecipeRepository : BaseRepository<Recipe, ProfitDbContext>
     {
         var response = await _context.Recipes
             .Include(x => x.IngredientRecipeRelations)
-            .ThenInclude(x => x.Ingredient)
             .ToListAsync(cancellationToken);
 
         _logger.LogInformation("{response} records were retrieved", response.Count);
+
+        return response;
+    }
+
+    public override async ValueTask<Recipe> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var response = await _context.Recipes
+            .AsNoTracking()
+            .Include(x => x.IngredientRecipeRelations)
+            .FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
 
         return response;
     }

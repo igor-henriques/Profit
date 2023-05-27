@@ -6,7 +6,7 @@ public sealed class ExceptionHandlerMiddleware
 
     public ExceptionHandlerMiddleware(RequestDelegate next)
     {
-        this._next = next;
+        _next = next;
     }
 
     public async Task Invoke(HttpContext context)
@@ -42,8 +42,12 @@ public sealed class ExceptionHandlerMiddleware
         catch (InvalidTenantException ex)
         {
             await Handle(context, ex);
-        } 
+        }
         catch (InvalidCredentialsException ex)
+        {
+            await Handle(context, ex);
+        }
+        catch (InvalidMeasurementConversionException ex)
         {
             await Handle(context, ex);
         }
@@ -166,11 +170,26 @@ public sealed class ExceptionHandlerMiddleware
             });
 
         await context.Response.WriteAsync(errorMessage);
-    } 
+    }
 
     private static async Task Handle(HttpContext context, InvalidCredentialsException ex)
     {
         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+        context.Response.ContentType = "application/json";
+
+        var errorMessage = JsonSerializer.Serialize(
+            new
+            {
+                Messages = ex.Message.Split("\n"),
+                context.Response.StatusCode
+            });
+
+        await context.Response.WriteAsync(errorMessage);
+    }
+
+    private static async Task Handle(HttpContext context, InvalidMeasurementConversionException ex)
+    {
+        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
         context.Response.ContentType = "application/json";
 
         var errorMessage = JsonSerializer.Serialize(

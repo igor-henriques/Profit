@@ -5,7 +5,8 @@ internal static class RepositoryFixtures
     internal static IUnitOfWork GetUnitOfWork(
         Mock<ILogger<UnitOfWork>> loggerMock,
         Mock<IRedisCacheService> redisMock,
-        Mock<IConfiguration> configuration)
+        Mock<IConfiguration> configuration,
+        Mock<IMigratorApplication> migrator)
     {
         // Arrange        
         var profitOptions = new DbContextOptionsBuilder<ProfitDbContext>()
@@ -22,7 +23,7 @@ internal static class RepositoryFixtures
 
         var authContext = new AuthDbContext(authOptions);
 
-        var unitOfWork = new UnitOfWork(profitContext, loggerMock.Object, redisMock.Object, configuration.Object, authContext);
+        var unitOfWork = new UnitOfWork(profitContext, loggerMock.Object, redisMock.Object, configuration.Object, authContext, migrator.Object);
 
         return unitOfWork;
     }

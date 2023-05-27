@@ -4,7 +4,7 @@ public sealed class ProductProfile : Profile
 {
     public ProductProfile()
     {
-        CreateMap<ProductDTO, Product>().ReverseMap();
+        CreateMap<ProductDto, Product>().ReverseMap();
         CreateMap<CreateProductCommand, Product>();
         CreateMap<PatchProductCommand, Product>();
         CreateMap<PutProductCommand, Product>();

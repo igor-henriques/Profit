@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.DTOs;
 
-public readonly record struct IngredientDTO
+public readonly record struct IngredientDto
 {
     public Guid Id { get; init; }
     public string Name { get; init; }
@@ -10,7 +10,7 @@ public readonly record struct IngredientDTO
     public string ImageThumbnailUrl { get; init; }
     public string Description { get; init; }
 
-    public IngredientDTO(Guid id,
+    public IngredientDto(Guid id,
                          string name,
                          decimal price,
                          decimal quantity,
@@ -27,5 +27,5 @@ public readonly record struct IngredientDTO
         Description = description;
     }
 
-    public IngredientDTO() { }
+    public IngredientDto() { }
 }

@@ -49,13 +49,13 @@ public sealed record MeasurementUnit
     public static MeasurementUnit CreateFromIngredient(Ingredient ingredient)
     {
         ArgumentValidator.ThrowIfNullOrDefault(ingredient, nameof(ingredient));
-        return new MeasurementUnit(ingredient.MeasurementUnitType, ingredient.Quantity);
+        return new MeasurementUnit(ingredient.MeasurementUnit, ingredient.Quantity);
     }
 
     public static MeasurementUnit CreateFromIngredientRecipeRelation(IngredientRecipeRelation ingredientRecipeRelation)
     {
         ArgumentValidator.ThrowIfNullOrDefault(ingredientRecipeRelation, nameof(ingredientRecipeRelation));
-        return new MeasurementUnit(ingredientRecipeRelation.Ingredient.MeasurementUnitType, ingredientRecipeRelation.IngredientCount);
+        return new MeasurementUnit(ingredientRecipeRelation.Ingredient.MeasurementUnit, ingredientRecipeRelation.IngredientCount);
     }
 
     /// <summary>

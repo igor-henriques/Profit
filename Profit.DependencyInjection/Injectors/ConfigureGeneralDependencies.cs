@@ -13,6 +13,7 @@ public static class ConfigureGeneralDependencies
         services.AddSingleton(typeof(ICommandBatchProcessorService<>), typeof(CommandBatchProcessorService<>));
         services.AddHostedService<CommandBatchProcessorWorker<RequestCommandQueryLog>>();
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+        services.AddScoped<IMigratorApplication, MigratorApplication>();
         return services;
     }
 }
