@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 try
 {
     var builder = WebApplication.CreateBuilder(args);
@@ -12,21 +10,28 @@ try
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
-
+    
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwagger();
+    builder.Services.AddOptionsConfigurations(builder.Configuration);
     builder.Services.AddGeneralDependencies();
     builder.Services.AddDbContext<ProfitDbContext>((serviceProvider, options) =>
     {
         var schemaInterceptor = serviceProvider.GetRequiredService<SchemaInterceptor>();
-        options.UseSqlServer(builder.Configuration.GetConnectionString("ProfitSqlServer"))
+        var connectionStringOptions = serviceProvider.GetRequiredService<IOptions<ConnectionStringsOptions>>();
+        options.UseSqlServer(connectionStringOptions.Value.ProfitSqlServer)
                .AddInterceptors(schemaInterceptor);
     });
 
-    builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AuthSqlServer")));
+    builder.Services.AddDbContext<AuthDbContext>((serviceProvider, options) =>
+    {
+        var connectionStringOptions = serviceProvider.GetRequiredService<IOptions<ConnectionStringsOptions>>();
+        options.UseSqlServer(connectionStringOptions.Value.AuthSqlServer);
+    });
+
     builder.Services.AddMapperProfiles();
     builder.Services.AddValidators();
-    builder.Services.AddCacheServices(builder.Configuration.GetConnectionString("Redis"));
+    builder.Services.AddCacheServices();
     builder.Services.AddCqrsHandlers();
     builder.Services.AddCustomAuthentication(builder.Configuration.GetValue<string>("JwtAuthentication:Key"));
     builder.Services.AddCustomAuthorization();

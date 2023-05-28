@@ -2,22 +2,22 @@
 
 public sealed class GetUniqueRecipeQueryHandler : IRequestHandler<GetUniqueRecipeQuery, RecipeDto>
 {
-    private readonly IRecipeRepository _recipeRepository;
+    private readonly IReadOnlyBaseRepository<Entities.Recipe> _repo;
     private readonly IMapper _mapper;
 
     public GetUniqueRecipeQueryHandler(
-        IUnitOfWork unitOfWork,
-        IMapper mapper)
+        IMapper mapper,
+        IReadOnlyBaseRepository<Entities.Recipe> repo)
     {
-        _recipeRepository = unitOfWork.RecipeRepository;
         _mapper = mapper;
+        _repo = repo;
     }
 
     public async Task<RecipeDto> Handle(GetUniqueRecipeQuery request, CancellationToken cancellationToken)
     {
         ArgumentValidator.ThrowIfNullOrDefault(request.Id, nameof(request.Id));
 
-        var recipe = await _recipeRepository.GetUniqueAsync(request.Id, cancellationToken)
+        var recipe = await _repo.GetUniqueAsync(request.Id, cancellationToken)
             ?? throw new EntityNotFoundException(request.Id, nameof(Entities.Recipe));
 
         var recipeDto = _mapper.Map<RecipeDto>(recipe);

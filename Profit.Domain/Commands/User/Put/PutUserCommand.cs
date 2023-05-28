@@ -6,4 +6,5 @@ public sealed record PutUserCommand : IRequest<Unit>
     public string Username { get; init; }
     public string Email { get; init; }
     public string Password { get; init; }
+    public bool IsDeleted { get; init; }
 }

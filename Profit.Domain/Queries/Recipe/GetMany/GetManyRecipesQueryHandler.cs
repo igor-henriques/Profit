@@ -2,20 +2,20 @@
 
 public sealed class GetManyRecipesQueryHandler : IRequestHandler<GetManyRecipesQuery, IEnumerable<RecipeDto>>
 {
-    private readonly IRecipeRepository _recipeRepository;
+    private readonly IReadOnlyBaseRepository<Entities.Recipe> _repo;
     private readonly IMapper _mapper;
 
     public GetManyRecipesQueryHandler(
-        IUnitOfWork unitOfWork,
-        IMapper mapper)
+        IMapper mapper,
+        IReadOnlyBaseRepository<Entities.Recipe> repo)
     {
-        _recipeRepository = unitOfWork.RecipeRepository;
         _mapper = mapper;
+        _repo = repo;
     }
 
     public async Task<IEnumerable<RecipeDto>> Handle(GetManyRecipesQuery request, CancellationToken cancellationToken)
     {
-        var recipes = await _recipeRepository.GetManyAsync(cancellationToken);
+        var recipes = await _repo.GetManyAsync(cancellationToken);
         var recipesDto = recipes.Select(_mapper.Map<RecipeDto>);
         return recipesDto;
     }

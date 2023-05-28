@@ -2,20 +2,19 @@
 
 public sealed class TokenGeneratorService : ITokenGeneratorService
 {
-    private readonly string _tokenKey;
-    private readonly int tokenHoursDuration;
+    private readonly IOptions<JwtAuthenticationOptions> _jwtOptions;
 
-    public TokenGeneratorService(IConfiguration configuration)
+    public TokenGeneratorService(IOptions<JwtAuthenticationOptions> jwtOptions)
     {
-        this._tokenKey = configuration.GetSection("JwtAuthentication:Key").Value;
-        this.tokenHoursDuration = int.Parse(configuration.GetSection("JwtAuthentication:TokenHoursDuration").Value);
+        ArgumentValidator.ThrowIfNullOrDefault(jwtOptions.Value, nameof(jwtOptions));
+        _jwtOptions = jwtOptions;
     }
 
     public JwtToken GenerateToken(IEnumerable<Claim> claims = null)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_tokenKey);
-        var expiresAt = DateTime.UtcNow.AddHours(tokenHoursDuration);
+        var key = Encoding.ASCII.GetBytes(_jwtOptions.Value.Key);
+        var expiresAt = DateTime.UtcNow.AddHours(_jwtOptions.Value.TokenHoursDuration);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Expires = expiresAt,

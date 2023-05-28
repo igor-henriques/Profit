@@ -8,4 +8,5 @@ public sealed record PutProductCommand : IRequest<Unit>
     public string ImageThumbnailUrl { get; init; }
     public string Description { get; init; }
     public Guid RecipeId { get; init; }
+    public bool IsDeleted { get; init; }
 }

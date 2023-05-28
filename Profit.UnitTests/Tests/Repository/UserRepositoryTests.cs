@@ -3,17 +3,18 @@
 public sealed class UserRepositoryTests
 {
     [Theory]
-    [AutoDomainData]
+    [@AutoData]
     public async Task Add_Entity_With_Valid_Data_Should_Count_One(
         User user,
         Mock<ILogger<UnitOfWork>> loggerMock,
         Mock<IRedisCacheService> redisMock,
-        Mock<IConfiguration> configuration,
+        IOptions<CacheOptions> configuration,
         Mock<IMigratorApplication> migrator,
-        Mock<ITenantInfo> tenantInfo)
+        Mock<ITenantInfo> tenantInfo,
+        Mock<IReadOnlyUserRepository> userRepo)
     {
         // Arrange
-        var unitOfWork = RepositoryFixtures.GetUnitOfWork(loggerMock, redisMock, configuration, migrator, tenantInfo);
+        var unitOfWork = RepositoryFixtures.GetUnitOfWork(loggerMock, redisMock, configuration, migrator, tenantInfo, userRepo);
 
         // Act
         await unitOfWork.UserRepository.Add(user);
@@ -21,21 +22,23 @@ public sealed class UserRepositoryTests
 
         // Assert
         (await unitOfWork.UserRepository.CountAsync()).Should().Be(1);
+        await unitOfWork.DisposeAsync();
     }
 
     [Theory]
-    [AutoDomainData]
+    [@AutoData]
     public async Task GetUniqueAsync_ShouldReturnCachedEntityWhenAvailable(
         User user,
         Mock<ILogger<UnitOfWork>> loggerMock,
         Mock<IRedisCacheService> redisMock,
-        Mock<IConfiguration> configuration,
+        IOptions<CacheOptions> configuration,
         Mock<IMigratorApplication> migrator,
-        Mock<ITenantInfo> tenantInfo)
+        Mock<ITenantInfo> tenantInfo,
+        Mock<IReadOnlyUserRepository> userRepo)
     {
         // Arrange
         redisMock.Setup(c => c.GetAsync<User>(It.IsAny<string>())).ReturnsAsync(user);
-        var unitOfWork = RepositoryFixtures.GetUnitOfWork(loggerMock, redisMock, configuration, migrator, tenantInfo);
+        var unitOfWork = RepositoryFixtures.GetUnitOfWork(loggerMock, redisMock, configuration, migrator, tenantInfo, userRepo);
 
         // Act
         var entity = await unitOfWork.UserRepository.GetUniqueAsync(user.Id);
@@ -51,21 +54,23 @@ public sealed class UserRepositoryTests
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception, string>>()),
             Times.Once);
+        await unitOfWork.DisposeAsync();
     }
 
     [Theory]
-    [AutoDomainData]
+    [@AutoData]
     public async Task GetUniqueAsync_ShouldReturnRepoEntityWhenCacheIsEmpty(
         User user,
         Mock<ILogger<UnitOfWork>> loggerMock,
         Mock<IRedisCacheService> redisMock,
-        Mock<IConfiguration> configuration,
+        IOptions<CacheOptions> configuration,
         Mock<IMigratorApplication> migrator,
-        Mock<ITenantInfo> tenantInfo)
+        Mock<ITenantInfo> tenantInfo,
+        Mock<IReadOnlyUserRepository> userRepo)
     {
         // Arrange
         redisMock.Setup(c => c.GetAsync<User>(It.IsAny<string>())).ReturnsAsync((User)null);
-        var unitOfWork = RepositoryFixtures.GetUnitOfWork(loggerMock, redisMock, configuration, migrator, tenantInfo);
+        var unitOfWork = RepositoryFixtures.GetUnitOfWork(loggerMock, redisMock, configuration, migrator, tenantInfo, userRepo);
         await unitOfWork.UserRepository.Add(user);
         await unitOfWork.Commit();
 
@@ -75,5 +80,6 @@ public sealed class UserRepositoryTests
         // Assert
         Assert.Equal(user, entity);
         redisMock.Verify(c => c.GetAsync<User>(It.IsAny<string>()), Times.Once());
+        await unitOfWork.DisposeAsync();
     }
 }

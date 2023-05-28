@@ -44,3 +44,8 @@ global using Profit.Infrastructure.Service.Services;
 global using Serilog;
 global using System.Security.Claims;
 global using System.Text;
+global using Profit.Infrastructure.Service.Workers;
+global using Microsoft.Extensions.Configuration;
+global using Profit.Domain.Models.Options;
+global using Profit.Domain.Interfaces.Repositories.Base;
+global using Profit.Infrastructure.Repository.Repositories.ReadOnly;

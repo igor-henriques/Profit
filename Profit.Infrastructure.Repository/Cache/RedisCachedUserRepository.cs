@@ -11,17 +11,20 @@ internal sealed class RedisCachedUserRepository : IUserRepository
     private const string REDIS_PREFIX = "dbo:profit:user:";
     private readonly long _cacheExpirationInSeconds;
     private readonly ILogger<UnitOfWork> _logger;
+    private readonly IReadOnlyUserRepository _readOnlyRepo;
 
     public RedisCachedUserRepository(
         AuthDbContext context,
         ILogger<UnitOfWork> logger,
         IRedisCacheService cacheService,
-        IConfiguration configuration)
+        IOptions<CacheOptions> cacheOptions,
+        IReadOnlyUserRepository readOnlyRepo)
     {
         _cacheService = cacheService;
         _repo = new UserRepository(context, logger);
-        _cacheExpirationInSeconds = configuration.GetValue<long>("CacheSecondsDuration");
+        _cacheExpirationInSeconds = cacheOptions.Value.SecondsDuration;
         _logger = logger;
+        _readOnlyRepo = readOnlyRepo;
     }
     private static string GetRedisKey(Guid id)
     {
@@ -72,18 +75,18 @@ internal sealed class RedisCachedUserRepository : IUserRepository
         _cacheService.Remove(entity.Id.ToString());
     }
 
-    public async ValueTask<bool> Exists(User entity, CancellationToken cancellationToken = default)
+    public async ValueTask<bool> ExistsAsync(User entity, CancellationToken cancellationToken = default)
     {
         var existsOnCache = _cacheService.Exists(entity.Id.ToString());
 
         if (!existsOnCache)
         {
-            return await _repo.Exists(entity, cancellationToken);
+            return await _repo.ExistsAsync(entity, cancellationToken);
         }
         else
         {
             _logger.LogInformation("Cache was hit for {methodName} on {sourceName}",
-               nameof(Exists),
+               nameof(ExistsAsync),
                nameof(RedisCachedRecipeRepository));
         }
 
@@ -145,7 +148,7 @@ internal sealed class RedisCachedUserRepository : IUserRepository
 
         if (user is null)
         {
-            user = await _repo.GetByUsername(username, cancellationToken);
+            user = await _readOnlyRepo.GetByUsername(username, cancellationToken);
             await _cacheService.SetAsync(redisKey, user, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
         }
         else
@@ -165,7 +168,7 @@ internal sealed class RedisCachedUserRepository : IUserRepository
 
         if (user is null)
         {
-            user = await _repo.GetByUsername(username, cancellationToken);
+            user = await _readOnlyRepo.GetByUsername(username, cancellationToken);
             await _cacheService.SetAsync(redisKey, user, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
         }
         else

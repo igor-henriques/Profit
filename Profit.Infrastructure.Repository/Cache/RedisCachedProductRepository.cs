@@ -8,17 +8,18 @@ internal sealed class RedisCachedProductRepository : IProductRepository
     private const string REDIS_PREFIX = "profit:product:";
     private readonly long _cacheExpirationInSeconds;
     private readonly ILogger<UnitOfWork> _logger;
+    private readonly IReadOnlyProductRepository _readOnlyRepo;
 
     public RedisCachedProductRepository(
         ProfitDbContext context,
         ILogger<UnitOfWork> logger,
         IRedisCacheService cacheService,
-        IConfiguration configuration,
+        IOptions<CacheOptions> cacheOptions,
         ITenantInfo tenant)
     {
         _repo = new ProductRepository(context, logger);
         _cacheService = cacheService;
-        _cacheExpirationInSeconds = configuration.GetValue<long>("CacheSecondsDuration");
+        _cacheExpirationInSeconds = cacheOptions.Value.SecondsDuration;
         _tenant = tenant;
         _logger = logger;
     }
@@ -71,18 +72,18 @@ internal sealed class RedisCachedProductRepository : IProductRepository
         _repo.Delete(entity);
     }
 
-    public async ValueTask<bool> Exists(Product entity, CancellationToken cancellationToken = default)
+    public async ValueTask<bool> ExistsAsync(Product entity, CancellationToken cancellationToken = default)
     {
         var existsOnCache = _cacheService.Exists(entity.Id.ToString());
 
         if (!existsOnCache)
         {
-            return await _repo.Exists(entity, cancellationToken);
+            return await _repo.ExistsAsync(entity, cancellationToken);
         }
         else
         {
             _logger.LogInformation("Cache was hit for {methodName} on {sourceName}",
-                nameof(Exists),
+                nameof(ExistsAsync),
                 nameof(RedisCachedRecipeRepository));
         }
 
@@ -148,7 +149,7 @@ internal sealed class RedisCachedProductRepository : IProductRepository
 
         if (productCost == default)
         {
-            productCost = await _repo.GetProductCost(productId, cancellationToken);
+            productCost = await _readOnlyRepo.GetProductCost(productId, cancellationToken);
             await _cacheService.SetAsync(specificRedisKey, productCost, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
         }
         else

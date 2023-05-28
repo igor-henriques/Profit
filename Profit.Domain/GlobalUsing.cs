@@ -33,3 +33,4 @@ global using System.Linq.Expressions;
 global using System.Runtime.CompilerServices;
 global using System.Security.Claims;
 global using System.Text;
+global using Profit.Infrastructure.Repository.Repositories.ReadOnly;

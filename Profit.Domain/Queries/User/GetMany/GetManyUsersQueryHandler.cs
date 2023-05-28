@@ -2,20 +2,20 @@
 
 public sealed class GetManyUsersQueryHandler : IRequestHandler<GetManyUsersQuery, IEnumerable<UserDto>>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IReadOnlyBaseRepository<Entities.User> _repo;
     private readonly IMapper _mapper;
 
     public GetManyUsersQueryHandler(
-        IUnitOfWork unitOfWork,
-        IMapper mapper)
+        IMapper mapper,
+        IReadOnlyBaseRepository<Entities.User> repo)
     {
-        _userRepository = unitOfWork.UserRepository;
         _mapper = mapper;
+        _repo = repo;
     }
 
     public async Task<IEnumerable<UserDto>> Handle(GetManyUsersQuery request, CancellationToken cancellationToken)
     {
-        var users = await _userRepository.GetManyAsync(cancellationToken);
+        var users = await _repo.GetManyAsync(cancellationToken);
         var usersDto = users.Select(_mapper.Map<UserDto>);
         return usersDto;
     }

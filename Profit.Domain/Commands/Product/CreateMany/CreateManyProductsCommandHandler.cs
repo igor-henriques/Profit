@@ -2,35 +2,23 @@
 
 public sealed class CreateManyProductsCommandHandler : IRequestHandler<CreateManyProductsCommand, IEnumerable<Guid>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
 
-    public CreateManyProductsCommandHandler(
-        IUnitOfWork unitOfWork,
-        IMapper mapper)
+    public CreateManyProductsCommandHandler(IMediator mediator)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
+        _mediator = mediator;
     }
 
     public async Task<IEnumerable<Guid>> Handle(CreateManyProductsCommand request, CancellationToken cancellationToken)
     {
         var response = new List<Guid>();
-        var errors = new List<string>();
 
         foreach (var productDto in request.Products)
         {
-            var ingredientEntity = _mapper.Map<Entities.Product>(productDto);
-            await _unitOfWork.ProductRepository.Add(ingredientEntity, cancellationToken);
-            response.Add(ingredientEntity.Id);
+            var productId = await _mediator.Send(productDto, cancellationToken);
+            response.Add(productId);
         }
 
-        if (errors.Any())
-        {
-            throw new ValidationException(string.Join("\n", errors));
-        }
-
-        await _unitOfWork.Commit(cancellationToken);
         return response;
     }
 }

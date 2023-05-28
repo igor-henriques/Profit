@@ -13,12 +13,12 @@ internal sealed class RedisCachedRecipeRepository : IRecipeRepository
         ProfitDbContext context,
         ILogger<UnitOfWork> logger,
         IRedisCacheService cacheService,
-        IConfiguration configuration,
+        IOptions<CacheOptions> cacheOptions,
         ITenantInfo tenant)
     {
         _repo = new RecipeRepository(context, logger);
         _cacheService = cacheService;
-        _cacheExpirationInSeconds = configuration.GetValue<long>("CacheSecondsDuration");
+        _cacheExpirationInSeconds = cacheOptions.Value.SecondsDuration;
         _tenant = tenant;
         _logger = logger;
     }
@@ -70,18 +70,18 @@ internal sealed class RedisCachedRecipeRepository : IRecipeRepository
         _repo.Delete(entity);
     }
 
-    public async ValueTask<bool> Exists(Recipe entity, CancellationToken cancellationToken = default)
+    public async ValueTask<bool> ExistsAsync(Recipe entity, CancellationToken cancellationToken = default)
     {
         var existsOnCache = _cacheService.Exists(entity.Id.ToString());
 
         if (!existsOnCache)
         {
-            return await _repo.Exists(entity, cancellationToken);
+            return await _repo.ExistsAsync(entity, cancellationToken);
         }
         else
         {
             _logger.LogInformation("Cache was hit for {methodName} on {sourceName}",
-                nameof(Exists),
+                nameof(ExistsAsync),
                 nameof(RedisCachedRecipeRepository));
         }
 

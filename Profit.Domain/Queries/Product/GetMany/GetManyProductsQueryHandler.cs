@@ -2,20 +2,20 @@
 
 public sealed class GetManyProductsQueryHandler : IRequestHandler<GetManyProductsQuery, IEnumerable<ProductDto>>
 {
-    private readonly IProductRepository _productRepository;
+    private readonly IReadOnlyBaseRepository<Entities.Product> _repo;
     private readonly IMapper _mapper;
 
     public GetManyProductsQueryHandler(
-        IUnitOfWork unitOfWork,
-        IMapper mapper)
+        IMapper mapper,
+        IReadOnlyBaseRepository<Entities.Product> repo)
     {
-        _productRepository = unitOfWork.ProductRepository;
         _mapper = mapper;
+        _repo = repo;
     }
 
     public async Task<IEnumerable<ProductDto>> Handle(GetManyProductsQuery request, CancellationToken cancellationToken)
     {
-        var ingredient = await _productRepository.GetManyAsync(cancellationToken);
+        var ingredient = await _repo.GetManyAsync(cancellationToken);
         var ingredientDto = ingredient.Select(_mapper.Map<ProductDto>);
         return ingredientDto;
     }

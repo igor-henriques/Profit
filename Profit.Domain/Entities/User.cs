@@ -8,6 +8,19 @@ public sealed record User : Entity<User>
     public string Email { get; private set; }
     public bool IsEmailVerified { get; private set; }
 
+    public User(Guid tenantId, string username, string hashedPassword, string email, bool isEmailVerified)
+    {
+        TenantId = tenantId;
+        Username = username;
+        HashedPassword = hashedPassword;
+        Email = email;
+        IsEmailVerified = isEmailVerified;
+
+        Validate();
+    }
+
+    public User() { }
+
     public ICollection<UserClaim> UserClaims { get; } = new List<UserClaim>();
 
     public override User Update(User entity)

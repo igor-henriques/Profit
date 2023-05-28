@@ -25,3 +25,6 @@ global using System.Linq.Expressions;
 global using System.Reflection;
 global using System.Runtime.CompilerServices;
 global using System.Transactions;
+global using Microsoft.Extensions.Options;
+global using Profit.Domain.Models.Options;
+global using Profit.Infrastructure.Repository.Repositories.ReadOnly;

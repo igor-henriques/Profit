@@ -2,25 +2,22 @@
 
 public sealed class GetUniqueIngredientQueryHandler : IRequestHandler<GetUniqueIngredientQuery, IngredientDto>
 {
-    private readonly IIngredientRepository _ingredientRepository;
+    private readonly IReadOnlyBaseRepository<Entities.Ingredient> _repo;
     private readonly IMapper _mapper;
-    private readonly IRedisCacheService _cache;
 
     public GetUniqueIngredientQueryHandler(
-        IUnitOfWork unitOfWork,
         IMapper mapper,
-        IRedisCacheService cache)
+        IReadOnlyBaseRepository<Entities.Ingredient> ingredientRepository)
     {
-        _cache = cache;
-        _ingredientRepository = unitOfWork.IngredientRepository;
         _mapper = mapper;
+        _repo = ingredientRepository;
     }
 
     public async Task<IngredientDto> Handle(GetUniqueIngredientQuery request, CancellationToken cancellationToken)
     {
         ArgumentValidator.ThrowIfNullOrDefault(request.Guid);
 
-        var ingredient = await _ingredientRepository.GetUniqueAsync(request.Guid, cancellationToken)
+        var ingredient = await _repo.GetUniqueAsync(request.Guid, cancellationToken)
             ?? throw new EntityNotFoundException(request.Guid, nameof(Entities.Ingredient));
 
         var ingredientDto = _mapper.Map<IngredientDto>(ingredient);

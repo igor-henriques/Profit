@@ -1,20 +1,20 @@
-﻿namespace Profit.Infrastructure.Service.Services;
+﻿namespace Profit.Infrastructure.Service.Workers;
 
 public sealed class CommandBatchProcessorWorker<T> : BackgroundService
 {
     private readonly ICommandBatchProcessorService<T> _commandBatchProcessorService;
+    private readonly IOptions<CommandBatchProcessingOptions> _options;
     private readonly ILogger<CommandBatchProcessorWorker<T>> _logger;
     private readonly PeriodicTimer _timer;
-    private readonly int _batchMaxSize;
 
     public CommandBatchProcessorWorker(
         ICommandBatchProcessorService<T> commandBatchProcessorService,
-        IConfiguration configuration,
+        IOptions<CommandBatchProcessingOptions> options,
         ILogger<CommandBatchProcessorWorker<T>> logger)
     {
-
-        _batchMaxSize = configuration.GetValue<int>("CommandBatchStoraging:BatchSize");
+        
         _commandBatchProcessorService = commandBatchProcessorService;
+        _options = options;
         _logger = logger;
         _timer = new PeriodicTimer(TimeSpan.FromSeconds(10));
     }
@@ -25,10 +25,19 @@ public sealed class CommandBatchProcessorWorker<T> : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested && await _timer.WaitForNextTickAsync(stoppingToken))
         {
-            if (_commandBatchProcessorService.GetBatchSize() >= _batchMaxSize)
+            if (_commandBatchProcessorService.GetBatchSize() >= _options.Value.BatchSize)
             {
-                await _commandBatchProcessorService.Process(stoppingToken);
-                _logger.LogInformation("{batchSize} commands processed", _commandBatchProcessorService.GetBatchSize());
+                try
+                {
+                    await _commandBatchProcessorService.Process(stoppingToken);
+                    _logger.LogInformation("{batchSize} commands processed", _commandBatchProcessorService.GetBatchSize());
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("Error while processing {commandBatchProcessorService}: {exception}",
+                        nameof(CommandBatchProcessorService<T>),
+                        e.ToString());                    
+                }
             }
         }
     }

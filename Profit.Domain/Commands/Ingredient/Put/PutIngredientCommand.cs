@@ -9,6 +9,7 @@ public sealed record PutIngredientCommand : IRequest<Unit>
     public EMeasurementUnit MeasurementUnit { get; init; }
     public string ImageThumbnailUrl { get; init; }
     public string Description { get; init; }
+    public bool IsDeleted { get; init; }
 
     public PutIngredientCommand(Guid id,
                          string name,
@@ -16,7 +17,8 @@ public sealed record PutIngredientCommand : IRequest<Unit>
                          decimal quantity,
                          string imageThumbnailUrl,
                          EMeasurementUnit measurementUnit,
-                         string description)
+                         string description,
+                         bool isDeleted)
     {
         Id = id;
         Name = name;
@@ -25,5 +27,6 @@ public sealed record PutIngredientCommand : IRequest<Unit>
         ImageThumbnailUrl = imageThumbnailUrl;
         MeasurementUnit = measurementUnit;
         Description = description;
+        IsDeleted = isDeleted;
     }
 }

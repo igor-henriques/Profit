@@ -17,6 +17,6 @@ public sealed class PasswordHashingService : IPasswordHashingService
         ArgumentValidator.ThrowIfNullOrEmpty(hashedPassword, nameof(hashedPassword));
         ArgumentValidator.ThrowIfNullOrEmpty(providedPassword, nameof(providedPassword));
 
-        return BCrypt.Net.BCrypt.Verify(hashedPassword, providedPassword);
+        return BCrypt.Net.BCrypt.Verify(providedPassword, hashedPassword);
     }
 }

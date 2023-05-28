@@ -15,7 +15,7 @@ public sealed class PutIngredientCommandHandlerTests
     }
 
     [Theory]
-    [AutoDomainData]
+    [@AutoData]
     public async Task Handle_ShouldUpdateIngredientAndCommit_WhenCalledWithValidRequest(
         PutIngredientCommand command,
         Profit.Domain.Entities.Ingredient ingredient)

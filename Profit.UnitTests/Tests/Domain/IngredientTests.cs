@@ -3,7 +3,7 @@
 public sealed class IngredientTests
 {
     [Theory(DisplayName = "Mapeamento de ingrediente para DTO deve ser sucesso para entidade válida")]
-    [AutoDomainData]
+    [@AutoData]
     public void Mapping_Ingredient_To_DTO_Should_Returns_Success_When_Valid_Entity(Ingredient ingredient)
     {
         // Arrange
@@ -14,7 +14,8 @@ public sealed class IngredientTests
             ingredient.Quantity,
             ingredient.ImageThumbnailUrl,
             ingredient.MeasurementUnit,
-            ingredient.Description);
+            ingredient.Description,
+            ingredient.IsDeleted);
 
         var config = new MapperConfiguration(cfg => cfg.AddProfile<IngredientProfile>());
         var mapper = new Mapper(config);
@@ -29,7 +30,7 @@ public sealed class IngredientTests
     }
 
     [Theory]
-    [AutoDomainData]
+    [@AutoData]
     public void Update_Ingredient_Name_Should_Throw_Exception_When_Empty(Ingredient ingredient)
     {
         // Arrange
@@ -43,7 +44,7 @@ public sealed class IngredientTests
     }
 
     [Theory]
-    [AutoDomainData]
+    [@AutoData]
     public void Update_Ingredient_Name_Should_Throw_Exception_When_Null(Ingredient ingredient)
     {
         // Arrange
@@ -57,7 +58,7 @@ public sealed class IngredientTests
     }
 
     [Theory]
-    [AutoDomainData]
+    [@AutoData]
     public void Update_Ingredient_Name_Should_Not_Throw_Exception_When_Valid(Ingredient ingredient)
     {
         // Arrange

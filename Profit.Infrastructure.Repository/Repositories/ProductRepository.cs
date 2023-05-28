@@ -20,18 +20,11 @@ internal sealed class ProductRepository : BaseRepository<Product, ProfitDbContex
             .Where(x => x.RecipeId == recipeId)
             .ToListAsync(cancellationToken);
 
-        _logger.LogInformation("{products} retrieved", response.Count);
+        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
+            nameof(GetProductsByRecipeId),
+            nameof(ProductRepository),
+            response);
 
         return response;
-    }
-
-    public async Task<decimal> GetProductCost(Guid productId, CancellationToken cancellationToken = default)
-    {
-        return await _context.Products
-            .AsNoTracking()
-            .Include(x => x.Recipe)
-            .ThenInclude(x => x.IngredientRecipeRelations)
-            .Where(x => x.Id == productId)
-            .SumAsync(x => x.Recipe.IngredientRecipeRelations.Select(y => y.RelationCost).Sum(), cancellationToken);
     }
 }

@@ -10,9 +10,10 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
     private readonly AuthDbContext _authContext;
     private readonly ILogger<UnitOfWork> _logger;
     private readonly IRedisCacheService _cacheService;
-    private readonly IConfiguration _configuration;
+    private readonly IOptions<CacheOptions> _cacheOptions;
     private readonly IMigratorApplication _migratorApplication;
     private readonly ITenantInfo _tenant;
+    private readonly IReadOnlyUserRepository _readOnlyUserRepository;
 
     private IIngredientRepository _ingredientRepository;
     private IUserRepository _userRepository;
@@ -29,7 +30,7 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
             _profitContext,
             _logger,
             _cacheService,
-            _configuration,
+            _cacheOptions,
             _tenant);
 
     /// <summary>
@@ -42,7 +43,8 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
             _authContext,
             _logger,
             _cacheService,
-            _configuration);
+            _cacheOptions,
+            _readOnlyUserRepository);
 
     /// <summary>
     /// Instead of delegating the object management to the IoC container
@@ -54,7 +56,7 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
             _profitContext,
             _logger,
             _cacheService,
-            _configuration,
+            _cacheOptions,
             _tenant);
 
     /// <summary>
@@ -67,25 +69,29 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
             _profitContext,
             _logger,
             _cacheService,
-            _configuration,
+            _cacheOptions,
             _tenant);
 
     public UnitOfWork(
         ProfitDbContext context,
         ILogger<UnitOfWork> logger,
         IRedisCacheService cacheService,
-        IConfiguration configuration,
+        IOptions<CacheOptions> cacheOptions,
         AuthDbContext authContext,
         IMigratorApplication migratorApplication,
-        ITenantInfo tenant)
+        ITenantInfo tenant,
+        IReadOnlyUserRepository _readOnlyUserRepository)
     {
+        ArgumentValidator.ThrowIfZeroOrNegative(cacheOptions?.Value?.SecondsDuration ?? 0);
+
         _profitContext = context;
         _logger = logger;
         _cacheService = cacheService;
-        _configuration = configuration;
+        _cacheOptions = cacheOptions;
         _authContext = authContext;
         _migratorApplication = migratorApplication;
         _tenant = tenant;
+        this._readOnlyUserRepository = _readOnlyUserRepository;
     }
 
     /// <summary>
@@ -170,7 +176,7 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
     {
         using var command = dbConnection.CreateCommand();
         command.CommandText = query;
-        _logger.LogInformation(command.CommandText);
+        _logger.LogInformation("{query}", command.CommandText);
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
 

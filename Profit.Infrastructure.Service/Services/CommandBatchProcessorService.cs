@@ -31,7 +31,7 @@ public sealed class CommandBatchProcessorService<T> : ICommandBatchProcessorServ
 
     public async ValueTask Process(CancellationToken cancellationToken)
     {
-        if (_bag.Count < 0)
+        if (_bag.IsEmpty)
         {
             _logger.LogInformation($"No commands to process");
             return;

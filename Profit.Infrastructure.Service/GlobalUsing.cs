@@ -14,3 +14,6 @@ global using System.Collections.Concurrent;
 global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
 global using System.Text;
+global using Microsoft.Extensions.Options;
+global using Profit.Domain.Models.Options;
+global using Profit.Infrastructure.Service.Services;

@@ -9,7 +9,7 @@ public sealed class TenantResolverMiddleware
         this._next = next;
     }
 
-    public async Task Invoke(HttpContext context, IUnitOfWork _unitOfWork, ITenantInfo _tenantInfo)
+    public async Task Invoke(HttpContext context, IReadOnlyUserRepository _readOnlyUserRepo, ITenantInfo _tenantInfo)
     {
         if (context.Request.Path.Value?.Contains(Routes.User.BaseUser, StringComparison.OrdinalIgnoreCase) ?? false)
         {
@@ -18,7 +18,7 @@ public sealed class TenantResolverMiddleware
         }
 
         var username = GetUsernameFromAuthorizationHeader(context);
-        var userTenant = await _unitOfWork.UserRepository.GetTenantIdByUsername(username);
+        var userTenant = await _readOnlyUserRepo.GetTenantIdByUsername(username);
         _tenantInfo.SetTenantId(userTenant);
 
         await _next(context);

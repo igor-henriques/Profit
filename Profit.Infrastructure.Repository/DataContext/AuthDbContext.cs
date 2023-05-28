@@ -1,6 +1,6 @@
 ﻿namespace Profit.Infrastructure.Repository.DataContext;
 
-public sealed class AuthDbContext : DbContext
+public class AuthDbContext : DbContext
 {
     public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options) { }
     public AuthDbContext() { }

@@ -13,13 +13,13 @@ internal sealed class RedisCachedIngredientRepository : IIngredientRepository
         ProfitDbContext context,
         ILogger<UnitOfWork> logger,
         IRedisCacheService cacheService,
-        IConfiguration configuration,
+        IOptions<CacheOptions> cacheOptions,
         ITenantInfo tenant)
     {
         _repo = new IngredientRepository(context, logger);
         _tenant = tenant;
         _cacheService = cacheService;
-        _cacheExpirationInSeconds = configuration.GetValue<long>("CacheSecondsDuration");
+        _cacheExpirationInSeconds = cacheOptions.Value.SecondsDuration;
         _logger = logger;
     }
 
@@ -71,9 +71,9 @@ internal sealed class RedisCachedIngredientRepository : IIngredientRepository
         _repo.Delete(entity);
     }
 
-    public async ValueTask<bool> Exists(Ingredient entity, CancellationToken cancellationToken = default)
+    public async ValueTask<bool> ExistsAsync(Ingredient entity, CancellationToken cancellationToken = default)
     {
-        return await _repo.Exists(entity, cancellationToken);
+        return await _repo.ExistsAsync(entity, cancellationToken);
     }
 
     public async ValueTask<IEnumerable<Ingredient>> GetManyAsync(CancellationToken cancellationToken = default)

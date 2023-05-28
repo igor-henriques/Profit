@@ -2,27 +2,27 @@
 
 public sealed class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCommand, JwtToken>
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordHashingService _passwordHashingService;
     private readonly ITokenGeneratorService _tokenGeneratorService;
+    private readonly IReadOnlyUserRepository _readOnlyRepo;
 
     public AuthenticateUserCommandHandler(
-        IUnitOfWork unitOfWork,
         IPasswordHashingService passwordHashingService,
-        ITokenGeneratorService tokenGeneratorService)
+        ITokenGeneratorService tokenGeneratorService,
+        IReadOnlyUserRepository readOnlyRepo)
     {
-        _unitOfWork = unitOfWork;
         _passwordHashingService = passwordHashingService;
         _tokenGeneratorService = tokenGeneratorService;
+        _readOnlyRepo = readOnlyRepo;
     }
 
     public async Task<JwtToken> Handle(AuthenticateUserCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            var user = await _unitOfWork.UserRepository.GetByUsername(request.Username, cancellationToken);
+            var user = await _readOnlyRepo.GetByUsername(request.Username, cancellationToken);
 
-            var isPasswordMatch = _passwordHashingService.VerifyPassword(request.Password, user.HashedPassword);
+            var isPasswordMatch = _passwordHashingService.VerifyPassword(user.HashedPassword, request.Password);
             if (!isPasswordMatch)
             {
                 throw new InvalidCredentialsException($"Authentication failed for username {request.Username}");

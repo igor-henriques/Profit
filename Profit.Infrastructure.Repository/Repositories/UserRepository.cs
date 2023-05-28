@@ -15,13 +15,24 @@ internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUse
 
     public override void BulkAdd(IEnumerable<User> entities)
     {
+        _logger.LogInformation("{methodName} from {sourceName} is not implemented",
+               nameof(BulkAdd),
+               nameof(UserRepository));
+
         throw new NotImplementedException($"{nameof(BulkAdd)} is not implemented for {nameof(User)}");
     }
 
-    public override async ValueTask<bool> Exists(User entity, CancellationToken cancellationToken = default)
+    public override async ValueTask<bool> ExistsAsync(User entity, CancellationToken cancellationToken = default)
     {
-        return await _context.Users.AnyAsync(
+        var response = await _context.Users.AnyAsync(
             x => x.Username == entity.Username || x.Email == entity.Email, cancellationToken);
+
+        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
+            nameof(ExistsAsync),
+            nameof(UserRepository),
+            response);
+
+        return response;
     }
 
     public override void Delete(User entity)
@@ -31,14 +42,26 @@ internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUse
         if (userClaims.Any())
         {
             _context.Claims.RemoveRange(userClaims);
+
+            _logger.LogInformation("{methodName} from {sourceName}: {entity} was marked to removal, but not commited: {values}",
+               nameof(Delete),
+               nameof(UserRepository),
+               nameof(User),
+               userClaims);
         }
 
         _context.Users.Remove(entity);
+
+        _logger.LogInformation("{methodName} from {sourceName}: {entity} was marked to removal, but not commited: {value}",
+               nameof(Delete),
+               nameof(UserRepository),
+               nameof(User),
+               entity);
     }
 
     public override async ValueTask Add(User entity, CancellationToken cancellationToken = default)
     {
-        var entityExists = await Exists(entity, cancellationToken);
+        var entityExists = await ExistsAsync(entity, cancellationToken);
 
         if (entityExists)
         {
@@ -53,32 +76,5 @@ internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUse
             UserId = entity.Id
         });
         _logger.LogInformation("{entity} was added", entity);
-    }
-
-    public async Task<User> GetByUsername(string username, CancellationToken cancellationToken = default)
-    {
-        ArgumentValidator.ThrowIfNullOrEmpty(username, nameof(username));
-
-        var user = await _context.Users
-           .AsNoTracking()
-           .Include(x => x.UserClaims)
-           .FirstOrDefaultAsync(x => x.Username.Equals(username), cancellationToken);
-
-        _ = user ?? throw new EntityNotFoundException(nameof(User));
-
-        return user;
-    }
-
-    public async Task<Guid> GetTenantIdByUsername(string username, CancellationToken cancellationToken = default)
-    {
-        ArgumentValidator.ThrowIfNullOrEmpty(username, nameof(username));
-
-        var tenant = await _context.Users
-           .AsNoTracking()
-           .Where(x => x.Username.Equals(username))
-           .Select(u => u.TenantId)
-           .FirstOrDefaultAsync(cancellationToken);
-
-        return tenant;
-    }
+    }  
 }

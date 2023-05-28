@@ -1,4 +1,8 @@
-﻿namespace Profit.Infrastructure.Repository.Repositories;
+﻿using Azure;
+using Microsoft.EntityFrameworkCore;
+using Profit.Domain.Entities.Base;
+
+namespace Profit.Infrastructure.Repository.Repositories;
 
 internal sealed class RecipeRepository : BaseRepository<Recipe, ProfitDbContext>, IRecipeRepository
 {
@@ -15,7 +19,7 @@ internal sealed class RecipeRepository : BaseRepository<Recipe, ProfitDbContext>
 
     public override async ValueTask Add(Recipe entity, CancellationToken cancellationToken = default)
     {
-        var entityExists = await base.Exists(entity, cancellationToken);
+        var entityExists = await base.ExistsAsync(entity, cancellationToken);
 
         if (entityExists)
         {
@@ -24,14 +28,24 @@ internal sealed class RecipeRepository : BaseRepository<Recipe, ProfitDbContext>
 
         _context.Recipes.Add(entity);
 
+        _logger.LogInformation("{methodName} from {sourceName}: {entity} was added, but not commited: {value}",
+           nameof(Add),
+           nameof(RecipeRepository),
+           nameof(Recipe),
+           entity);
+
         foreach (var relation in entity.IngredientRecipeRelations)
         {
             relation.UpdateRecipeId(entity.Id);
+
+            _logger.LogInformation("{methodName} from {sourceName} updated {fieldName} to {value}",
+               nameof(GetManyByAsync),
+               nameof(RecipeRepository),
+               nameof(relation.RecipeId),
+               entity.Id);
         }
 
         _context.IngredientRecipeRelations.AddRange(entity.IngredientRecipeRelations);
-
-        _logger.LogInformation("{entity} was added", entity);
     }
 
     public async Task<IEnumerable<Recipe>> GetRecipesAndRelationsByIngredientId(
@@ -54,7 +68,10 @@ internal sealed class RecipeRepository : BaseRepository<Recipe, ProfitDbContext>
             .Include(x => x.IngredientRecipeRelations)
             .ToListAsync(cancellationToken);
 
-        _logger.LogInformation("{response} records were retrieved", response.Count);
+        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
+           nameof(GetManyAsync),
+           nameof(RecipeRepository),
+           response);
 
         return response;
     }
@@ -65,6 +82,11 @@ internal sealed class RecipeRepository : BaseRepository<Recipe, ProfitDbContext>
             .Include(x => x.IngredientRecipeRelations)
             .ThenInclude(x => x.Ingredient)
             .FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
+
+        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
+           nameof(GetUniqueAsync),
+           nameof(RecipeRepository),
+           response);
 
         return response;
     }

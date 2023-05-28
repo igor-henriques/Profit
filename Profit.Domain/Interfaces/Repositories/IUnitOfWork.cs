@@ -4,7 +4,7 @@
 /// Provides a mechanism for working with the repository pattern, 
 /// centralizing all the transactions in a single database context.
 /// </summary>
-public interface IUnitOfWork
+public interface IUnitOfWork : IAsyncDisposable
 {
     /// <summary>
     /// Readonly access to <see cref="IIngredientRepository"/>

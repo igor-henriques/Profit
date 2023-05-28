@@ -5,26 +5,34 @@ public sealed class RedisCacheService : IRedisCacheService
     private readonly ConnectionMultiplexer _redis;
     private readonly IServer _redisServer;
     private readonly JsonSerializerSettings _jsonSettings;
+    private readonly ILogger<RedisCacheService> _logger;
 
     public RedisCacheService(
-        string connectionString,
+        IOptions<ConnectionStringsOptions> connectionStrings,
+        ILogger<RedisCacheService> logger,
         JsonSerializerSettings jsonSettings = null)
     {
-        ArgumentValidator.ThrowIfNullOrEmpty(connectionString);
-        _redis = ConnectionMultiplexer.Connect(connectionString);
-        _redisServer = _redis.GetServer(connectionString);
+        ArgumentValidator.ThrowIfNullOrEmpty(connectionStrings.Value.Redis, nameof(connectionStrings));
+        _redis = ConnectionMultiplexer.Connect(connectionStrings.Value.Redis);
+        _redisServer = _redis.GetServer(connectionStrings.Value.Redis);
+        _logger = logger;
         _jsonSettings = jsonSettings ?? new()
         {
             ContractResolver = new PrivateResolver(),
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-        };
+        };        
     }
 
     public async Task<T> GetAsync<T>(string key)
     {
         var database = _redis.GetDatabase();
         var keyValue = await database.StringGetAsync(key);
+
+        if (keyValue.HasValue)
+        {
+            _logger.LogInformation("Redis cache hit for key: {key}", key);
+        }
 
         return keyValue.HasValue
             ? JsonConvert.DeserializeObject<T>(keyValue.ToString(), _jsonSettings)
@@ -42,6 +50,7 @@ public sealed class RedisCacheService : IRedisCacheService
 
             if (keyValue.HasValue)
             {
+                _logger.LogInformation("Redis cache hit for key: {key}", key);
                 response.Add(JsonConvert.DeserializeObject<T>(keyValue.ToString(), _jsonSettings));
             }
         }
