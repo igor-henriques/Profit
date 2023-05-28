@@ -6,7 +6,6 @@ public sealed class IngredientProfile : Profile
     {
         CreateMap<IngredientDto, Ingredient>().ReverseMap();
         CreateMap<CreateIngredientCommand, Ingredient>();
-        CreateMap<PatchIngredientCommand, Ingredient>();
         CreateMap<PutIngredientCommand, Ingredient>();
     }
 }

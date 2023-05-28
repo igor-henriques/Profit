@@ -9,7 +9,7 @@ public sealed class TenantResolverMiddleware
         this._next = next;
     }
 
-    public async Task Invoke(HttpContext context, IUnitOfWork _unitOfWork, TenantInfo _tenantInfo)
+    public async Task Invoke(HttpContext context, IUnitOfWork _unitOfWork, ITenantInfo _tenantInfo)
     {
         if (context.Request.Path.Value?.Contains(Routes.User.BaseUser, StringComparison.OrdinalIgnoreCase) ?? false)
         {

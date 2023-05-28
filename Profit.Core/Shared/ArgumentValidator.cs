@@ -36,7 +36,7 @@ public static class ArgumentValidator
 
     public static void ThrowIfNullOrDefault<T>(T obj, string paramName = null) where T : new()
     {
-        if (obj.Equals(default(T)) | obj == null)
+        if (obj == null || obj.Equals(default(T)))
         {
             throw new System.ArgumentNullException($"{paramName ?? "Argument"} cannot be null or default");
         }

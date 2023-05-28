@@ -43,4 +43,25 @@ public interface IRedisCacheService
     /// <param name="prefix"></param>
     /// <returns></returns>
     Task<IEnumerable<T>> GetAllKeys<T>(string prefix);
+
+    /// <summary>
+    /// Build a custom redis key
+    /// </summary>
+    /// <param name="keys"></param>
+    /// <returns></returns>
+    public static string GetCustomKey(params string[] keys)
+    {
+        StringBuilder sb = new();
+
+        for (int i = 0; i < keys.Length; i++)
+        {
+            if (i != keys.Length - 1)
+            {
+                sb.Append(keys[i]);
+                sb.Append(':');
+            }
+        }
+
+        return sb.ToString().ToLower();
+    }
 }

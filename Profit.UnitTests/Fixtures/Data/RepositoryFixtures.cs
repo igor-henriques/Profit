@@ -6,9 +6,9 @@ internal static class RepositoryFixtures
         Mock<ILogger<UnitOfWork>> loggerMock,
         Mock<IRedisCacheService> redisMock,
         Mock<IConfiguration> configuration,
-        Mock<IMigratorApplication> migrator)
+        Mock<IMigratorApplication> migrator,
+        Mock<ITenantInfo> tenantInfo)
     {
-        // Arrange        
         var profitOptions = new DbContextOptionsBuilder<ProfitDbContext>()
             .EnableSensitiveDataLogging()
             .UseInMemoryDatabase(databaseName: "Ingredients")
@@ -23,7 +23,7 @@ internal static class RepositoryFixtures
 
         var authContext = new AuthDbContext(authOptions);
 
-        var unitOfWork = new UnitOfWork(profitContext, loggerMock.Object, redisMock.Object, configuration.Object, authContext, migrator.Object);
+        var unitOfWork = new UnitOfWork(profitContext, loggerMock.Object, redisMock.Object, configuration.Object, authContext, migrator.Object, tenantInfo.Object);
 
         return unitOfWork;
     }

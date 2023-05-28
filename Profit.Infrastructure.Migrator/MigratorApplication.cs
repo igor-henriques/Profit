@@ -47,7 +47,7 @@ internal sealed class MigratorApplication : IMigratorApplication
 
             var contextOptions = new DbContextOptionsBuilder<ProfitDbContext>()
                      .UseSqlServer(_configuration.GetConnectionString("ProfitSqlServer"),
-                         x => x.MigrationsHistoryTable("__EFMigrationsHistory", tenantInfo.FormattedTenantId))                     
+                         x => x.MigrationsHistoryTable("__EFMigrationsHistory", tenantInfo.FormattedTenantId))
                      .ReplaceService<IMigrationsAssembly, DbSchemaAwareMigrationAssembly>()
                      .Options;
 

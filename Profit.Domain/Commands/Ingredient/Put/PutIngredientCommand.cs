@@ -6,7 +6,7 @@ public sealed record PutIngredientCommand : IRequest<Unit>
     public string Name { get; init; }
     public decimal Price { get; init; }
     public decimal Quantity { get; init; }
-    public EMeasurementUnit MeasurementUnitType { get; init; }
+    public EMeasurementUnit MeasurementUnit { get; init; }
     public string ImageThumbnailUrl { get; init; }
     public string Description { get; init; }
 
@@ -15,7 +15,7 @@ public sealed record PutIngredientCommand : IRequest<Unit>
                          decimal price,
                          decimal quantity,
                          string imageThumbnailUrl,
-                         EMeasurementUnit measurementUnitType,
+                         EMeasurementUnit measurementUnit,
                          string description)
     {
         Id = id;
@@ -23,7 +23,7 @@ public sealed record PutIngredientCommand : IRequest<Unit>
         Price = price;
         Quantity = quantity;
         ImageThumbnailUrl = imageThumbnailUrl;
-        MeasurementUnitType = measurementUnitType;
+        MeasurementUnit = measurementUnit;
         Description = description;
     }
 }

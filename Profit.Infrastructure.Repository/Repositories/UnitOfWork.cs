@@ -12,6 +12,7 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
     private readonly IRedisCacheService _cacheService;
     private readonly IConfiguration _configuration;
     private readonly IMigratorApplication _migratorApplication;
+    private readonly ITenantInfo _tenant;
 
     private IIngredientRepository _ingredientRepository;
     private IUserRepository _userRepository;
@@ -28,7 +29,8 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
             _profitContext,
             _logger,
             _cacheService,
-            _configuration);
+            _configuration,
+            _tenant);
 
     /// <summary>
     /// Instead of delegating the object management to the IoC container
@@ -52,7 +54,8 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
             _profitContext,
             _logger,
             _cacheService,
-            _configuration);
+            _configuration,
+            _tenant);
 
     /// <summary>
     /// Instead of delegating the object management to the IoC container
@@ -64,7 +67,8 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
             _profitContext,
             _logger,
             _cacheService,
-            _configuration);
+            _configuration,
+            _tenant);
 
     public UnitOfWork(
         ProfitDbContext context,
@@ -72,7 +76,8 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
         IRedisCacheService cacheService,
         IConfiguration configuration,
         AuthDbContext authContext,
-        IMigratorApplication migratorApplication)
+        IMigratorApplication migratorApplication,
+        ITenantInfo tenant)
     {
         _profitContext = context;
         _logger = logger;
@@ -80,6 +85,7 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
         _configuration = configuration;
         _authContext = authContext;
         _migratorApplication = migratorApplication;
+        _tenant = tenant;
     }
 
     /// <summary>

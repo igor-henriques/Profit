@@ -2,9 +2,9 @@
 
 public sealed class SchemaInterceptor : DbCommandInterceptor
 {
-    private readonly TenantInfo _tenantInfo;
+    private readonly ITenantInfo _tenantInfo;
 
-    public SchemaInterceptor(TenantInfo tenantInfo)
+    public SchemaInterceptor(ITenantInfo tenantInfo)
     {
         _tenantInfo = tenantInfo;
     }
@@ -20,7 +20,7 @@ public sealed class SchemaInterceptor : DbCommandInterceptor
         return base.ReaderExecutingAsync(command, eventData, result, cancellationToken);
     }
 
-    private string ReplaceSchema(string commandText)
+    public string ReplaceSchema(string commandText)
     {
         return commandText.Replace("[dbo].", $"[{_tenantInfo.FormattedTenantId}].");
     }

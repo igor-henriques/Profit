@@ -42,15 +42,6 @@ public static class IngredientEndpoints
             return Results.Ok(response);
         }).WithTags(SwaggerTags.INGREDIENT).RequireAuthorization();
 
-        app.MapPatch(Routes.Ingredient.Patch, async (
-            [FromBody] PatchIngredientCommand patchIngredientCommand,
-            [FromServices] IMediator mediator,
-            CancellationToken cancellationToken) =>
-        {
-            var response = await mediator.Send(patchIngredientCommand, cancellationToken);
-            return Results.NoContent();
-        }).WithTags(SwaggerTags.INGREDIENT).RequireAuthorization();
-
         app.MapPut(Routes.Ingredient.Put, async (
             [FromBody] PutIngredientCommand putIngredientCommand,
             [FromServices] IMediator mediator,

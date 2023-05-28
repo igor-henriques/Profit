@@ -13,11 +13,23 @@ public sealed class DeleteIngredientCommandHandler : IRequestHandler<DeleteIngre
     {
         ArgumentValidator.ThrowIfNullOrDefault(request.IngredientId, nameof(request.IngredientId));
 
+        var recipesAffected = await _unitOfWork.RecipeRepository.GetRecipesAndRelationsByIngredientId(
+                       request.IngredientId,
+                       cancellationToken);
+
+        if (recipesAffected.Any())
+        {
+            var recipesNameAffected = string.Join(",", recipesAffected.Select(x => x.Name).ToList());
+            throw new InvalidEntityDeleteException(recipesNameAffected);
+        }
+
         var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.IngredientId, cancellationToken);
         _unitOfWork.IngredientRepository.Delete(ingredient);
 
         if (await _unitOfWork.Commit(cancellationToken) is 0)
+        {
             throw new EntityNotFoundException(request.IngredientId, nameof(Entities.Ingredient));
+        }
 
         return Unit.Value;
     }

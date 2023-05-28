@@ -39,7 +39,7 @@ namespace Profit.Infrastructure.Migrator.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<byte>("MeasurementUnitType")
+                    b.Property<byte>("MeasurementUnit")
                         .HasColumnType("tinyint");
 
                     b.Property<string>("Name")

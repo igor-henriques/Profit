@@ -46,7 +46,7 @@ public sealed record Ingredient : Entity<Ingredient>
     {
         UpdateName(ingredient.Name);
         UpdatePrice(ingredient.Price);
-        UpdateMeasurementUnitType(ingredient.MeasurementUnit);
+        UpdateMeasurementUnit(ingredient.MeasurementUnit);
         UpdateQuantity(ingredient.Quantity);
         UpdateImageThumbnailUrl(ingredient.ImageThumbnailUrl);
         UpdateDescription(ingredient.Description);
@@ -54,7 +54,7 @@ public sealed record Ingredient : Entity<Ingredient>
         return this;
     }
 
-    public Ingredient UpdateMeasurementUnitType(EMeasurementUnit incomingMeasurementUnit)
+    public Ingredient UpdateMeasurementUnit(EMeasurementUnit incomingMeasurementUnit)
     {
         if (MeasurementUnit != incomingMeasurementUnit)
         {

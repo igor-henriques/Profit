@@ -26,6 +26,13 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
         _logger.LogInformation("{entity} was added", entity);
     }
 
+    public virtual async ValueTask<IEnumerable<TEntity>> GetManyByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        var response = await _context.Set<TEntity>().Where(predicate).ToListAsync(cancellationToken);
+        _logger.LogInformation("{response} records were retrieved", response.Count);
+        return response;
+    }
+
     public virtual void BulkAdd(IEnumerable<TEntity> entities)
     {
         _context.Set<TEntity>().AddRange(entities);
@@ -68,5 +75,35 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
     {
         _context.Set<TEntity>().Update(entity);
         _logger.LogInformation("{entity} was updated", entity);
+    }
+
+    public virtual async ValueTask<EntityQueryResultPaginated<TEntity>> GetByPaginated(
+        Expression<Func<TEntity, bool>> predicate,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await _context.Set<TEntity>()
+            .AsNoTracking()
+            .Where(predicate)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        _logger.LogInformation("{response} records were retrieved", response.Count);
+
+        return new EntityQueryResultPaginated<TEntity>()
+        {
+            Data = response,
+            PageNumber = page,
+            PageSize = pageSize
+        };
+    }
+
+    public virtual async ValueTask<int> CountByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        var response = await _context.Set<TEntity>().AsNoTracking().CountAsync(predicate, cancellationToken);
+        _logger.LogInformation("{response} records were counted", response);
+        return response;
     }
 }

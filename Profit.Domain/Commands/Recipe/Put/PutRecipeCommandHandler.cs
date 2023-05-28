@@ -15,11 +15,29 @@ public sealed class PutRecipeCommandHandler : IRequestHandler<PutRecipeCommand, 
 
     public async Task<Unit> Handle(PutRecipeCommand request, CancellationToken cancellationToken)
     {
-        var recipe = _mapper.Map<Entities.Recipe>(request);
-        _unitOfWork.RecipeRepository.Update(recipe);
+        var incomingRecipe = _mapper.Map<Entities.Recipe>(request);
+        var recipe = await _unitOfWork.RecipeRepository.GetUniqueAsync(incomingRecipe.Id, cancellationToken);
+
+        ArgumentValidator.ThrowIfNullOrDefault(recipe, nameof(recipe));
+
+        recipe.UpdateName(incomingRecipe.Name);
+        recipe.UpdateDescription(incomingRecipe.Description);
+
+        foreach (var relation in recipe.IngredientRecipeRelations)
+        {
+            var incomingRelation = incomingRecipe.IngredientRecipeRelations
+                .FirstOrDefault(x => x.IngredientId == relation.IngredientId);
+
+            relation.UpdateMeasurementUnit(incomingRelation.MeasurementUnit);
+            relation.UpdateIngredientCount(incomingRelation.IngredientCount);
+            relation.UpdateRelationCost(
+                    (relation.Ingredient.Price * relation.IngredientCount) / relation.Ingredient.Quantity);
+        }
 
         if (await _unitOfWork.Commit(cancellationToken) is 0)
+        {
             throw new EntityNotFoundException(request.Id, nameof(Entities.Recipe));
+        }
 
         return Unit.Value;
     }

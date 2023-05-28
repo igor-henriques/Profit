@@ -23,7 +23,7 @@ public sealed class PutIngredientCommandHandlerTests
         // Arrange           
         _mapperMock.Setup(m => m.Map<Profit.Domain.Entities.Ingredient>(command)).Returns(ingredient);
 
-        var ingredientRecipeRelations = new List<Recipe>() { /* Adicione suas instâncias aqui */ };
+        var ingredientRecipeRelations = new List<Profit.Domain.Entities.Recipe>() { /* Adicione suas instâncias aqui */ };
 
         _unitOfWorkMock.Setup(u => u.IngredientRepository.Update(It.IsAny<Profit.Domain.Entities.Ingredient>()));
 

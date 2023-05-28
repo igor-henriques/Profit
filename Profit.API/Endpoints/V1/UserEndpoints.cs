@@ -33,15 +33,6 @@ public static class UserEndpoints
             return Results.Ok(response);
         }).WithTags(SwaggerTags.USER);
 
-        app.MapPatch(Routes.User.Patch, async (
-            [FromBody] PatchUserCommand patchUserCommand,
-            [FromServices] IMediator mediator,
-            CancellationToken cancellationToken) =>
-        {
-            var response = await mediator.Send(patchUserCommand, cancellationToken);
-            return Results.NoContent();
-        }).WithTags(SwaggerTags.USER).RequireAuthorization();
-
         app.MapPut(Routes.User.Put, async (
             [FromBody] PutUserCommand putUserCommand,
             [FromServices] IMediator mediator,

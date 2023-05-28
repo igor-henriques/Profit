@@ -15,7 +15,7 @@ public sealed record Product : Entity<Product>
         string imageThumbnailUrl,
         string description,
         Guid recipeId,
-        Recipe recipe)
+        Recipe recipe = null)
     {
         Name = name;
         TotalPrice = totalPrice;
@@ -99,7 +99,7 @@ public sealed record Product : Entity<Product>
         UpdateName(entity.Name);
         UpdateTotalPrice(entity.TotalPrice);
         UpdateImageThumbnailUrl(entity.ImageThumbnailUrl);
-        UpdateDescription(entity.ImageThumbnailUrl);
+        UpdateDescription(entity.Description);
         UpdateRecipeId(entity.RecipeId);
 
         return this;

@@ -62,8 +62,8 @@ internal sealed class RecipeRepository : BaseRepository<Recipe, ProfitDbContext>
     public override async ValueTask<Recipe> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var response = await _context.Recipes
-            .AsNoTracking()
             .Include(x => x.IngredientRecipeRelations)
+            .ThenInclude(x => x.Ingredient)
             .FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
 
         return response;

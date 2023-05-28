@@ -16,7 +16,7 @@ namespace Profit.Infrastructure.Migrator.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "MeasurementUnitType",
+                name: "MeasurementUnit",
                 table: "Ingredients",
                 newName: "MeasurementUnit",
                 schema: _schema.Schema);
@@ -28,7 +28,7 @@ namespace Profit.Infrastructure.Migrator.Migrations
             migrationBuilder.RenameColumn(
                 name: "MeasurementUnit",
                 table: "Ingredients",
-                newName: "MeasurementUnitType",
+                newName: "MeasurementUnit",
                 schema: _schema.Schema);
         }
     }

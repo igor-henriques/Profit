@@ -2,45 +2,72 @@
 
 internal sealed class RedisCachedRecipeRepository : IRecipeRepository
 {
+    private readonly ITenantInfo _tenant;
     private readonly IRedisCacheService _cacheService;
-    private readonly RecipeRepository _recipeRepository;
-    private const string REDIS_RECIPE_PREFIX = "profit:recipe:";
+    private readonly RecipeRepository _repo;
+    private const string REDIS_PREFIX = "profit:recipe:";
     private readonly long _cacheExpirationInSeconds;
+    private readonly ILogger<UnitOfWork> _logger;
 
     public RedisCachedRecipeRepository(
         ProfitDbContext context,
         ILogger<UnitOfWork> logger,
         IRedisCacheService cacheService,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        ITenantInfo tenant)
     {
-        this._recipeRepository = new RecipeRepository(context, logger);
-        this._cacheService = cacheService;
-        this._cacheExpirationInSeconds = configuration.GetValue<long>("CacheSecondsDuration");
+        _repo = new RecipeRepository(context, logger);
+        _cacheService = cacheService;
+        _cacheExpirationInSeconds = configuration.GetValue<long>("CacheSecondsDuration");
+        _tenant = tenant;
+        _logger = logger;
     }
-    private static string GetRedisKey(Guid id)
+    private string GetRedisKey(Guid id)
     {
-        return $"{REDIS_RECIPE_PREFIX}{id}";
+        return IRedisCacheService.GetCustomKey(
+            _tenant.TenantId.FormatTenantToSchema(),
+            REDIS_PREFIX,
+            id.ToString());
     }
 
     public async ValueTask Add(Recipe entity, CancellationToken cancellationToken = default)
     {
-        await _recipeRepository.Add(entity, cancellationToken);
+        await _repo.Add(entity, cancellationToken);
     }
 
     public void BulkAdd(IEnumerable<Recipe> ingredients)
     {
-        _recipeRepository.BulkAdd(ingredients);
+        _repo.BulkAdd(ingredients);
     }
 
     public async ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
     {
-        return await _recipeRepository.CountAsync(cancellationToken);
+        var redisKey = IRedisCacheService.GetCustomKey(
+            _tenant.TenantId.FormatTenantToSchema(),
+            nameof(Product),
+            nameof(CountAsync));
+
+        var count = await _cacheService.GetAsync<int>(redisKey);
+
+        if (count is 0)
+        {
+            count = await _repo.CountAsync(cancellationToken);
+            await _cacheService.SetAsync(redisKey, count, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
+        }
+        else
+        {
+            _logger.LogInformation("Cache was hit for {methodName} on {sourceName}",
+                nameof(CountAsync),
+                nameof(RedisCachedRecipeRepository));
+        }
+
+        return count;
     }
 
     public void Delete(Recipe entity)
     {
         _cacheService.Remove(entity.Id.ToString());
-        _recipeRepository.Delete(entity);
+        _repo.Delete(entity);
     }
 
     public async ValueTask<bool> Exists(Recipe entity, CancellationToken cancellationToken = default)
@@ -49,7 +76,13 @@ internal sealed class RedisCachedRecipeRepository : IRecipeRepository
 
         if (!existsOnCache)
         {
-            return await _recipeRepository.Exists(entity, cancellationToken);
+            return await _repo.Exists(entity, cancellationToken);
+        }
+        else
+        {
+            _logger.LogInformation("Cache was hit for {methodName} on {sourceName}",
+                nameof(Exists),
+                nameof(RedisCachedRecipeRepository));
         }
 
         return existsOnCache;
@@ -57,16 +90,22 @@ internal sealed class RedisCachedRecipeRepository : IRecipeRepository
 
     public async ValueTask<IEnumerable<Recipe>> GetManyAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _cacheService.GetAllKeys<Recipe>(REDIS_RECIPE_PREFIX);
+        var response = await _cacheService.GetAllKeys<Recipe>(REDIS_PREFIX);
 
         if (!response.Any())
         {
-            response = await _recipeRepository.GetManyAsync(cancellationToken);
+            response = await _repo.GetManyAsync(cancellationToken);
 
             foreach (var item in response)
             {
                 await _cacheService.SetAsync(GetRedisKey(item.Id), item, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
             }
+        }
+        else
+        {
+            _logger.LogInformation("Cache was hit for {methodName} on {sourceName}",
+                nameof(GetManyAsync),
+                nameof(RedisCachedRecipeRepository));
         }
 
         return response;
@@ -78,8 +117,14 @@ internal sealed class RedisCachedRecipeRepository : IRecipeRepository
 
         if (recipe is null)
         {
-            recipe = await _recipeRepository.GetUniqueAsync(id, cancellationToken);
+            recipe = await _repo.GetUniqueAsync(id, cancellationToken);
             await _cacheService.SetAsync(GetRedisKey(id), recipe, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
+        }
+        else
+        {
+            _logger.LogInformation("Cache was hit for {methodName} on {sourceName}",
+                nameof(GetUniqueAsync),
+                nameof(RedisCachedRecipeRepository));
         }
 
         return recipe;
@@ -87,7 +132,7 @@ internal sealed class RedisCachedRecipeRepository : IRecipeRepository
 
     public void Update(Recipe entity)
     {
-        _recipeRepository.Update(entity);
+        _repo.Update(entity);
     }
 
     public async Task<IEnumerable<Recipe>> GetRecipesAndRelationsByIngredientId(Guid ingredientId, CancellationToken cancellationToken = default)
@@ -97,10 +142,39 @@ internal sealed class RedisCachedRecipeRepository : IRecipeRepository
 
         if (recipes is null)
         {
-            recipes = await _recipeRepository.GetRecipesAndRelationsByIngredientId(ingredientId, cancellationToken);
+            recipes = await _repo.GetRecipesAndRelationsByIngredientId(ingredientId, cancellationToken);
             await _cacheService.SetAsync(specificRedisKey, recipes, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
+        }
+        else
+        {
+            _logger.LogInformation("Cache was hit for {methodName} on {sourceName}",
+                nameof(GetRecipesAndRelationsByIngredientId),
+                nameof(RedisCachedRecipeRepository));
         }
 
         return recipes;
+    }
+
+    public async ValueTask<IEnumerable<Recipe>> GetManyByAsync(Expression<Func<Recipe, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return await _repo.GetManyByAsync(predicate, cancellationToken);
+    }
+
+    public async ValueTask<EntityQueryResultPaginated<Recipe>> GetByPaginated(Expression<Func<Recipe, bool>> predicate, int page, int pageSize, CancellationToken cancellationToken = default)
+    {
+        var result = await _repo.GetByPaginated(predicate, page, pageSize, cancellationToken);
+
+        int totalCount = await CountAsync(cancellationToken);
+        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+        result.TotalPages = totalPages;
+        result.TotalCount = totalCount;
+
+        return result;
+    }
+
+    public async ValueTask<int> CountByAsync(Expression<Func<Recipe, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return await _repo.CountByAsync(predicate, cancellationToken);
     }
 }

@@ -10,7 +10,7 @@ internal sealed class AutoDomainData : AutoDataAttribute
             .ForEach(b => fixture.Behaviors.Remove(b));
         fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
-        fixture.Customize(new IngredientCustomization());
+        fixture.Customize(new EntitiesCustomization());
 
         return fixture;
     })

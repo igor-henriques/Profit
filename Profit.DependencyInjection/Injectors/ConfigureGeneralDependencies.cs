@@ -4,7 +4,7 @@ public static class ConfigureGeneralDependencies
 {
     public static IServiceCollection AddGeneralDependencies(this IServiceCollection services)
     {
-        services.AddScoped<TenantInfo>();
+        services.AddScoped<ITenantInfo, TenantInfo>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<SchemaInterceptor>();
         services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();

@@ -3,7 +3,7 @@
 /// <summary>
 /// Responsible for carrying and managing the current tenant id throughout the scoped pipeline
 /// </summary>
-public sealed record TenantInfo
+public sealed record TenantInfo : ITenantInfo
 {
     private Guid _tenantId;
     public Guid TenantId

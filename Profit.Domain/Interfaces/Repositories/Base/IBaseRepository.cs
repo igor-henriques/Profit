@@ -1,13 +1,21 @@
 ﻿namespace Profit.Domain.Interfaces.Repositories.Base;
 
-public interface IBaseRepository<T> where T : Entity<T>
+public interface IBaseRepository<TEntity> where TEntity : Entity<TEntity>
 {
-    public ValueTask Add(T entity, CancellationToken cancellationToken = default);
-    public void BulkAdd(IEnumerable<T> ingredients);
-    public void Update(T entity);
-    public void Delete(T entity);
+    public ValueTask Add(TEntity entity, CancellationToken cancellationToken = default);
+    public void BulkAdd(IEnumerable<TEntity> ingredients);
+    public void Update(TEntity entity);
+    public void Delete(TEntity entity);
     public ValueTask<int> CountAsync(CancellationToken cancellationToken = default);
-    public ValueTask<bool> Exists(T entity, CancellationToken cancellationToken = default);
-    public ValueTask<T> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default);
-    public ValueTask<IEnumerable<T>> GetManyAsync(CancellationToken cancellationToken = default);
+    public ValueTask<bool> Exists(TEntity entity, CancellationToken cancellationToken = default);
+    public ValueTask<TEntity> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default);
+    public ValueTask<IEnumerable<TEntity>> GetManyAsync(CancellationToken cancellationToken = default);
+    ValueTask<IEnumerable<TEntity>> GetManyByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+    ValueTask<EntityQueryResultPaginated<TEntity>> GetByPaginated(
+        Expression<Func<TEntity, bool>> predicate,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default);
+
+    ValueTask<int> CountByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 }

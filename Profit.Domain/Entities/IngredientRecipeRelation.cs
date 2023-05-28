@@ -32,6 +32,11 @@ public sealed record IngredientRecipeRelation
 
     public IngredientRecipeRelation() { }
 
+    public IngredientRecipeRelation(EMeasurementUnit measurementUnit)
+    {
+        this.MeasurementUnit = measurementUnit;
+    }
+
     public IngredientRecipeRelation Update(IngredientRecipeRelation incomingEntity)
     {
         UpdateIngredientId(incomingEntity.IngredientId);

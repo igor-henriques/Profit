@@ -33,15 +33,12 @@ public sealed class PutIngredientCommandHandler : IRequestHandler<PutIngredientC
                 }
 
                 relation.UpdateMeasurementUnit(incomingIngredient.MeasurementUnit);
-                relation.UpdateIngredientCount(incomingIngredient.Quantity);
+
+                relation.UpdateRelationCost(
+                    (incomingIngredient.Price * relation.IngredientCount) / incomingIngredient.Quantity);
             }
-        }
 
-        var productsAffected = await _unitOfWork.ProductRepository.GetProductsByRecipeId(request.Id, cancellationToken);
-
-        foreach (var product in productsAffected)
-        {
-
+            recipe.UpdateTotalCost(recipe.IngredientRecipeRelations.Sum(x => x.RelationCost));
         }
 
         if (await _unitOfWork.Commit(cancellationToken) is 0)

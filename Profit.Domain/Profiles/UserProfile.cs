@@ -9,9 +9,6 @@ public sealed class UserProfile : Profile
         CreateMap<CreateUserCommand, User>()
             .ForMember(dest => dest.HashedPassword, opt => opt.MapFrom(src => src.Password));
 
-        CreateMap<PatchUserCommand, User>()
-            .ForMember(dest => dest.HashedPassword, opt => opt.MapFrom(src => src.Password));
-
         CreateMap<PutUserCommand, User>()
             .ForMember(dest => dest.HashedPassword, opt => opt.MapFrom(src => src.Password));
     }

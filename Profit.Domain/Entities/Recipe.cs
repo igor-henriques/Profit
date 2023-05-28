@@ -6,6 +6,24 @@ public sealed record Recipe : Entity<Recipe>
     public decimal TotalCost { get; private set; }
     public string Description { get; private set; }
     public ICollection<IngredientRecipeRelation> IngredientRecipeRelations { get; init; }
+    public decimal SumRelationsCost => IngredientRecipeRelations?.Sum(x => x.RelationCost)
+        ?? throw new ArgumentNullException($"{nameof(IngredientRecipeRelations)} has to be included in the query");
+
+    public Recipe(
+        string name,
+        decimal totalCost,
+        string description,
+        ICollection<IngredientRecipeRelation> ingredientRecipeRelations = null)
+    {
+        Name = name;
+        TotalCost = totalCost;
+        Description = description;
+        IngredientRecipeRelations = ingredientRecipeRelations;
+
+        Validate();
+    }
+
+    public Recipe() { }
 
     public override void Validate()
     {

@@ -2,10 +2,10 @@
 
 public sealed record MeasurementUnit
 {
-    public EMeasurementUnit MeasurementUnitType { get; init; }
+    private readonly EMeasurementUnit _measurementUnit;
     public decimal Quantity { get; init; }
-    public string TranslatedName { get => _measurementUnitTranslator.GetValueOrDefault(MeasurementUnitType); }
-    public string Abbreviation { get => _measurementAbbreviationTranslator.GetValueOrDefault(MeasurementUnitType); }
+    public string TranslatedName { get => _measurementUnitTranslator.GetValueOrDefault(_measurementUnit); }
+    public string Abbreviation { get => _measurementAbbreviationTranslator.GetValueOrDefault(_measurementUnit); }
 
     private readonly static ImmutableDictionary<EMeasurementUnit, string> _measurementUnitTranslator;
     private readonly static ImmutableDictionary<EMeasurementUnit, string> _measurementAbbreviationTranslator;
@@ -30,20 +30,20 @@ public sealed record MeasurementUnit
         abbreviationdictionaryBuilder.Add(EMeasurementUnit.Milliliter, "Ml");
         abbreviationdictionaryBuilder.Add(EMeasurementUnit.Liter, "L");
 
-        _measurementAbbreviationTranslator = dictionaryBuilder.ToImmutable();
+        _measurementAbbreviationTranslator = abbreviationdictionaryBuilder.ToImmutable();
     }
 
-    private MeasurementUnit(EMeasurementUnit measurementUnitType, decimal quantity)
+    private MeasurementUnit(EMeasurementUnit measurementUnit, decimal quantity)
     {
-        MeasurementUnitType = measurementUnitType;
+        _measurementUnit = measurementUnit;
         Quantity = quantity;
     }
 
-    public static MeasurementUnit Create(EMeasurementUnit measurementUnitType, decimal quantity)
+    public static MeasurementUnit Create(EMeasurementUnit measurementUnit, decimal quantity)
     {
         ArgumentValidator.ThrowIfZero(quantity, nameof(quantity));
         ArgumentValidator.ThrowIfNegative(quantity, nameof(quantity));
-        return new MeasurementUnit(measurementUnitType, quantity);
+        return new MeasurementUnit(measurementUnit, quantity);
     }
 
     public static MeasurementUnit CreateFromIngredient(Ingredient ingredient)
@@ -67,14 +67,14 @@ public sealed record MeasurementUnit
     /// <exception cref="InvalidOperationException">Exception thrown when the units are not compatible.</exception>
     public static MeasurementUnit GetEquivalent(MeasurementUnit fromUnit, EMeasurementUnit toUnit)
     {
-        return fromUnit.MeasurementUnitType switch
+        return fromUnit._measurementUnit switch
         {
             EMeasurementUnit.Milligram when toUnit is EMeasurementUnit.Gram => new MeasurementUnit(EMeasurementUnit.Gram, fromUnit.Quantity / 100m),
             EMeasurementUnit.Milligram when toUnit is EMeasurementUnit.Kilogram => new MeasurementUnit(EMeasurementUnit.Kilogram, fromUnit.Quantity / 1_000_000m),
             EMeasurementUnit.Gram when toUnit is EMeasurementUnit.Milligram => new MeasurementUnit(EMeasurementUnit.Milligram, fromUnit.Quantity * 1_000m),
             EMeasurementUnit.Gram when toUnit is EMeasurementUnit.Kilogram => new MeasurementUnit(EMeasurementUnit.Kilogram, fromUnit.Quantity / 1_000m),
             EMeasurementUnit.Kilogram when toUnit is EMeasurementUnit.Milligram => new MeasurementUnit(EMeasurementUnit.Milligram, fromUnit.Quantity * 1_000_000m),
-            EMeasurementUnit.Kilogram when toUnit is EMeasurementUnit.Gram => new MeasurementUnit(EMeasurementUnit.Milligram, fromUnit.Quantity * 1_000m),
+            EMeasurementUnit.Kilogram when toUnit is EMeasurementUnit.Gram => new MeasurementUnit(EMeasurementUnit.Gram, fromUnit.Quantity * 1_000m),
             EMeasurementUnit.Milliliter when toUnit is EMeasurementUnit.Liter => new MeasurementUnit(EMeasurementUnit.Liter, fromUnit.Quantity / 1_000m),
             EMeasurementUnit.Liter when toUnit is EMeasurementUnit.Milliliter => new MeasurementUnit(EMeasurementUnit.Liter, fromUnit.Quantity * 1_000m),
             _ => throw new InvalidOperationException("This conversion is not supported.")

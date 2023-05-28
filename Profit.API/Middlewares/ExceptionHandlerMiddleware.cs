@@ -51,6 +51,10 @@ public sealed class ExceptionHandlerMiddleware
         {
             await Handle(context, ex);
         }
+        catch (InvalidEntityDeleteException ex)
+        {
+            await Handle(context, ex);
+        }
         catch (Exception ex)
         {
             await Handle(context, ex);
@@ -188,6 +192,21 @@ public sealed class ExceptionHandlerMiddleware
     }
 
     private static async Task Handle(HttpContext context, InvalidMeasurementConversionException ex)
+    {
+        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        context.Response.ContentType = "application/json";
+
+        var errorMessage = JsonSerializer.Serialize(
+            new
+            {
+                Messages = ex.Message.Split("\n"),
+                context.Response.StatusCode
+            });
+
+        await context.Response.WriteAsync(errorMessage);
+    }
+
+    private static async Task Handle(HttpContext context, InvalidEntityDeleteException ex)
     {
         context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
         context.Response.ContentType = "application/json";

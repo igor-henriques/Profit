@@ -17,16 +17,15 @@ public sealed class CreateRecipeCommandHandler : IRequestHandler<CreateRecipeCom
     {
         var recipe = _mapper.Map<Entities.Recipe>(request);
 
-        decimal recipeTotalCost = 0;
-
         foreach (var relation in recipe.IngredientRecipeRelations)
         {
             var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(relation.IngredientId, cancellationToken);
             ArgumentValidator.ThrowIfNullOrDefault(ingredient, nameof(ingredient));
-            recipeTotalCost += ingredient.UnitPrice * relation.IngredientCount;
+            relation.UpdateRelationCost(
+                    (ingredient.Price * relation.IngredientCount) / ingredient.Quantity);
         }
 
-        recipe.UpdateTotalCost(recipeTotalCost);
+        recipe.UpdateTotalCost(recipe.SumRelationsCost);
 
         await _unitOfWork.RecipeRepository.Add(recipe, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);

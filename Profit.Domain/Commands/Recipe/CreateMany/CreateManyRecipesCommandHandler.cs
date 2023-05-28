@@ -2,15 +2,11 @@
 
 public sealed class CreateManyRecipesCommandHandler : IRequestHandler<CreateManyRecipesCommand, IEnumerable<Guid>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
 
-    public CreateManyRecipesCommandHandler(
-        IUnitOfWork unitOfWork,
-        IMapper mapper)
+    public CreateManyRecipesCommandHandler(IMediator mediator)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
+        _mediator = mediator;
     }
 
     public async Task<IEnumerable<Guid>> Handle(CreateManyRecipesCommand request, CancellationToken cancellationToken)
@@ -19,13 +15,10 @@ public sealed class CreateManyRecipesCommandHandler : IRequestHandler<CreateMany
 
         foreach (var recipeDto in request.Recipes)
         {
-
-            var recipe = _mapper.Map<Entities.Recipe>(recipeDto);
-            await _unitOfWork.RecipeRepository.Add(recipe, cancellationToken);
-            response.Add(recipe.Id);
+            var recipeId = await _mediator.Send(recipeDto, cancellationToken);
+            response.Add(recipeId);
         }
 
-        await _unitOfWork.Commit(cancellationToken);
         return response;
     }
 }

@@ -42,15 +42,6 @@ public static class ProductEndpoints
             return Results.Ok(response);
         }).WithTags(SwaggerTags.PRODUCT).RequireAuthorization();
 
-        app.MapPatch(Routes.Product.Patch, async (
-            [FromBody] PatchProductCommand patchProductCommand,
-            [FromServices] IMediator mediator,
-            CancellationToken cancellationToken) =>
-        {
-            var response = await mediator.Send(patchProductCommand, cancellationToken);
-            return Results.NoContent();
-        }).WithTags(SwaggerTags.PRODUCT).RequireAuthorization();
-
         app.MapPut(Routes.Product.Put, async (
             [FromBody] PutProductCommand putProductCommand,
             [FromServices] IMediator mediator,

@@ -7,11 +7,9 @@ public sealed class RecipeProfile : Profile
         CreateMap<RecipeDto, Recipe>().ReverseMap();
         CreateMap<CreateRecipeCommand, Recipe>()
             .ForMember(x => x.IngredientRecipeRelations, y => y.MapFrom(src => src.IngredientRecipeRelations.Select(
-                i => new IngredientRecipeRelation().UpdateIngredientCount(i.IngredientCount)
-                                                   .UpdateIngredientId(i.IngredientId)
-                                                   .UpdateMeasurementUnit(i.MeasurementUnit))));
+                i => new IngredientRecipeRelation(i.MeasurementUnit).UpdateIngredientCount(i.IngredientCount)
+                                                   .UpdateIngredientId(i.IngredientId))));
 
-        CreateMap<PatchRecipeCommand, Recipe>();
         CreateMap<PutRecipeCommand, Recipe>();
         CreateMap<IngredientRecipeRelation, IngredientRecipeRelationDto>().ReverseMap();
     }

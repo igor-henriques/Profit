@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Migrations.Internal;
-using System.Reflection;
 
 namespace Profit.Infrastructure.Migrator.Data;
 

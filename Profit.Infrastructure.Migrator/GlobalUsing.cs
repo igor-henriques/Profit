@@ -14,5 +14,5 @@ global using Profit.Infrastructure.Migrator.Data;
 global using Profit.Infrastructure.Repository.DataContext;
 global using Profit.Infrastructure.Repository.DataContext.EntityMapping;
 global using Serilog;
-global using System.Runtime.CompilerServices;
 global using System.Reflection;
+global using System.Runtime.CompilerServices;
