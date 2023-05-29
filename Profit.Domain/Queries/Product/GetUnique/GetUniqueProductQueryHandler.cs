@@ -2,12 +2,12 @@
 
 public sealed class GetUniqueProductQueryHandler : IRequestHandler<GetUniqueProductQuery, ProductDto>
 {
-    private readonly IReadOnlyBaseRepository<Entities.Product> _repo;
+    private readonly IReadOnlyProductRepository _repo;
     private readonly IMapper _mapper;
 
     public GetUniqueProductQueryHandler(
         IMapper mapper,
-        IReadOnlyBaseRepository<Entities.Product> repo)
+        IReadOnlyProductRepository repo)
     {
         _mapper = mapper;
         _repo = repo;

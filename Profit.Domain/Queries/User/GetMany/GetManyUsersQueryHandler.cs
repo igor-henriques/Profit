@@ -2,12 +2,12 @@
 
 public sealed class GetManyUsersQueryHandler : IRequestHandler<GetManyUsersQuery, IEnumerable<UserDto>>
 {
-    private readonly IReadOnlyBaseRepository<Entities.User> _repo;
+    private readonly IReadOnlyUserRepository _repo;
     private readonly IMapper _mapper;
 
     public GetManyUsersQueryHandler(
         IMapper mapper,
-        IReadOnlyBaseRepository<Entities.User> repo)
+        IReadOnlyUserRepository repo)
     {
         _mapper = mapper;
         _repo = repo;

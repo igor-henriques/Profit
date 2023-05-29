@@ -21,7 +21,7 @@ internal sealed class MigratorApplication : IMigratorApplication
             .Distinct()
             .ToListAsync();
 
-        _logger.LogInformation("{tenantsCount} TENANTS FOUND", tenants.Count());
+        _logger.LogInformation("{tenantsCount} TENANTS FOUND", tenants.Count);
 
         foreach (var tenant in tenants)
         {

@@ -2,12 +2,12 @@
 
 public sealed class GetManyIngredientsQueryHandler : IRequestHandler<GetManyIngredientsQuery, IEnumerable<IngredientDto>>
 {
-    private readonly IReadOnlyBaseRepository<Entities.Ingredient> _repo;
+    private readonly IReadOnlyIngredientRepository _repo;
     private readonly IMapper _mapper;
 
     public GetManyIngredientsQueryHandler(
-        IMapper mapper, 
-        IReadOnlyBaseRepository<Entities.Ingredient> repo)
+        IMapper mapper,
+        IReadOnlyIngredientRepository repo)
     {
         _mapper = mapper;
         _repo = repo;

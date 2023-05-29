@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Migrations.Internal;
-
-namespace Profit.Infrastructure.Migrator.Data;
+﻿namespace Profit.Infrastructure.Migrator.Data;
 
 internal sealed class DbSchemaAwareMigrationAssembly : MigrationsAssembly
 {

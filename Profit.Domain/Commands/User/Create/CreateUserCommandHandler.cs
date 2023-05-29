@@ -17,12 +17,9 @@ public sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand
 
     public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        var user = _mapper.Map<Entities.User>(new CreateUserCommand
-        {
-            Email = request.Email,
-            Password = _passwordHashingService.HashPassword(request.Password),
-            Username = request.Username,
-        });
+        var user = _mapper.Map<Entities.User>(request);
+
+        user.UpdateHashedPassword(_passwordHashingService.HashPassword(request.Password));
 
         await _unitOfWork.UserRepository.Add(user, cancellationToken);
 

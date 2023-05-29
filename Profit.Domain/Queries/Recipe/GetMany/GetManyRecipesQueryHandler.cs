@@ -2,12 +2,12 @@
 
 public sealed class GetManyRecipesQueryHandler : IRequestHandler<GetManyRecipesQuery, IEnumerable<RecipeDto>>
 {
-    private readonly IReadOnlyBaseRepository<Entities.Recipe> _repo;
+    private readonly IReadOnlyRecipeRepository _repo;
     private readonly IMapper _mapper;
 
     public GetManyRecipesQueryHandler(
         IMapper mapper,
-        IReadOnlyBaseRepository<Entities.Recipe> repo)
+        IReadOnlyRecipeRepository repo)
     {
         _mapper = mapper;
         _repo = repo;

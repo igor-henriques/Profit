@@ -2,12 +2,12 @@
 
 public sealed class GetUniqueIngredientQueryHandler : IRequestHandler<GetUniqueIngredientQuery, IngredientDto>
 {
-    private readonly IReadOnlyBaseRepository<Entities.Ingredient> _repo;
+    private readonly IReadOnlyIngredientRepository _repo;
     private readonly IMapper _mapper;
 
     public GetUniqueIngredientQueryHandler(
         IMapper mapper,
-        IReadOnlyBaseRepository<Entities.Ingredient> ingredientRepository)
+        IReadOnlyIngredientRepository ingredientRepository)
     {
         _mapper = mapper;
         _repo = ingredientRepository;

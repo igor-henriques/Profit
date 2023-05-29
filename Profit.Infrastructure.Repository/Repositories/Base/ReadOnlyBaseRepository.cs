@@ -13,7 +13,7 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
         _logger = logger;
     }
 
-    public virtual async ValueTask<bool> Exists(TEntity entity, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<bool> ExistsAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         if (entity == null || entity == default)
         {
@@ -26,7 +26,7 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
             .AnyAsync(x => x.Id == entity.Id, cancellationToken);
 
         _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-            nameof(Exists),
+            nameof(ExistsAsync),
             nameof(ReadOnlyBaseRepository<TEntity, TDbContext>),
             response);
 

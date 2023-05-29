@@ -1,4 +1,6 @@
-﻿namespace Profit.DependencyInjection.Injectors;
+﻿using Profit.Infrastructure.Repository.Repositories.Base;
+
+namespace Profit.DependencyInjection.Injectors;
 
 public static class ConfigureGeneralDependencies
 {
@@ -14,10 +16,10 @@ public static class ConfigureGeneralDependencies
         services.AddHostedService<CommandBatchProcessorWorker<RequestCommandQueryLog>>();
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
         services.AddScoped<IMigratorApplication, MigratorApplication>();
-        services.AddScoped(typeof(IReadOnlyBaseRepository<>), typeof(ReadOnlyIngredientRepository));
-        services.AddScoped(typeof(IReadOnlyBaseRepository<>), typeof(ReadOnlyProductRepository));
-        services.AddScoped(typeof(IReadOnlyBaseRepository<>), typeof(ReadOnlyRecipeRepository));
-        services.AddScoped(typeof(IReadOnlyBaseRepository<>), typeof(ReadOnlyUserRepository));
+        services.AddScoped(typeof(IReadOnlyIngredientRepository), typeof(ReadOnlyIngredientRepository));
+        services.AddScoped(typeof(IReadOnlyProductRepository), typeof(ReadOnlyProductRepository));
+        services.AddScoped(typeof(IReadOnlyRecipeRepository), typeof(ReadOnlyRecipeRepository));
+        services.AddScoped(typeof(IReadOnlyUserRepository), typeof(ReadOnlyUserRepository));
         return services;
     }
 }

@@ -53,7 +53,7 @@ internal sealed class RedisCachedProductRepository : IProductRepository
 
         if (count is 0)
         {
-            count = await _repo.CountAsync(cancellationToken);
+            count = await _readOnlyRepo.CountByAsync(x => true, cancellationToken);
             await _cacheService.SetAsync(redisKey, count, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
         }
         else
@@ -78,7 +78,7 @@ internal sealed class RedisCachedProductRepository : IProductRepository
 
         if (!existsOnCache)
         {
-            return await _repo.ExistsAsync(entity, cancellationToken);
+            return await _readOnlyRepo.ExistsAsync(entity, cancellationToken);
         }
         else
         {
@@ -96,7 +96,7 @@ internal sealed class RedisCachedProductRepository : IProductRepository
 
         if (!response.Any())
         {
-            response = await _repo.GetManyAsync(cancellationToken);
+            response = await _readOnlyRepo.GetManyAsync(cancellationToken);
 
             foreach (var item in response)
             {
@@ -119,7 +119,7 @@ internal sealed class RedisCachedProductRepository : IProductRepository
 
         if (product is null)
         {
-            product = await _repo.GetUniqueAsync(id, cancellationToken);
+            product = await _readOnlyRepo.GetUniqueAsync(id, cancellationToken);
             await _cacheService.SetAsync(GetRedisKey(id), product, TimeSpan.FromSeconds(_cacheExpirationInSeconds));
         }
         else
@@ -164,12 +164,12 @@ internal sealed class RedisCachedProductRepository : IProductRepository
 
     public async ValueTask<IEnumerable<Product>> GetManyByAsync(Expression<Func<Product, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        return await _repo.GetManyByAsync(predicate, cancellationToken);
+        return await _readOnlyRepo.GetManyByAsync(predicate, cancellationToken);
     }
 
     public async ValueTask<EntityQueryResultPaginated<Product>> GetByPaginated(Expression<Func<Product, bool>> predicate, int page, int pageSize, CancellationToken cancellationToken = default)
     {
-        var result = await _repo.GetByPaginated(predicate, page, pageSize, cancellationToken);
+        var result = await _readOnlyRepo.GetByPaginated(predicate, page, pageSize, cancellationToken);
 
         int totalCount = await CountAsync(cancellationToken);
         var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
@@ -182,6 +182,6 @@ internal sealed class RedisCachedProductRepository : IProductRepository
 
     public async ValueTask<int> CountByAsync(Expression<Func<Product, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        return await _repo.CountByAsync(predicate, cancellationToken);
+        return await _readOnlyRepo.CountByAsync(predicate, cancellationToken);
     }
 }

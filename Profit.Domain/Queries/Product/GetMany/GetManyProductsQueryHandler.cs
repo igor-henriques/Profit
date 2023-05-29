@@ -2,12 +2,12 @@
 
 public sealed class GetManyProductsQueryHandler : IRequestHandler<GetManyProductsQuery, IEnumerable<ProductDto>>
 {
-    private readonly IReadOnlyBaseRepository<Entities.Product> _repo;
+    private readonly IReadOnlyProductRepository _repo;
     private readonly IMapper _mapper;
 
     public GetManyProductsQueryHandler(
         IMapper mapper,
-        IReadOnlyBaseRepository<Entities.Product> repo)
+        IReadOnlyProductRepository repo)
     {
         _mapper = mapper;
         _repo = repo;

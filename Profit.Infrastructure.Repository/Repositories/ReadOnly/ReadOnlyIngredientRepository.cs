@@ -1,7 +1,7 @@
 ﻿namespace Profit.Infrastructure.Repository.Repositories.ReadOnly;
 
-public sealed class ReadOnlyIngredientRepository : ReadOnlyBaseRepository<Ingredient, ProfitDbContext>, 
-    IReadOnlyBaseRepository<Ingredient>    
+public sealed class ReadOnlyIngredientRepository : ReadOnlyBaseRepository<Ingredient, ProfitDbContext>,
+    IReadOnlyIngredientRepository
 {
     public ReadOnlyIngredientRepository(
         ProfitDbContext context,

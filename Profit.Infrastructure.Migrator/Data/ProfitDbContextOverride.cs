@@ -1,6 +1,6 @@
 ﻿namespace Profit.Infrastructure.Migrator.Data;
 
-public sealed class ProfitDbContextOverride : ProfitDbContext, IDbContextSchema
+internal sealed class ProfitDbContextOverride : ProfitDbContext, IDbContextSchema
 {
     private readonly string _tenantId;
     public string Schema => _tenantId;
