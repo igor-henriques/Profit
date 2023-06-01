@@ -134,7 +134,7 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
             .Where(predicate)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync(cancellationToken);        
+            .ToListAsync(cancellationToken);
 
         var paginatedResult = new EntityQueryResultPaginated<TEntity>()
         {
@@ -160,6 +160,21 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
 
         _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
            nameof(CountByAsync),
+           nameof(ReadOnlyBaseRepository<TEntity, TDbContext>),
+           response);
+
+        return response;
+    }
+
+    public virtual async ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+    {
+        var response = await _context
+            .Set<TEntity>()
+            .AsNoTracking()
+            .CountAsync(cancellationToken);
+
+        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
+           nameof(CountAsync),
            nameof(ReadOnlyBaseRepository<TEntity, TDbContext>),
            response);
 

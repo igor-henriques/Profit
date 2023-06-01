@@ -1,7 +1,8 @@
 ﻿global using Microsoft.EntityFrameworkCore;
-global using Microsoft.EntityFrameworkCore.Design;
+global using Microsoft.EntityFrameworkCore.Diagnostics;
 global using Microsoft.EntityFrameworkCore.Infrastructure;
 global using Microsoft.EntityFrameworkCore.Migrations;
+global using Microsoft.EntityFrameworkCore.Migrations.Internal;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
@@ -16,5 +17,3 @@ global using Profit.Infrastructure.Repository.DataContext.EntityMapping;
 global using Serilog;
 global using System.Reflection;
 global using System.Runtime.CompilerServices;
-global using Microsoft.EntityFrameworkCore.Diagnostics;
-global using Microsoft.EntityFrameworkCore.Migrations.Internal;

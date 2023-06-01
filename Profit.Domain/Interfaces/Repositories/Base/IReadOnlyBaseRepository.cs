@@ -7,6 +7,7 @@
 /// <typeparam name="TEntity"></typeparam>
 public interface IReadOnlyBaseRepository<TEntity> where TEntity : Entity<TEntity>
 {
+    ValueTask<int> CountAsync(CancellationToken cancellationToken = default);
     ValueTask<int> CountByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
     ValueTask<bool> ExistsAsync(TEntity entity, CancellationToken cancellationToken = default);
     ValueTask<EntityQueryResultPaginated<TEntity>> GetByPaginated(Expression<Func<TEntity, bool>> predicate, int page, int pageSize, CancellationToken cancellationToken = default);

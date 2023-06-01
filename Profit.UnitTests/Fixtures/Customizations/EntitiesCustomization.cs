@@ -1,6 +1,4 @@
-﻿using AutoFixture;
-
-namespace Profit.UnitTests.Fixtures.Customizations;
+﻿namespace Profit.UnitTests.Fixtures.Customizations;
 
 internal sealed class EntitiesCustomization : ICustomization
 {

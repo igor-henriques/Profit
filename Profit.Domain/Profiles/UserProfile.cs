@@ -23,6 +23,6 @@ public sealed class UserProfile : Profile
             .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted))
             .ForMember(dest => dest.TenantId, opt => opt.Ignore())
             .ForMember(dest => dest.IsEmailVerified, opt => opt.Ignore())
-            .ForMember(dest => dest.UserClaims, opt => opt.Ignore()); 
+            .ForMember(dest => dest.UserClaims, opt => opt.Ignore());
     }
 }

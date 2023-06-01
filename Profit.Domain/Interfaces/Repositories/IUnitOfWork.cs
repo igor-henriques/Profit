@@ -12,7 +12,7 @@ public interface IUnitOfWork : IAsyncDisposable
     IIngredientRepository IngredientRepository { get; }
 
     /// <summary>
-    /// Readonly access to <see cref="IIngredientRepository"/>
+    /// Readonly access to <see cref="IUserRepository"/>
     /// </summary>
     IUserRepository UserRepository { get; }
 

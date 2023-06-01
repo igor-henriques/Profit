@@ -10,7 +10,7 @@ try
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
-    
+
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwagger();
     builder.Services.AddOptionsConfigurations(builder.Configuration);
@@ -46,7 +46,7 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-    app.MapHealthChecks("/health");
+    app.MapHealthChecks(Routes.Health);
     app.UseCors(c => c.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
     app.UseMiddleware<TenantResolverMiddleware>();
     app.UseHttpsRedirection();

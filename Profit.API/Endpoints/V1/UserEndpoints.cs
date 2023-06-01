@@ -52,7 +52,7 @@ public static class UserEndpoints
         }).WithTags(SwaggerTags.USER).RequireAuthorization();
 
         app.MapPost(Routes.User.Authenticate, async (
-            [FromBody] AuthenticateUserCommand authenticateUserCommand,
+            [FromBody] AuthenticateUserQuery authenticateUserCommand,
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {

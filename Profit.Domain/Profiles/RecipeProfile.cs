@@ -12,7 +12,7 @@ public sealed class RecipeProfile : Profile
                         .UpdateIngredientId(i.IngredientId))))
             .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => false))
             .ForMember(dest => dest.Id, opt => opt.Ignore())
-            .ForMember(dest => dest.TotalCost, opt => opt.Ignore()); 
+            .ForMember(dest => dest.TotalCost, opt => opt.Ignore());
 
         CreateMap<PutRecipeCommand, Recipe>()
             .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted))

@@ -1,4 +1,5 @@
-﻿using Profit.Infrastructure.Repository.Repositories.Base;
+﻿using Profit.Domain.Interfaces.Repositories.ReadOnly;
+using Profit.Infrastructure.Repository.Cache;
 
 namespace Profit.DependencyInjection.Injectors;
 
@@ -16,10 +17,19 @@ public static class ConfigureGeneralDependencies
         services.AddHostedService<CommandBatchProcessorWorker<RequestCommandQueryLog>>();
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
         services.AddScoped<IMigratorApplication, MigratorApplication>();
-        services.AddScoped(typeof(IReadOnlyIngredientRepository), typeof(ReadOnlyIngredientRepository));
-        services.AddScoped(typeof(IReadOnlyProductRepository), typeof(ReadOnlyProductRepository));
-        services.AddScoped(typeof(IReadOnlyRecipeRepository), typeof(ReadOnlyRecipeRepository));
-        services.AddScoped(typeof(IReadOnlyUserRepository), typeof(ReadOnlyUserRepository));
+
+        services.AddScoped<IReadOnlyIngredientRepository, ReadOnlyIngredientRepository>();
+        services.Decorate<IReadOnlyIngredientRepository, CachedReadonlyIngredientRepository>();
+
+        services.AddScoped<IReadOnlyProductRepository, ReadOnlyProductRepository>();
+        services.Decorate<IReadOnlyProductRepository, CachedReadonlyProductRepository>();
+
+        services.AddScoped<IReadOnlyRecipeRepository, ReadOnlyRecipeRepository>();
+        services.Decorate<IReadOnlyRecipeRepository, CachedReadonlyRecipeRepository>();
+
+        services.AddScoped<IReadOnlyUserRepository, ReadOnlyUserRepository>();
+        services.Decorate<IReadOnlyUserRepository, CachedReadonlyUserRepository>();
+
         return services;
     }
 }

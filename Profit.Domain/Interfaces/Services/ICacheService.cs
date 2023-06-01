@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a service that provides cache functionality.
 /// </summary>
-public interface IRedisCacheService
+public interface ICacheService
 {
     /// <summary>
     /// Gets the value associated with the specified key.
@@ -51,13 +51,24 @@ public interface IRedisCacheService
     /// <returns></returns>
     public static string GetCustomKey(params string[] keys)
     {
+        if ((keys?.Length ?? 0) == 0)
+        {
+            return string.Empty;
+        }
+
         StringBuilder sb = new();
 
         for (int i = 0; i < keys.Length; i++)
         {
-            if (i != keys.Length - 1)
+            if (string.IsNullOrWhiteSpace(keys[i]))
             {
-                sb.Append(keys[i]);
+                continue;
+            }
+
+            sb.Append(keys[i]);
+
+            if (i != keys.Length - 1)
+            {                
                 sb.Append(':');
             }
         }

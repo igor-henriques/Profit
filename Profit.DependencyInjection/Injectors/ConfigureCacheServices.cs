@@ -4,8 +4,8 @@ public static class ConfigureCacheServices
 {
     public static IServiceCollection AddCacheServices(
         this IServiceCollection services)
-    {        
-        services.AddScoped<IRedisCacheService, RedisCacheService>();
+    {
+        services.AddScoped<ICacheService, RedisCacheService>();
 
         return services;
     }

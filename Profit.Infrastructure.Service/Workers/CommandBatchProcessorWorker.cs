@@ -12,7 +12,7 @@ public sealed class CommandBatchProcessorWorker<T> : BackgroundService
         IOptions<CommandBatchProcessingOptions> options,
         ILogger<CommandBatchProcessorWorker<T>> logger)
     {
-        
+
         _commandBatchProcessorService = commandBatchProcessorService;
         _options = options;
         _logger = logger;
@@ -36,7 +36,7 @@ public sealed class CommandBatchProcessorWorker<T> : BackgroundService
                 {
                     _logger.LogError("Error while processing {commandBatchProcessorService}: {exception}",
                         nameof(CommandBatchProcessorService<T>),
-                        e.ToString());                    
+                        e.ToString());
                 }
             }
         }

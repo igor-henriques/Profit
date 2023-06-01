@@ -28,7 +28,20 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
            nameof(Add),
            nameof(BaseRepository<TEntity, TDbContext>),
            nameof(TEntity),
-           entity);        
+           entity);
+    }
+    private async ValueTask<bool> ExistsAsync(TEntity entity, CancellationToken cancellationToken = default)
+    {
+        var response = await _context
+            .Set<TEntity>()
+            .AnyAsync(x => x.Id == entity.Id, cancellationToken);
+
+        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
+          nameof(ExistsAsync),
+          nameof(BaseRepository<TEntity, TDbContext>),
+          response);
+
+        return response;
     }
 
     public virtual async ValueTask<IEnumerable<TEntity>> GetManyByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
@@ -57,19 +70,6 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
            entities.Count());
     }
 
-    public virtual async ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-    {
-        var response = await _context.Set<TEntity>()
-                                     .CountAsync(cancellationToken);
-
-        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-          nameof(CountAsync),
-          nameof(BaseRepository<TEntity, TDbContext>),
-          response);
-
-        return response;
-    }
-
     public virtual void Delete(TEntity entity)
     {
         _context.Set<TEntity>().Remove(entity);
@@ -79,20 +79,6 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
            nameof(BaseRepository<TEntity, TDbContext>),
            nameof(TEntity),
            entity);
-    }
-
-    public virtual async ValueTask<bool> ExistsAsync(TEntity entity, CancellationToken cancellationToken = default)
-    {
-        var response = await _context
-            .Set<TEntity>()
-            .AnyAsync(x => x.Id == entity.Id, cancellationToken);
-
-        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-          nameof(ExistsAsync),
-          nameof(BaseRepository<TEntity, TDbContext>),
-          response);
-
-        return response;
     }
 
     public virtual async ValueTask<IEnumerable<TEntity>> GetManyAsync(CancellationToken cancellationToken = default)
@@ -132,45 +118,5 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
            nameof(BaseRepository<TEntity, TDbContext>),
            nameof(TEntity),
            entity);
-    }
-
-    public virtual async ValueTask<EntityQueryResultPaginated<TEntity>> GetByPaginated(
-        Expression<Func<TEntity, bool>> predicate,
-        int page,
-        int pageSize,
-        CancellationToken cancellationToken = default)
-    {
-        var response = await _context.Set<TEntity>()
-            .Where(predicate)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync(cancellationToken);
-        
-        var paginatedResult = new EntityQueryResultPaginated<TEntity>()
-        {
-            Data = response,
-            PageNumber = page,
-            PageSize = pageSize
-        };
-
-        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-          nameof(GetByPaginated),
-          nameof(BaseRepository<TEntity, TDbContext>),
-          paginatedResult);
-
-        return paginatedResult;
-    }
-
-    public virtual async ValueTask<int> CountByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-    {
-        var response = await _context.Set<TEntity>()
-                                     .CountAsync(predicate, cancellationToken);
-
-        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-         nameof(CountByAsync),
-         nameof(BaseRepository<TEntity, TDbContext>),
-         response);
-
-        return response;
     }
 }

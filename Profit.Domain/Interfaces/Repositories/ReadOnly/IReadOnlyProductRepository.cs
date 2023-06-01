@@ -1,4 +1,4 @@
-﻿namespace Profit.Infrastructure.Repository.Repositories.ReadOnly;
+﻿namespace Profit.Domain.Interfaces.Repositories.ReadOnly;
 
 public interface IReadOnlyProductRepository : IReadOnlyBaseRepository<Product>
 {

@@ -11,7 +11,7 @@ public sealed class TenantResolverMiddleware
 
     public async Task Invoke(HttpContext context, IReadOnlyUserRepository _readOnlyUserRepo, ITenantInfo _tenantInfo)
     {
-        if (context.Request.Path.Value?.Contains(Routes.User.BaseUser, StringComparison.OrdinalIgnoreCase) ?? false)
+        if (Routes.AllowedRoutesWithoutAuthentication.Any(route => context.Request.Path.Value?.Contains(route, StringComparison.OrdinalIgnoreCase) ?? false))
         {
             await _next(context);
             return;

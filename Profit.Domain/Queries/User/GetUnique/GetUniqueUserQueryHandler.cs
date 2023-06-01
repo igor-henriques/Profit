@@ -8,7 +8,7 @@ public sealed class GetUniqueUserQueryHandler : IRequestHandler<GetUniqueUserQue
     public GetUniqueUserQueryHandler(
         IMapper mapper,
         IReadOnlyUserRepository repo)
-    {        
+    {
         _mapper = mapper;
         _repo = repo;
     }

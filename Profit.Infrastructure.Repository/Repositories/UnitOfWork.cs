@@ -9,11 +9,7 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
     private readonly ProfitDbContext _profitContext;
     private readonly AuthDbContext _authContext;
     private readonly ILogger<UnitOfWork> _logger;
-    private readonly IRedisCacheService _cacheService;
-    private readonly IOptions<CacheOptions> _cacheOptions;
     private readonly IMigratorApplication _migratorApplication;
-    private readonly ITenantInfo _tenant;
-    private readonly IReadOnlyUserRepository _readOnlyUserRepository;
 
     private IIngredientRepository _ingredientRepository;
     private IUserRepository _userRepository;
@@ -26,12 +22,9 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
     /// are used only through UnitOfWork
     /// </summary>
     public IIngredientRepository IngredientRepository
-        => _ingredientRepository ??= new RedisCachedIngredientRepository(
+        => _ingredientRepository ??= new IngredientRepository(
             _profitContext,
-            _logger,
-            _cacheService,
-            _cacheOptions,
-            _tenant);
+            _logger);
 
     /// <summary>
     /// Instead of delegating the object management to the IoC container
@@ -39,12 +32,9 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
     /// are used only through UnitOfWork
     /// </summary>
     public IUserRepository UserRepository
-        => _userRepository ??= new RedisCachedUserRepository(
+        => _userRepository ??= new UserRepository(
             _authContext,
-            _logger,
-            _cacheService,
-            _cacheOptions,
-            _readOnlyUserRepository);
+            _logger);
 
     /// <summary>
     /// Instead of delegating the object management to the IoC container
@@ -52,12 +42,9 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
     /// are used only through UnitOfWork
     /// </summary>
     public IProductRepository ProductRepository
-        => _productRepository ??= new RedisCachedProductRepository(
+        => _productRepository ??= new ProductRepository(
             _profitContext,
-            _logger,
-            _cacheService,
-            _cacheOptions,
-            _tenant);
+            _logger);
 
     /// <summary>
     /// Instead of delegating the object management to the IoC container
@@ -65,33 +52,20 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
     /// are used only through UnitOfWork
     /// </summary>
     public IRecipeRepository RecipeRepository
-        => _recipeRepository ??= new RedisCachedRecipeRepository(
+        => _recipeRepository ??= new RecipeRepository(
             _profitContext,
-            _logger,
-            _cacheService,
-            _cacheOptions,
-            _tenant);
+            _logger);
 
     public UnitOfWork(
         ProfitDbContext context,
         ILogger<UnitOfWork> logger,
-        IRedisCacheService cacheService,
-        IOptions<CacheOptions> cacheOptions,
         AuthDbContext authContext,
-        IMigratorApplication migratorApplication,
-        ITenantInfo tenant,
-        IReadOnlyUserRepository _readOnlyUserRepository)
+        IMigratorApplication migratorApplication)
     {
-        ArgumentValidator.ThrowIfZeroOrNegative(cacheOptions?.Value?.SecondsDuration ?? 0);
-
         _profitContext = context;
         _logger = logger;
-        _cacheService = cacheService;
-        _cacheOptions = cacheOptions;
         _authContext = authContext;
         _migratorApplication = migratorApplication;
-        _tenant = tenant;
-        this._readOnlyUserRepository = _readOnlyUserRepository;
     }
 
     /// <summary>

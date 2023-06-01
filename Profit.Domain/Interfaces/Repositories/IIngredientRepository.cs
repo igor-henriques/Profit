@@ -2,5 +2,4 @@
 
 public interface IIngredientRepository : IBaseRepository<Ingredient>
 {
-
 }

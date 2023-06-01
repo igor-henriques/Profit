@@ -1,7 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.Text;
-
-namespace Profit.Core.Shared;
+﻿namespace Profit.Core.Shared;
 
 public static class Helper
 {

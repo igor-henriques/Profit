@@ -1,18 +1,14 @@
-﻿using Profit.Infrastructure.Repository.Repositories.ReadOnly;
-
-namespace Profit.UnitTests.Fixtures.Data;
+﻿namespace Profit.UnitTests.Fixtures.Data;
 
 internal static class RepositoryFixtures
 {
     internal static IUnitOfWork GetUnitOfWork(
         Mock<ILogger<UnitOfWork>> loggerMock,
-        Mock<IRedisCacheService> redisMock,
-        IOptions<CacheOptions> configuration,
         Mock<IMigratorApplication> migrator,
-        Mock<ITenantInfo> tenantInfo,
-        Mock<IReadOnlyUserRepository> readOnlyUserRepoMock,
-        string database = "in-memory-db")
+        string database = null)
     {
+        database ??= Guid.NewGuid().ToString();
+
         var profitOptions = new DbContextOptionsBuilder<ProfitDbContext>()
             .EnableSensitiveDataLogging()
             .UseInMemoryDatabase(databaseName: database)
@@ -27,7 +23,11 @@ internal static class RepositoryFixtures
 
         var authContext = new AuthDbContext(authOptions);
 
-        var unitOfWork = new UnitOfWork(profitContext, loggerMock.Object, redisMock.Object, configuration, authContext, migrator.Object, tenantInfo.Object, readOnlyUserRepoMock.Object);        
+        var unitOfWork = new UnitOfWork(
+            profitContext,
+            loggerMock.Object,
+            authContext,
+            migrator.Object);
 
         return unitOfWork;
     }

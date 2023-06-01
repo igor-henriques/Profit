@@ -14,6 +14,77 @@ public sealed class ReadOnlyProductRepository : ReadOnlyBaseRepository<Product, 
         this._logger = localLogger;
     }
 
+    public override async ValueTask<IEnumerable<Product>> GetManyAsync(CancellationToken cancellationToken = default)
+    {
+        var response = await _context.Products
+            .AsNoTracking()
+            .Include(x => x.Recipe)
+            .ThenInclude(x => x.IngredientRecipeRelations)
+            .ThenInclude(x => x.Ingredient)
+            .ToListAsync(cancellationToken);
+
+        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
+            nameof(GetManyAsync),
+            nameof(ReadOnlyProductRepository),
+            response);
+
+        return response;
+    }
+
+    public override async ValueTask<IEnumerable<Product>> GetManyByAsync(Expression<Func<Product, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        var response = await _context.Products
+            .AsNoTracking()
+            .Include(x => x.Recipe)
+            .ThenInclude(x => x.IngredientRecipeRelations)
+            .ThenInclude(x => x.Ingredient)
+            .Where(predicate)
+            .ToListAsync(cancellationToken);
+
+        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
+            nameof(GetManyByAsync),
+            nameof(ReadOnlyProductRepository),
+            response);
+
+        return response;
+    }
+
+    public override async ValueTask<Product> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var response = await _context.Products
+            .AsNoTracking()
+            .Include(x => x.Recipe)
+            .ThenInclude(x => x.IngredientRecipeRelations)
+            .ThenInclude(x => x.Ingredient)
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
+            nameof(GetUniqueAsync),
+            nameof(ReadOnlyProductRepository),
+            response);
+
+        return response;
+    }
+
+    public override async ValueTask<Product> GetUniqueByAsync(Expression<Func<Product, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        var response = await _context.Products
+            .AsNoTracking()
+            .Include(x => x.Recipe)
+            .ThenInclude(x => x.IngredientRecipeRelations)
+            .ThenInclude(x => x.Ingredient)
+            .Where(predicate)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
+            nameof(GetUniqueByAsync),
+            nameof(ReadOnlyProductRepository),
+            response);
+
+        return response;
+    }
+
     public async Task<decimal> GetProductCost(Guid productId, CancellationToken cancellationToken = default)
     {
         var response = await _context.Products

@@ -23,8 +23,8 @@ internal sealed class AutoData : AutoDataAttribute
                    .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                    .Options;
 
-                        var profitContext = new ProfitDbContext(profitOptions);
-                        return profitContext;
+                var profitContext = new ProfitDbContext(profitOptions);
+                return profitContext;
             }));
 
         fixture.Customize<AuthDbContext>(c =>

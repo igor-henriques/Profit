@@ -1,6 +1,6 @@
 ﻿namespace Profit.Infrastructure.Service.Services;
 
-public sealed class RedisCacheService : IRedisCacheService
+public sealed class RedisCacheService : ICacheService
 {
     private readonly ConnectionMultiplexer _redis;
     private readonly IServer _redisServer;
@@ -21,7 +21,7 @@ public sealed class RedisCacheService : IRedisCacheService
             ContractResolver = new PrivateResolver(),
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-        };        
+        };
     }
 
     public async Task<T> GetAsync<T>(string key)

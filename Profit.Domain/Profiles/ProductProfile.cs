@@ -6,9 +6,9 @@ public sealed class ProductProfile : Profile
     {
         CreateMap<ProductDto, Product>().ReverseMap();
         CreateMap<CreateProductCommand, Product>()
-            .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => false)) 
-            .ForMember(dest => dest.Id, opt => opt.Ignore()); 
+            .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => false))
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
         CreateMap<PutProductCommand, Product>()
-            .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted)); 
+            .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted));
     }
 }

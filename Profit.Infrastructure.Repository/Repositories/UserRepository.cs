@@ -22,18 +22,6 @@ internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUse
         throw new NotImplementedException($"{nameof(BulkAdd)} is not implemented for {nameof(User)}");
     }
 
-    public override async ValueTask<bool> ExistsAsync(User entity, CancellationToken cancellationToken = default)
-    {
-        var response = await _context.Users.AnyAsync(
-            x => x.Username == entity.Username || x.Email == entity.Email, cancellationToken);
-
-        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-            nameof(ExistsAsync),
-            nameof(UserRepository),
-            response);
-
-        return response;
-    }
 
     public override void Delete(User entity)
     {
@@ -75,6 +63,24 @@ internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUse
             ClaimValue = entity.Username,
             UserId = entity.Id
         });
-        _logger.LogInformation("{entity} was added", entity);
-    }  
+
+        _logger.LogInformation("{methodName} from {sourceName}: {entity} was added, but not commited: {value}",
+          nameof(Add),
+          nameof(UserRepository),
+          nameof(User),
+          entity);
+    }
+
+    private async ValueTask<bool> ExistsAsync(User entity, CancellationToken cancellationToken = default)
+    {
+        var response = await _context.Users.AnyAsync(
+            x => x.Username == entity.Username || x.Email == entity.Email, cancellationToken);
+
+        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
+            nameof(ExistsAsync),
+            nameof(UserRepository),
+            response);
+
+        return response;
+    }
 }

@@ -1,6 +1,6 @@
-﻿namespace Profit.Domain.Commands.User.Authenticate;
+﻿namespace Profit.Domain.Queries.User.Authenticate;
 
-public sealed class AuthenticateUserValidator : AbstractValidator<AuthenticateUserCommand>
+public sealed class AuthenticateUserValidator : AbstractValidator<AuthenticateUserQuery>
 {
     public AuthenticateUserValidator()
     {

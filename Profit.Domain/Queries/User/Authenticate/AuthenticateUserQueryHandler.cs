@@ -1,12 +1,12 @@
-﻿namespace Profit.Domain.Commands.User.Authenticate;
+﻿namespace Profit.Domain.Queries.User.Authenticate;
 
-public sealed class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCommand, JwtToken>
+public sealed class AuthenticateUserQueryHandler : IRequestHandler<AuthenticateUserQuery, JwtToken>
 {
     private readonly IPasswordHashingService _passwordHashingService;
     private readonly ITokenGeneratorService _tokenGeneratorService;
     private readonly IReadOnlyUserRepository _readOnlyRepo;
 
-    public AuthenticateUserCommandHandler(
+    public AuthenticateUserQueryHandler(
         IPasswordHashingService passwordHashingService,
         ITokenGeneratorService tokenGeneratorService,
         IReadOnlyUserRepository readOnlyRepo)
@@ -16,7 +16,7 @@ public sealed class AuthenticateUserCommandHandler : IRequestHandler<Authenticat
         _readOnlyRepo = readOnlyRepo;
     }
 
-    public async Task<JwtToken> Handle(AuthenticateUserCommand request, CancellationToken cancellationToken)
+    public async Task<JwtToken> Handle(AuthenticateUserQuery request, CancellationToken cancellationToken)
     {
         try
         {

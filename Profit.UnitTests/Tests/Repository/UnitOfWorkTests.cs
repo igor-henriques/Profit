@@ -6,21 +6,12 @@ public sealed class UnitOfWorkTests
     [@AutoData]
     public async Task Commit_ShouldInvokeSaveChangesAsync(
         Mock<ILogger<UnitOfWork>> loggerMock,
-        Mock<IRedisCacheService> redisMock,
-        IOptions<CacheOptions> configuration,
-        Mock<IMigratorApplication> migrator,
-        Mock<ITenantInfo> tenantInfo,
-        Mock<IReadOnlyUserRepository> userRepo)
+        Mock<IMigratorApplication> migrator)
     {
         // Arrange
         var unitOfWork = RepositoryFixtures.GetUnitOfWork(
             loggerMock,
-            redisMock,
-            configuration,
-            migrator,
-            tenantInfo,
-            userRepo,
-            "uow-db1");
+            migrator);
 
         // Act
         await unitOfWork.Commit(CancellationToken.None);

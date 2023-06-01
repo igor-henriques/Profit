@@ -6,32 +6,35 @@ public static class Constants
     {
         public readonly struct Ingredient
         {
-            public const string GetUnique = "api/v1/ingredient/get";
-            public const string GetMany = "api/v1/ingredient/get-many";
-            public const string Create = "api/v1/ingredient/create";
-            public const string BulkCreate = "api/v1/ingredient/bulk-create";
-            public const string Put = "api/v1/ingredient/put";
-            public const string Delete = "api/v1/ingredient/delete";
+            public const string BaseIngredient = "api/v1/ingredient";
+            public const string GetUnique = $"{BaseIngredient}/get";
+            public const string GetMany = $"{BaseIngredient}/get-many";
+            public const string Create = $"{BaseIngredient}/create";
+            public const string BulkCreate = $"{BaseIngredient}/bulk-create";
+            public const string Put = $"{BaseIngredient}/put";
+            public const string Delete = $"{BaseIngredient}/delete";
         }
 
         public readonly struct Recipe
         {
-            public const string GetUnique = "api/v1/recipe/get";
-            public const string GetMany = "api/v1/recipe/get-many";
-            public const string Create = "api/v1/recipe/create";
-            public const string BulkCreate = "api/v1/recipe/bulk-create";
-            public const string Put = "api/v1/recipe/put";
-            public const string Delete = "api/v1/recipe/delete";
+            public const string BaseRecipe = "api/v1/recipe";
+            public const string GetUnique = $"{BaseRecipe}/get";
+            public const string GetMany = $"{BaseRecipe}/get-many";
+            public const string Create = $"{BaseRecipe}/create";
+            public const string BulkCreate = $"{BaseRecipe}/bulk-create";
+            public const string Put = $"{BaseRecipe}/put";
+            public const string Delete = $"{BaseRecipe}/delete";
         }
 
         public readonly struct Product
         {
-            public const string GetUnique = "api/v1/product/get";
-            public const string GetMany = "api/v1/product/get-many";
-            public const string Create = "api/v1/product/create";
-            public const string BulkCreate = "api/v1/product/bulk-create";
-            public const string Put = "api/v1/product/put";
-            public const string Delete = "api/v1/product/delete";
+            public const string BaseProduct = "api/v1/product";
+            public const string GetUnique = $"{BaseProduct}/get";
+            public const string GetMany = $"{BaseProduct}/get-many";
+            public const string Create = $"{BaseProduct}/create";
+            public const string BulkCreate = $"{BaseProduct}/bulk-create";
+            public const string Put = $"{BaseProduct}/put";
+            public const string Delete = $"{BaseProduct}/delete";
         }
 
         public readonly struct User
@@ -44,6 +47,14 @@ public static class Constants
             public const string Delete = $"{BaseUser}/delete";
             public const string Authenticate = $"{BaseUser}/authenticate";
         }
+
+        public const string Health = "/health";
+
+        public readonly static string[] AllowedRoutesWithoutAuthentication = new string[]
+        {
+            User.Authenticate,
+            Routes.Health
+        };
     }
 
     public readonly struct SwaggerTags
