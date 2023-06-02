@@ -37,14 +37,6 @@ public interface ICacheService
     bool Exists(string key);
 
     /// <summary>
-    /// Get all records with a specified prefix
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="prefix"></param>
-    /// <returns></returns>
-    Task<IEnumerable<T>> GetAllKeys<T>(string prefix);
-
-    /// <summary>
     /// Build a custom redis key
     /// </summary>
     /// <param name="keys"></param>

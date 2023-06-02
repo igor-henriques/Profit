@@ -53,6 +53,8 @@ public static class Constants
         public readonly static string[] AllowedRoutesWithoutAuthentication = new string[]
         {
             User.Authenticate,
+            User.Create,
+            User.Put,
             Routes.Health
         };
     }

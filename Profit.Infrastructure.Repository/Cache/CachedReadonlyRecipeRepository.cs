@@ -74,7 +74,7 @@ public sealed class CachedReadonlyRecipeRepository : IReadOnlyRecipeRepository
     public async ValueTask<IEnumerable<Recipe>> GetManyAsync(CancellationToken cancellationToken = default)
     {
         var redisKey = GetRedisKey(nameof(GetManyAsync));
-        var response = await _cacheService.GetAllKeys<Recipe>(redisKey);
+        var response = await _cacheService.GetAsync<IEnumerable<Recipe>>(redisKey);
 
         if (!response?.Any() ?? true)
         {
