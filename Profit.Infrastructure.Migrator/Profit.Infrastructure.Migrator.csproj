@@ -6,6 +6,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<UserSecretsId>294c3893-a64d-4d62-a543-9be1f1cd95f9</UserSecretsId>
+		<AssemblyName>ProfitMigrator</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>
