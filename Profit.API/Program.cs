@@ -11,11 +11,6 @@ try
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 
-    Console.WriteLine(builder.Configuration.GetConnectionString("ProfitConnection"));
-    Console.WriteLine(builder.Configuration.GetConnectionString("AuthConnection"));
-    Console.WriteLine(builder.Configuration.GetConnectionString("Redis"));
-    Console.WriteLine(builder.Configuration.GetConnectionString("AzureStorage"));
-
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwagger();
     builder.Services.AddOptionsConfigurations(builder.Configuration);
