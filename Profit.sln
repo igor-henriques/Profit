@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Profit.UnitTests", "Profit.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Profit.Infrastructure.Service", "Profit.Infrastructure.Service\Profit.Infrastructure.Service.csproj", "{E4924F02-5F7E-470F-B3CD-87A108F530E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Profit.Infrastructure.Migrator", "Profit.Infrastructure.Migrator\Profit.Infrastructure.Migrator.csproj", "{266CEF68-09AC-4614-8B2D-2037C88E0A7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Profit.Infrastructure.Migrator", "Profit.Infrastructure.Migrator\Profit.Infrastructure.Migrator.csproj", "{266CEF68-09AC-4614-8B2D-2037C88E0A7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
