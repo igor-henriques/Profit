@@ -1,7 +1,4 @@
-﻿using Profit.Domain.Interfaces.Repositories.ReadOnly;
-using Profit.Infrastructure.Repository.Cache;
-
-namespace Profit.DependencyInjection.Injectors;
+﻿namespace Profit.DependencyInjection.Injectors;
 
 public static class ConfigureGeneralDependencies
 {
