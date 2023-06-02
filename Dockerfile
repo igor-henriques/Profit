@@ -2,9 +2,8 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
-EXPOSE 6000
-EXPOSE 6001
-EXPOSE 443
+EXPOSE 5800
+EXPOSE 5801
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
@@ -26,7 +25,7 @@ RUN dotnet publish "Profit.API.csproj" -c Release -o /app/publish /p:UseAppHost=
 FROM base AS final
 WORKDIR /app
 
-ENV ASPNETCORE_URLS=http://+:6000;https://+:6001
+ENV ASPNETCORE_URLS=http://+:5800
 
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Profit.API.dll"]

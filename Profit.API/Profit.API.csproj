@@ -5,8 +5,7 @@
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>4689f388-6cf0-4656-b9a9-344c12c1d7e8</UserSecretsId>
-		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<AssemblyName>ProfitApi</AssemblyName>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>		
 	</PropertyGroup>
 
 	<ItemGroup>

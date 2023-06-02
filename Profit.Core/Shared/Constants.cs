@@ -49,13 +49,15 @@ public static class Constants
         }
 
         public const string Health = "/health";
+        public const string Swagger = "/swagger";
 
         public readonly static string[] AllowedRoutesWithoutAuthentication = new string[]
         {
             User.Authenticate,
             User.Create,
             User.Put,
-            Routes.Health
+            Routes.Health,
+            Routes.Swagger,
         };
     }
 
