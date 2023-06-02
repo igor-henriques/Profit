@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: igorhenriquesprofit 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: igorhenriquesprofit
+  template:
+    metadata:
+      labels:
+        app: igorhenriquesprofit 
+    spec:
+      containers:
+        - name: igorhenriquesprofit 
+          image: ironsolutions.azurecr.io/igorhenriquesprofit
+          ports:
+          - containerPort: 443
