@@ -14,6 +14,7 @@ COPY ["Profit.DependencyInjection/Profit.DependencyInjection.csproj", "Profit.De
 COPY ["Profit.Domain/Profit.Domain.csproj", "Profit.Domain/"]
 COPY ["Profit.Infrastructure.Repository/Profit.Infrastructure.Repository.csproj", "Profit.Infrastructure.Repository/"]
 COPY ["Profit.Infrastructure.Service/Profit.Infrastructure.Service.csproj", "Profit.Infrastructure.Service/"]
+COPY ["Profit.Infrastructure.Migrator/Profit.Infrastructure.Migrator.csproj", "Profit.Infrastructure.Migrator/"]
 RUN dotnet restore "Profit.API/Profit.API.csproj"
 COPY . .
 WORKDIR "/src/Profit.API"
@@ -24,7 +25,8 @@ RUN dotnet publish "Profit.API.csproj" -c Release -o /app/publish /p:UseAppHost=
 
 FROM base AS final
 WORKDIR /app
+
 ENV ASPNETCORE_URLS=http://+:6000;https://+:6001
-CMD [ "dotnet dev-certs https --trust" ]
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Profit.API.dll"]

@@ -10,7 +10,7 @@ Log.Logger = new LoggerConfiguration()
 var host = Host.CreateDefaultBuilder(args)
         .ConfigureServices(services =>
         {
-            services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("AuthSqlServer")));
+            services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("AuthConnection")));
             services.AddSingleton<IConfiguration>(x => configuration);
             services.AddSingleton<MigratorApplication>();
             services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));

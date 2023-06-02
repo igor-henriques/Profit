@@ -19,14 +19,14 @@ try
     {
         var schemaInterceptor = serviceProvider.GetRequiredService<SchemaInterceptor>();
         var connectionStringOptions = serviceProvider.GetRequiredService<IOptions<ConnectionStringsOptions>>();
-        options.UseSqlServer(connectionStringOptions.Value.ProfitSqlServer)
+        options.UseSqlServer(connectionStringOptions.Value.ProfitConnection)
                .AddInterceptors(schemaInterceptor);
     });
 
     builder.Services.AddDbContext<AuthDbContext>((serviceProvider, options) =>
     {
         var connectionStringOptions = serviceProvider.GetRequiredService<IOptions<ConnectionStringsOptions>>();
-        options.UseSqlServer(connectionStringOptions.Value.AuthSqlServer);
+        options.UseSqlServer(connectionStringOptions.Value.AuthConnection);
     });
 
     builder.Services.AddMapperProfiles();

@@ -2,8 +2,8 @@
 
 public sealed record ConnectionStringsOptions
 {
-    public string ProfitSqlServer { get; init; }
-    public string AuthSqlServer { get; init; }
+    public string ProfitConnection { get; init; }
+    public string AuthConnection { get; init; }
     public string Redis { get; init; }
     public string AzureStorage { get; init; }
 }
