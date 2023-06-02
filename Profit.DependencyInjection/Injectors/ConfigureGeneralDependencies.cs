@@ -1,4 +1,6 @@
-﻿namespace Profit.DependencyInjection.Injectors;
+﻿using Profit.Infrastructure.Migrator;
+
+namespace Profit.DependencyInjection.Injectors;
 
 public static class ConfigureGeneralDependencies
 {

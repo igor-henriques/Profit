@@ -39,7 +39,6 @@ global using Profit.Domain.Queries.User.GetMany;
 global using Profit.Domain.Queries.User.GetUnique;
 global using Profit.Domain.Validations.DTOs;
 global using Profit.Domain.Validations.Entities;
-global using Profit.Infrastructure.Migrator;
 global using Profit.Infrastructure.Repository.EFInterceptors;
 global using Profit.Infrastructure.Repository.Repositories;
 global using Profit.Infrastructure.Repository.Repositories.ReadOnly;
