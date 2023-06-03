@@ -35,3 +35,4 @@ global using System.Runtime.CompilerServices;
 global using System.Security.Claims;
 global using System.Text;
 global using Profit.Domain.Enums;
+global using Profit.Domain.Commands.Order.Create;

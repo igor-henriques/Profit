@@ -48,6 +48,16 @@ public static class Constants
             public const string Authenticate = $"{BaseUser}/authenticate";
         }
 
+        public readonly struct Order
+        {
+            public const string BaseOrder = "api/v1/order";
+            public const string GetUnique = $"{BaseOrder}/get";
+            public const string GetMany = $"{BaseOrder}/get-many";
+            public const string Create = $"{BaseOrder}/create";
+            public const string Put = $"{BaseOrder}/put";
+            public const string Delete = $"{BaseOrder}/delete";
+        }
+
         public const string Health = "/health";
         public const string Swagger = "/swagger";
 
@@ -64,6 +74,7 @@ public static class Constants
     public readonly struct SwaggerTags
     {
         public const string INGREDIENT = "Ingredient";
+        public const string ORDER = "Order";
         public const string PRODUCT = "Product";
         public const string RECIPE = "Recipe";
         public const string USER = "User";

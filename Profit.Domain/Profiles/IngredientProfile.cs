@@ -14,5 +14,8 @@ public sealed class IngredientProfile : Profile
         CreateMap<PutIngredientCommand, Ingredient>()
             .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted))
             .ForMember(dest => dest.IngredientRecipeRelations, opt => opt.Ignore());
+        CreateMap<CreateOrderCommand, Order>()
+            .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => false))
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
     }
 }

@@ -55,6 +55,7 @@ try
     app.ConfigureProductEndpoints();
     app.ConfigureRecipeEndpoints();
     app.ConfigureUserEndpoints();
+    app.ConfigureOrderEndpoints();
 
     app.Run();
 }

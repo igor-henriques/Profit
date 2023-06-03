@@ -29,6 +29,9 @@ public static class ConfigureGeneralDependencies
         services.AddScoped<IReadOnlyUserRepository, ReadOnlyUserRepository>();
         services.Decorate<IReadOnlyUserRepository, CachedReadonlyUserRepository>();
 
+        services.AddScoped<IReadOnlyOrderRepository, ReadOnlyOrderRepository>();
+        services.Decorate<IReadOnlyOrderRepository, CachedReadonlyOrderRepository>();
+
         return services;
     }
 }

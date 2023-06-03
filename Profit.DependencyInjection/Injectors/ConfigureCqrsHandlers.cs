@@ -1,4 +1,10 @@
-﻿namespace Profit.DependencyInjection.Injectors;
+﻿using Profit.Domain.Commands.Order.Create;
+using Profit.Domain.Commands.Order.Delete;
+using Profit.Domain.Commands.Order.Put;
+using Profit.Domain.Queries.Order.GetMany;
+using Profit.Domain.Queries.Order.GetUnique;
+
+namespace Profit.DependencyInjection.Injectors;
 
 public static class ConfigureCqrsHandlers
 {
@@ -27,7 +33,12 @@ public static class ConfigureCqrsHandlers
             typeof(DeleteUserCommandHandler).Assembly,
             typeof(PutUserCommandHandler).Assembly,
             typeof(GetManyUsersQueryHandler).Assembly,
-            typeof(GetUniqueUserQueryHandler).Assembly)
+            typeof(GetUniqueUserQueryHandler).Assembly,
+            typeof(CreateOrderCommandHandler).Assembly,
+            typeof(DeleteOrderCommand).Assembly,
+            typeof(PutOrderCommand).Assembly,
+            typeof(GetManyOrdersQueryHandler).Assembly,
+            typeof(GetUniqueOrderQueryHandler).Assembly)
         .AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
         .AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>)));
 
