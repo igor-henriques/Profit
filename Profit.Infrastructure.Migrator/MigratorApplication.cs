@@ -2,19 +2,24 @@
 
 internal sealed class MigratorApplication : IMigratorApplication
 {
-    private readonly AuthDbContext _authContext;
-    private readonly IConfiguration _configuration;
+    private readonly AuthDbContext _authContext;    
+    private readonly IOptions<ConnectionStringsOptions> _options;
     private readonly ILogger<MigratorApplication> _logger;
 
-    public MigratorApplication(IConfiguration configuration, ILogger<MigratorApplication> logger, AuthDbContext authContext)
-    {
-        _configuration = configuration;
+    public MigratorApplication(
+        IOptions<ConnectionStringsOptions> options, 
+        ILogger<MigratorApplication> logger, 
+        AuthDbContext authContext)
+    {        
+        _options = options;
         _logger = logger;
         _authContext = authContext;
     }
 
     internal async Task RunMigrationsForAllTenantsAsync()
     {
+        await Console.Out.WriteLineAsync($"INITIALIZING SERVICE {nameof(MigratorApplication)}");        
+
         var tenants = await _authContext.Users
             .AsNoTracking()
             .Select(u => u.TenantId)
@@ -29,8 +34,9 @@ internal sealed class MigratorApplication : IMigratorApplication
             {
                 await RunMigrationsToSingleTenantAsync(tenant);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex.ToString());
                 //Ignore exception to be able to try running to the next tenant
             }
         }
@@ -46,8 +52,8 @@ internal sealed class MigratorApplication : IMigratorApplication
             tenantInfo.SetTenantId(tenantId);
 
             var contextOptions = new DbContextOptionsBuilder<ProfitDbContext>()
-                     .UseSqlServer(_configuration.GetConnectionString("ProfitConnection"),
-                         x => x.MigrationsHistoryTable("__EFMigrationsHistory", tenantInfo.FormattedTenantId))
+                     .UseSqlServer(_options.Value.ProfitConnection,
+                         x => x.MigrationsHistoryTable("__EFMigrationsHistory", tenantInfo.FormattedTenantId).MigrationsAssembly("Profit.Infrastructure.Migrator"))
                      .ReplaceService<IMigrationsAssembly, DbSchemaAwareMigrationAssembly>()
                      .Options;
 

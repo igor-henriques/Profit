@@ -1,38 +1,51 @@
-﻿const string RELATIVE_PATH = @"../../../../Profit.API";
-var absolutePath = Path.GetFullPath(RELATIVE_PATH);
+﻿try
+{
+    var configuration = BuildConfiguration();
 
-var configuration = BuildConfiguration();
+    Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+              .CreateLogger();
 
-Log.Logger = new LoggerConfiguration()
-        .ReadFrom.Configuration(configuration)
-          .CreateLogger();
+    var authConnection = configuration.GetConnectionString("AuthConnection");
+    var profitConnection = configuration.GetConnectionString("ProfitConnection");
 
-var host = Host.CreateDefaultBuilder(args)
-        .ConfigureServices(services =>
-        {
-            services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("AuthConnection")));
-            services.AddSingleton<IConfiguration>(x => configuration);
-            services.AddSingleton<MigratorApplication>();
-            services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
-        }).Build();
+    Console.WriteLine(authConnection);
+    Console.WriteLine(profitConnection);
 
-var application = host.Services.GetService<MigratorApplication>();
-await application.RunMigrationsForAllTenantsAsync();
+    var host = Host.CreateDefaultBuilder(args)
+            .ConfigureServices(services =>
+            {
+                services.AddDbContext<ProfitDbContext>(options => options.UseSqlServer(authConnection), ServiceLifetime.Singleton, ServiceLifetime.Singleton);
+                services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(authConnection), ServiceLifetime.Singleton, ServiceLifetime.Singleton);
+                services.Configure<ConnectionStringsOptions>(configuration.GetSection("ConnectionStrings"));
+                services.AddSingleton<MigratorApplication>();
+                services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+            }).Build();
+
+    var application = host.Services.GetService<MigratorApplication>();
+    await application.RunMigrationsForAllTenantsAsync();
+}
+catch (Exception ex) when (ex is not HostAbortedException)
+{
+    Console.WriteLine(ex.ToString());
+    throw;
+}
 
 static IConfiguration BuildConfiguration()
 {
     const string RELATIVE_PATH = @"../../../../Profit.API";
     var absolutePath = Path.GetFullPath(RELATIVE_PATH);
 
+    if (!Directory.Exists(absolutePath) || !Directory.GetFiles(absolutePath, "*", SearchOption.AllDirectories).Any(file => file.Contains("appsettings")))
+    {
+        absolutePath = Path.GetFullPath("../Profit.API/");
+    }
+
     var builder = new ConfigurationBuilder();
     builder.SetBasePath(absolutePath)
         .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-    var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-    if (environmentName == null || string.Equals(environmentName, "Development", StringComparison.OrdinalIgnoreCase))
-    {
-        builder.AddUserSecrets(Assembly.GetExecutingAssembly(), optional: true);
-    }
+    builder.AddUserSecrets(Assembly.GetExecutingAssembly(), optional: true);
 
     var configuration = builder.Build();
 

@@ -17,3 +17,5 @@ global using Profit.Infrastructure.Repository.DataContext.EntityMapping;
 global using Serilog;
 global using System.Reflection;
 global using System.Runtime.CompilerServices;
+global using Microsoft.Extensions.Options;
+global using Profit.Domain.Models.Options;

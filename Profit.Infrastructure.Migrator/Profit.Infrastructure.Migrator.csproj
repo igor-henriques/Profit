@@ -6,7 +6,6 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<UserSecretsId>294c3893-a64d-4d62-a543-9be1f1cd95f9</UserSecretsId>
-		<AssemblyName>ProfitMigrator</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -22,7 +21,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Profit.Domain\Profit.Domain.csproj" />
 		<ProjectReference Include="..\Profit.Infrastructure.Repository\Profit.Infrastructure.Repository.csproj" />
-		<ProjectReference Include="..\Profit.Infrastructure.Service\Profit.Infrastructure.Service.csproj" />
 	</ItemGroup>
 
 </Project>

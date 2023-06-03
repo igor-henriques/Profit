@@ -12,7 +12,15 @@ public class ProfitDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        modelBuilder.ApplyConfiguration(new AddressFluentMapping());
+        modelBuilder.ApplyConfiguration(new CustomerFluentMapping());
+        modelBuilder.ApplyConfiguration(new IngredientFluentMapping());
+        modelBuilder.ApplyConfiguration(new IngredientRecipeRelationFluentMapping());
+        modelBuilder.ApplyConfiguration(new InvoiceFluentMapping());
+        modelBuilder.ApplyConfiguration(new OrderDetailFluentMapping());
+        modelBuilder.ApplyConfiguration(new OrderFluentMapping());
+        modelBuilder.ApplyConfiguration(new ProductFluentMapping());
+        modelBuilder.ApplyConfiguration(new RecipeFluentMapping());
         modelBuilder.HasDefaultSchema("dbo");
 
         base.OnModelCreating(modelBuilder);
@@ -22,4 +30,9 @@ public class ProfitDbContext : DbContext
     public DbSet<IngredientRecipeRelation> IngredientRecipeRelations { get; init; }
     public DbSet<Recipe> Recipes { get; init; }
     public DbSet<Product> Products { get; init; }
+    public DbSet<Address> Addresses { get; init; }
+    public DbSet<Customer> Customers { get; init; }
+    public DbSet<Invoice> Invoices { get; init; }
+    public DbSet<OrderDetail> OrderDetails { get; init; }
+    public DbSet<Order> Orders { get; init; }
 }
