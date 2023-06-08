@@ -1,5 +1,5 @@
-﻿namespace Profit.Domain.Queries.User.GetMany;
+﻿namespace Profit.Domain.Queries.User.GetPaginated;
 
-public readonly record struct GetManyUsersQuery : IQuery<IEnumerable<UserDto>>
+public readonly record struct GetPaginatedUsersQuery : IQuery<IEnumerable<UserDto>>
 {
 }

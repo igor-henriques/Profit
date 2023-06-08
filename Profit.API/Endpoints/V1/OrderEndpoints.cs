@@ -4,11 +4,11 @@ public static class OrderEndpoints
 {
     public static void ConfigureOrderEndpoints(this WebApplication app)
     {
-        app.MapGet(Routes.Order.GetMany, async (
+        app.MapGet(Routes.Order.GetPaginated, async (
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {
-            var query = new GetManyOrdersQuery();
+            var query = new GetPaginatedOrdersQuery();
             var response = await mediator.Send(query, cancellationToken);
 
             return Results.Ok(response);

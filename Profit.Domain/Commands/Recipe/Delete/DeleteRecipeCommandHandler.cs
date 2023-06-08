@@ -16,7 +16,7 @@ public sealed class DeleteRecipeCommandHandler : IRequestHandler<DeleteRecipeCom
         ArgumentValidator.ThrowIfNullOrDefault(recipe, nameof(recipe));
 
         var productsAffected = await _unitOfWork.ProductRepository
-            .GetManyByAsync(x => x.RecipeId == recipe.Id, cancellationToken);
+            .GetPaginatedByAsync(x => x.RecipeId == recipe.Id, cancellationToken);
 
         if (productsAffected?.Any() ?? true)
         {

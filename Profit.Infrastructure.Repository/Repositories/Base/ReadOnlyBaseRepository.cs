@@ -49,38 +49,6 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
         return response;
     }
 
-    public virtual async ValueTask<IEnumerable<TEntity>> GetManyAsync(CancellationToken cancellationToken = default)
-    {
-        var response = await _context
-            .Set<TEntity>()
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
-
-        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-            nameof(GetManyAsync),
-            nameof(ReadOnlyBaseRepository<TEntity, TDbContext>),
-            response);
-
-        return response;
-    }
-
-
-    public virtual async ValueTask<IEnumerable<TEntity>> GetManyByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-    {
-        var response = await _context
-            .Set<TEntity>()
-            .AsNoTracking()
-            .Where(predicate)
-            .ToListAsync(cancellationToken);
-
-        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-            nameof(GetManyByAsync),
-            nameof(ReadOnlyBaseRepository<TEntity, TDbContext>),
-            response);
-
-        return response;
-    }
-
     public virtual async ValueTask<TEntity> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default)
     {
         if (id == default)
@@ -123,12 +91,27 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
         return response;
     }
 
-    public virtual async ValueTask<EntityQueryResultPaginated<TEntity>> GetByPaginated(
+    public virtual async ValueTask<EntityQueryResultPaginated<TEntity>> GetByPaginatedAsync(
         Expression<Func<TEntity, bool>> predicate,
         int page,
         int pageSize,
         CancellationToken cancellationToken = default)
     {
+        if (page < 1 || pageSize <= 0)
+        {
+            _logger.LogInformation("{methodName} from {sourceName} retrieved {response} due invalid page or pageSize",
+                nameof(GetByPaginatedAsync),
+                nameof(ReadOnlyBaseRepository<TEntity, TDbContext>),
+                "empty");
+
+            return new EntityQueryResultPaginated<TEntity>()
+            {
+                Data = Enumerable.Empty<TEntity>().ToList(),
+                PageNumber = page,
+                PageSize = pageSize
+            }; 
+        }
+
         var response = await _context.Set<TEntity>()
             .AsNoTracking()
             .Where(predicate)
@@ -144,7 +127,49 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
         };
 
         _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-           nameof(GetByPaginated),
+           nameof(GetByPaginatedAsync),
+           nameof(ReadOnlyBaseRepository<TEntity, TDbContext>),
+           paginatedResult);
+
+        return paginatedResult;
+    }
+
+    public virtual async ValueTask<EntityQueryResultPaginated<TEntity>> GetPaginatedAsync(
+        int page, 
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        if (page < 1 || pageSize <= 0)
+        {
+            _logger.LogInformation("{methodName} from {sourceName} retrieved {response} due invalid page or pageSize",
+                nameof(GetPaginatedAsync),
+                nameof(ReadOnlyBaseRepository<TEntity, TDbContext>),
+                "empty");
+
+            return new EntityQueryResultPaginated<TEntity>()
+            {
+                Data = Enumerable.Empty<TEntity>().ToList(),
+                PageNumber = page,
+                PageSize = pageSize
+            };
+        }
+
+        var response = await _context
+            .Set<TEntity>()
+            .AsNoTracking()
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        var paginatedResult = new EntityQueryResultPaginated<TEntity>()
+        {
+            Data = response,
+            PageNumber = page,
+            PageSize = pageSize
+        };
+
+        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
+           nameof(GetPaginatedAsync),
            nameof(ReadOnlyBaseRepository<TEntity, TDbContext>),
            paginatedResult);
 
@@ -179,5 +204,5 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
            response);
 
         return response;
-    }
+    }   
 }

@@ -34,7 +34,7 @@ public sealed class DeleteRecipeCommandHandlerTests
         var recipe = new Profit.Domain.Entities.Recipe { Id = _recipeId };
         _unitOfWorkMock.Setup(u => u.RecipeRepository.GetUniqueAsync(_recipeId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(recipe);
-        _unitOfWorkMock.Setup(u => u.ProductRepository.GetManyByAsync(x => x.RecipeId == recipe.Id, It.IsAny<CancellationToken>()))
+        _unitOfWorkMock.Setup(u => u.ProductRepository.GetPaginatedByAsync(x => x.RecipeId == recipe.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<Product> { new Product().UpdateName("Product1") });
 
         await Assert.ThrowsAsync<InvalidEntityDeleteException>(() => _handler.Handle(new DeleteRecipeCommand { RecipeId = _recipeId }, CancellationToken.None));
@@ -46,7 +46,7 @@ public sealed class DeleteRecipeCommandHandlerTests
         var recipe = new Profit.Domain.Entities.Recipe { Id = _recipeId };
         _unitOfWorkMock.Setup(u => u.RecipeRepository.GetUniqueAsync(_recipeId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(recipe);
-        _unitOfWorkMock.Setup(u => u.ProductRepository.GetManyByAsync(x => x.RecipeId == recipe.Id, It.IsAny<CancellationToken>()))
+        _unitOfWorkMock.Setup(u => u.ProductRepository.GetPaginatedByAsync(x => x.RecipeId == recipe.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<Product>());
         _unitOfWorkMock.Setup(u => u.Commit(It.IsAny<CancellationToken>())).ReturnsAsync(0);
 
@@ -59,7 +59,7 @@ public sealed class DeleteRecipeCommandHandlerTests
         var recipe = new Profit.Domain.Entities.Recipe { Id = _recipeId };
         _unitOfWorkMock.Setup(u => u.RecipeRepository.GetUniqueAsync(_recipeId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(recipe);
-        _unitOfWorkMock.Setup(u => u.ProductRepository.GetManyByAsync(x => x.RecipeId == recipe.Id, It.IsAny<CancellationToken>()))
+        _unitOfWorkMock.Setup(u => u.ProductRepository.GetPaginatedByAsync(x => x.RecipeId == recipe.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<Product>());
         _unitOfWorkMock.Setup(u => u.Commit(It.IsAny<CancellationToken>())).ReturnsAsync(1);
 

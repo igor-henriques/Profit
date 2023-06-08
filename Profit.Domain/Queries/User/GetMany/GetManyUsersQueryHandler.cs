@@ -1,11 +1,11 @@
-﻿namespace Profit.Domain.Queries.User.GetMany;
+﻿namespace Profit.Domain.Queries.User.GetPaginated;
 
-public sealed class GetManyUsersQueryHandler : IRequestHandler<GetManyUsersQuery, IEnumerable<UserDto>>
+public sealed class GetPaginatedUsersQueryHandler : IRequestHandler<GetPaginatedUsersQuery, IEnumerable<UserDto>>
 {
     private readonly IReadOnlyUserRepository _repo;
     private readonly IMapper _mapper;
 
-    public GetManyUsersQueryHandler(
+    public GetPaginatedUsersQueryHandler(
         IMapper mapper,
         IReadOnlyUserRepository repo)
     {
@@ -13,9 +13,9 @@ public sealed class GetManyUsersQueryHandler : IRequestHandler<GetManyUsersQuery
         _repo = repo;
     }
 
-    public async Task<IEnumerable<UserDto>> Handle(GetManyUsersQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<UserDto>> Handle(GetPaginatedUsersQuery request, CancellationToken cancellationToken)
     {
-        var users = await _repo.GetManyAsync(cancellationToken);
+        var users = await _repo.GetPaginatedAsync(cancellationToken);
         var usersDto = users.Select(_mapper.Map<UserDto>);
         return usersDto;
     }

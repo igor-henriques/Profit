@@ -1,4 +1,4 @@
-﻿namespace Profit.Infrastructure.Repository.Repositories;
+﻿namespace Profit.Infrastructure.Repository.Repositories.Persistance;
 
 internal sealed class RecipeRepository : BaseRepository<Recipe, ProfitDbContext>, IRecipeRepository
 {
@@ -7,8 +7,8 @@ internal sealed class RecipeRepository : BaseRepository<Recipe, ProfitDbContext>
 
     public RecipeRepository(ProfitDbContext context, ILogger<UnitOfWork> logger) : base(context, logger)
     {
-        this._context = context;
-        this._logger = logger;
+        _context = context;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<Recipe>> GetRecipesAndRelationsByIngredientId(

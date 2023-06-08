@@ -1,6 +1,6 @@
 ﻿namespace Profit.Infrastructure.Repository.Cache;
 
-public sealed class CachedReadonlyIngredientRepository : IReadOnlyIngredientRepository
+public sealed class CachedReadOnlyIngredientRepository : IReadOnlyIngredientRepository
 {
     private readonly ITenantInfo _tenant;
     private readonly ICacheService _cacheService;
@@ -8,7 +8,7 @@ public sealed class CachedReadonlyIngredientRepository : IReadOnlyIngredientRepo
     private readonly IReadOnlyIngredientRepository _repo;
     private readonly ILogger<UnitOfWork> _logger;
 
-    public CachedReadonlyIngredientRepository(
+    public CachedReadOnlyIngredientRepository(
         ILogger<UnitOfWork> logger,
         ICacheService cacheService,
         IOptions<CacheOptions> cacheOptions,
@@ -39,7 +39,7 @@ public sealed class CachedReadonlyIngredientRepository : IReadOnlyIngredientRepo
         {
             _logger.LogInformation("Cache was not hit for {redisKey} on {sourceName}",
                redisKey,
-               nameof(CachedReadonlyIngredientRepository));
+               nameof(CachedReadOnlyIngredientRepository));
 
             count = await _repo.CountAsync(cancellationToken);
             await _cacheService.SetAsync(redisKey, count, TimeSpan.FromSeconds(_cacheOptions.Value.SecondsDuration));
@@ -48,7 +48,7 @@ public sealed class CachedReadonlyIngredientRepository : IReadOnlyIngredientRepo
         {
             _logger.LogInformation("Cache was hit for {redisKey} on {sourceName}",
                 redisKey,
-                nameof(CachedReadonlyIngredientRepository));
+                nameof(CachedReadOnlyIngredientRepository));
         }
 
         return count;
@@ -63,7 +63,7 @@ public sealed class CachedReadonlyIngredientRepository : IReadOnlyIngredientRepo
         {
             _logger.LogInformation("Cache was hit for {redisKey} on {sourceName}",
                 redisKey,
-                nameof(CachedReadonlyIngredientRepository));
+                nameof(CachedReadOnlyIngredientRepository));
 
             return true;
         }
@@ -71,25 +71,25 @@ public sealed class CachedReadonlyIngredientRepository : IReadOnlyIngredientRepo
         return await _repo.ExistsAsync(entity, cancellationToken);
     }
 
-    public async ValueTask<IEnumerable<Ingredient>> GetManyAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<EntityQueryResultPaginated<Ingredient>> GetPaginatedAsync(int page, int pageSize, CancellationToken cancellationToken = default)
     {
-        var redisKey = GetRedisKey(nameof(GetManyAsync));
-        var response = await _cacheService.GetAsync<IEnumerable<Ingredient>>(redisKey);
+        var redisKey = GetRedisKey(nameof(GetPaginatedAsync));
+        var response = await _cacheService.GetAsync<EntityQueryResultPaginated<Ingredient>>(redisKey);
 
-        if (!response?.Any() ?? true)
+        if (response is not null)
         {
             _logger.LogInformation("Cache was not hit for {redisKey} on {sourceName}",
                 redisKey,
-                nameof(CachedReadonlyIngredientRepository));
+                nameof(CachedReadOnlyIngredientRepository));
 
-            response = await _repo.GetManyAsync(cancellationToken);
+            response = await _repo.GetPaginatedAsync(page, pageSize, cancellationToken);
             await _cacheService.SetAsync(redisKey, response, TimeSpan.FromSeconds(_cacheOptions.Value.SecondsDuration));
         }
         else
         {
             _logger.LogInformation("Cache was hit for {redisKey} on {sourceName}",
                 redisKey,
-                nameof(CachedReadonlyIngredientRepository));
+                nameof(CachedReadOnlyIngredientRepository));
         }
 
         return response;
@@ -104,7 +104,7 @@ public sealed class CachedReadonlyIngredientRepository : IReadOnlyIngredientRepo
         {
             _logger.LogInformation("Cache was not hit for {redisKey} on {sourceName}",
                 redisKey,
-                nameof(CachedReadonlyIngredientRepository));
+                nameof(CachedReadOnlyIngredientRepository));
 
             ingredient = await _repo.GetUniqueAsync(id, cancellationToken);
             await _cacheService.SetAsync(redisKey, ingredient, TimeSpan.FromSeconds(_cacheOptions.Value.SecondsDuration));
@@ -113,20 +113,14 @@ public sealed class CachedReadonlyIngredientRepository : IReadOnlyIngredientRepo
         {
             _logger.LogInformation("Cache was hit for {redisKey} on {sourceName}",
                 redisKey,
-                nameof(CachedReadonlyIngredientRepository));
+                nameof(CachedReadOnlyIngredientRepository));
         }
 
         return ingredient;
     }
-
-    public async ValueTask<IEnumerable<Ingredient>> GetManyByAsync(Expression<Func<Ingredient, bool>> predicate, CancellationToken cancellationToken = default)
+    public async ValueTask<EntityQueryResultPaginated<Ingredient>> GetByPaginatedAsync(Expression<Func<Ingredient, bool>> predicate, int page, int pageSize, CancellationToken cancellationToken = default)
     {
-        return await _repo.GetManyByAsync(predicate, cancellationToken);
-    }
-
-    public async ValueTask<EntityQueryResultPaginated<Ingredient>> GetByPaginated(Expression<Func<Ingredient, bool>> predicate, int page, int pageSize, CancellationToken cancellationToken = default)
-    {
-        var result = await _repo.GetByPaginated(predicate, page, pageSize, cancellationToken);
+        var result = await _repo.GetByPaginatedAsync(predicate, page, pageSize, cancellationToken);
 
         int totalCount = await CountAsync(cancellationToken);
         var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);

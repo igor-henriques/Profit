@@ -8,7 +8,7 @@ public static class Constants
         {
             public const string BaseIngredient = "api/v1/ingredient";
             public const string GetUnique = $"{BaseIngredient}/get";
-            public const string GetMany = $"{BaseIngredient}/get-many";
+            public const string GetPaginated = $"{BaseIngredient}/get-paginated";
             public const string Create = $"{BaseIngredient}/create";
             public const string BulkCreate = $"{BaseIngredient}/bulk-create";
             public const string Put = $"{BaseIngredient}/put";
@@ -19,7 +19,7 @@ public static class Constants
         {
             public const string BaseRecipe = "api/v1/recipe";
             public const string GetUnique = $"{BaseRecipe}/get";
-            public const string GetMany = $"{BaseRecipe}/get-many";
+            public const string GetPaginated = $"{BaseRecipe}/get-paginated";
             public const string Create = $"{BaseRecipe}/create";
             public const string BulkCreate = $"{BaseRecipe}/bulk-create";
             public const string Put = $"{BaseRecipe}/put";
@@ -30,7 +30,7 @@ public static class Constants
         {
             public const string BaseProduct = "api/v1/product";
             public const string GetUnique = $"{BaseProduct}/get";
-            public const string GetMany = $"{BaseProduct}/get-many";
+            public const string GetPaginated = $"{BaseProduct}/get-paginated";
             public const string Create = $"{BaseProduct}/create";
             public const string BulkCreate = $"{BaseProduct}/bulk-create";
             public const string Put = $"{BaseProduct}/put";
@@ -41,7 +41,7 @@ public static class Constants
         {
             public const string BaseUser = "api/v1/user";
             public const string GetUnique = $"{BaseUser}/get";
-            public const string GetMany = $"{BaseUser}/get-many";
+            public const string GetPaginated = $"{BaseUser}/get-paginated";
             public const string Create = $"{BaseUser}/create";
             public const string Put = $"{BaseUser}/put";
             public const string Delete = $"{BaseUser}/delete";
@@ -52,7 +52,7 @@ public static class Constants
         {
             public const string BaseOrder = "api/v1/order";
             public const string GetUnique = $"{BaseOrder}/get";
-            public const string GetMany = $"{BaseOrder}/get-many";
+            public const string GetPaginated = $"{BaseOrder}/get-paginated";
             public const string Create = $"{BaseOrder}/create";
             public const string Put = $"{BaseOrder}/put";
             public const string Delete = $"{BaseOrder}/delete";

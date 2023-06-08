@@ -1,5 +1,5 @@
-﻿namespace Profit.Domain.Queries.Product.GetMany;
+﻿namespace Profit.Domain.Queries.Product.GetPaginated;
 
-public readonly record struct GetManyProductsQuery : IQuery<IEnumerable<ProductDto>>
+public readonly record struct GetPaginatedProductsQuery : IQuery<IEnumerable<ProductDto>>
 {
 }

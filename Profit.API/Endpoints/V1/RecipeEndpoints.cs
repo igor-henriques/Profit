@@ -4,11 +4,11 @@ public static class RecipeEndpoints
 {
     public static void ConfigureRecipeEndpoints(this WebApplication app)
     {
-        app.MapGet(Routes.Recipe.GetMany, async (
+        app.MapGet(Routes.Recipe.GetPaginated, async (
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {
-            var query = new GetManyRecipesQuery();
+            var query = new GetPaginatedRecipesQuery();
             var response = await mediator.Send(query, cancellationToken);
 
             return Results.Ok(response);

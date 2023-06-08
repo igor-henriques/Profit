@@ -44,7 +44,7 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
         return response;
     }
 
-    public virtual async ValueTask<IEnumerable<TEntity>> GetManyByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<IEnumerable<TEntity>> GetPaginatedByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
         var response = await _context
             .Set<TEntity>()
@@ -52,7 +52,7 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
             .ToListAsync(cancellationToken);
 
         _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-           nameof(GetManyByAsync),
+           nameof(GetPaginatedByAsync),
            nameof(BaseRepository<TEntity, TDbContext>),
            response);
 
@@ -81,13 +81,13 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
            entity);
     }
 
-    public virtual async ValueTask<IEnumerable<TEntity>> GetManyAsync(CancellationToken cancellationToken = default)
+    public virtual async ValueTask<IEnumerable<TEntity>> GetPaginatedAsync(CancellationToken cancellationToken = default)
     {
         var response = await _context.Set<TEntity>()
                                      .ToListAsync(cancellationToken);
 
         _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-          nameof(GetManyAsync),
+          nameof(GetPaginatedAsync),
           nameof(BaseRepository<TEntity, TDbContext>),
           response);
 

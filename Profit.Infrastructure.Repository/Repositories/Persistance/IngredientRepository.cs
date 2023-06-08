@@ -1,4 +1,4 @@
-﻿namespace Profit.Infrastructure.Repository.Repositories;
+﻿namespace Profit.Infrastructure.Repository.Repositories.Persistance;
 
 internal sealed class IngredientRepository : BaseRepository<Ingredient, ProfitDbContext>, IIngredientRepository
 {

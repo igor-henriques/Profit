@@ -18,19 +18,19 @@ public static class ConfigureGeneralDependencies
         services.AddScoped<IMigratorApplication, MigratorApplication>();
 
         services.AddScoped<IReadOnlyIngredientRepository, ReadOnlyIngredientRepository>();
-        services.Decorate<IReadOnlyIngredientRepository, CachedReadonlyIngredientRepository>();
+        services.Decorate<IReadOnlyIngredientRepository, CachedReadOnlyIngredientRepository>();
 
         services.AddScoped<IReadOnlyProductRepository, ReadOnlyProductRepository>();
-        services.Decorate<IReadOnlyProductRepository, CachedReadonlyProductRepository>();
+        services.Decorate<IReadOnlyProductRepository, CachedReadOnlyProductRepository>();
 
         services.AddScoped<IReadOnlyRecipeRepository, ReadOnlyRecipeRepository>();
-        services.Decorate<IReadOnlyRecipeRepository, CachedReadonlyRecipeRepository>();
+        services.Decorate<IReadOnlyRecipeRepository, CachedReadOnlyRecipeRepository>();
 
         services.AddScoped<IReadOnlyUserRepository, ReadOnlyUserRepository>();
-        services.Decorate<IReadOnlyUserRepository, CachedReadonlyUserRepository>();
+        services.Decorate<IReadOnlyUserRepository, CachedReadOnlyUserRepository>();
 
         services.AddScoped<IReadOnlyOrderRepository, ReadOnlyOrderRepository>();
-        services.Decorate<IReadOnlyOrderRepository, CachedReadonlyOrderRepository>();
+        services.Decorate<IReadOnlyOrderRepository, CachedReadOnlyOrderRepository>();
 
         return services;
     }

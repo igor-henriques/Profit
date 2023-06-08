@@ -15,7 +15,10 @@ public sealed class ReadOnlyRecipeRepository : ReadOnlyBaseRepository<Recipe, Pr
         this._logger = localLogger;
     }
 
-    public override async ValueTask<IEnumerable<Recipe>> GetManyAsync(CancellationToken cancellationToken = default)
+    public override async ValueTask<EntityQueryResultPaginated<Recipe>> GetPaginatedAsync(
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default)
     {
         var response = await _context.Recipes
             .AsNoTracking()
@@ -23,14 +26,19 @@ public sealed class ReadOnlyRecipeRepository : ReadOnlyBaseRepository<Recipe, Pr
             .ToListAsync(cancellationToken);
 
         _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-            nameof(GetManyAsync),
+            nameof(GetPaginatedAsync),
             nameof(ReadOnlyRecipeRepository),
             response);
 
-        return response;
+        return new EntityQueryResultPaginated<Recipe>()
+        {
+            Data = response,
+            PageSize = pageSize,
+            PageNumber = page            
+        };
     }
 
-    public override async ValueTask<IEnumerable<Recipe>> GetManyByAsync(Expression<Func<Recipe, bool>> predicate, CancellationToken cancellationToken = default)
+    public override async ValueTask<EntityQueryResultPaginated<Recipe>> GetByPaginatedAsync(Expression<Func<Recipe, bool>> predicate, int page, int pageSize, CancellationToken cancellationToken = default)
     {
         var response = await _context.Recipes
             .AsNoTracking()
@@ -39,13 +47,17 @@ public sealed class ReadOnlyRecipeRepository : ReadOnlyBaseRepository<Recipe, Pr
             .ToListAsync(cancellationToken);
 
         _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-            nameof(GetManyByAsync),
+            nameof(GetByPaginatedAsync),
             nameof(ReadOnlyRecipeRepository),
             response);
 
-        return response;
+        return new EntityQueryResultPaginated<Recipe>()
+        {
+            Data = response,
+            PageNumber = page,
+            PageSize = pageSize            
+        };
     }
-
     public override async ValueTask<Recipe> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var response = await _context.Recipes

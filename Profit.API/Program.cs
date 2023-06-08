@@ -1,3 +1,5 @@
+using Profit.Domain.Interfaces.Repositories;
+
 try
 {
     var builder = WebApplication.CreateBuilder(args);
@@ -57,7 +59,9 @@ try
     app.ConfigureUserEndpoints();
     app.ConfigureOrderEndpoints();
 
-    app.Run();
+    await ExecuteMigrations(app);
+
+    await app.RunAsync();
 }
 catch (Exception ex)
 {
@@ -67,4 +71,11 @@ catch (Exception ex)
 finally
 {
     Log.CloseAndFlush();
+}
+
+static async Task ExecuteMigrations(WebApplication app)
+{
+    using var scope = app.Services.CreateScope();
+    var migrator = scope.ServiceProvider.GetRequiredService<IMigratorApplication>();
+    await migrator.RunMigrationsForAllTenantsAsync();
 }

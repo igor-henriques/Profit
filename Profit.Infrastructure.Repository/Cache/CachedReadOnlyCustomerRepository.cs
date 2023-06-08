@@ -1,21 +1,21 @@
 ﻿namespace Profit.Infrastructure.Repository.Cache;
 
-public sealed class CachedReadOnlyProductRepository : IReadOnlyProductRepository
+public sealed class CachedReadOnlyCustomerRepository : IReadOnlyCustomerRepository
 {
     private readonly ITenantInfo _tenant;
     private readonly ICacheService _cacheService;
     private readonly IOptions<CacheOptions> _cacheOptions;
-    private readonly IReadOnlyProductRepository _repo;
+    private readonly IReadOnlyCustomerRepository _repo;
     private readonly ILogger<UnitOfWork> _logger;
 
-    public CachedReadOnlyProductRepository(
+    public CachedReadOnlyCustomerRepository(
         ILogger<UnitOfWork> logger,
         ICacheService cacheService,
         IOptions<CacheOptions> cacheOptions,
         ITenantInfo tenant,
-        IReadOnlyProductRepository readOnlyProductRepo)
+        IReadOnlyCustomerRepository readOnlyCustomerRepo)
     {
-        _repo = readOnlyProductRepo;
+        _repo = readOnlyCustomerRepo;
         _tenant = tenant;
         _cacheService = cacheService;
         _cacheOptions = cacheOptions;
@@ -26,7 +26,7 @@ public sealed class CachedReadOnlyProductRepository : IReadOnlyProductRepository
     {
         return $"{ICacheService.GetCustomKey(
             _tenant.TenantId.ToString(),
-            nameof(Product))}:{ICacheService.GetCustomKey(keys)}";
+            nameof(Customer))}:{ICacheService.GetCustomKey(keys)}";
     }
 
     public async ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
@@ -39,7 +39,7 @@ public sealed class CachedReadOnlyProductRepository : IReadOnlyProductRepository
         {
             _logger.LogInformation("Cache was not hit for {redisKey} on {sourceName}",
                redisKey,
-               nameof(CachedReadOnlyProductRepository));
+               nameof(CachedReadOnlyCustomerRepository));
 
             count = await _repo.CountAsync(cancellationToken);
             await _cacheService.SetAsync(redisKey, count, TimeSpan.FromSeconds(_cacheOptions.Value.SecondsDuration));
@@ -48,22 +48,22 @@ public sealed class CachedReadOnlyProductRepository : IReadOnlyProductRepository
         {
             _logger.LogInformation("Cache was hit for {redisKey} on {sourceName}",
                 redisKey,
-                nameof(CachedReadOnlyProductRepository));
+                nameof(CachedReadOnlyCustomerRepository));
         }
 
         return count;
     }
 
-    public async ValueTask<bool> ExistsAsync(Product entity, CancellationToken cancellationToken = default)
+    public async ValueTask<bool> ExistsAsync(Customer entity, CancellationToken cancellationToken = default)
     {
         var redisKey = GetRedisKey(entity.Id.ToString());
-        var response = _cacheService.GetAsync<Product>(redisKey);
+        var response = _cacheService.GetAsync<Customer>(redisKey);
 
         if (response is not null)
         {
             _logger.LogInformation("Cache was hit for {redisKey} on {sourceName}",
                 redisKey,
-                nameof(CachedReadOnlyProductRepository));
+                nameof(CachedReadOnlyCustomerRepository));
 
             return true;
         }
@@ -71,16 +71,16 @@ public sealed class CachedReadOnlyProductRepository : IReadOnlyProductRepository
         return await _repo.ExistsAsync(entity, cancellationToken);
     }
 
-    public async ValueTask<EntityQueryResultPaginated<Product>> GetPaginatedAsync(int page, int pageSize, CancellationToken cancellationToken = default)
+    public async ValueTask<EntityQueryResultPaginated<Customer>> GetPaginatedAsync(int page, int pageSize, CancellationToken cancellationToken = default)
     {
         var redisKey = GetRedisKey(nameof(GetPaginatedAsync));
-        var response = await _cacheService.GetAsync<EntityQueryResultPaginated<Product>>(redisKey);
+        var response = await _cacheService.GetAsync<EntityQueryResultPaginated<Customer>>(redisKey);
 
         if (response is not null)
         {
             _logger.LogInformation("Cache was not hit for {redisKey} on {sourceName}",
                 redisKey,
-                nameof(CachedReadOnlyProductRepository));
+                nameof(CachedReadOnlyCustomerRepository));
 
             response = await _repo.GetPaginatedAsync(page, pageSize, cancellationToken);
             await _cacheService.SetAsync(redisKey, response, TimeSpan.FromSeconds(_cacheOptions.Value.SecondsDuration));
@@ -89,37 +89,37 @@ public sealed class CachedReadOnlyProductRepository : IReadOnlyProductRepository
         {
             _logger.LogInformation("Cache was hit for {redisKey} on {sourceName}",
                 redisKey,
-                nameof(CachedReadOnlyProductRepository));
+                nameof(CachedReadOnlyCustomerRepository));
         }
 
         return response;
     }
 
-    public async ValueTask<Product> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default)
+    public async ValueTask<Customer> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var redisKey = GetRedisKey(id.ToString());
-        var Product = await _cacheService.GetAsync<Product>(redisKey);
+        var Customer = await _cacheService.GetAsync<Customer>(redisKey);
 
-        if (Product is null)
+        if (Customer is null)
         {
             _logger.LogInformation("Cache was not hit for {redisKey} on {sourceName}",
                 redisKey,
-                nameof(CachedReadOnlyProductRepository));
+                nameof(CachedReadOnlyCustomerRepository));
 
-            Product = await _repo.GetUniqueAsync(id, cancellationToken);
-            await _cacheService.SetAsync(redisKey, Product, TimeSpan.FromSeconds(_cacheOptions.Value.SecondsDuration));
+            Customer = await _repo.GetUniqueAsync(id, cancellationToken);
+            await _cacheService.SetAsync(redisKey, Customer, TimeSpan.FromSeconds(_cacheOptions.Value.SecondsDuration));
         }
         else
         {
             _logger.LogInformation("Cache was hit for {redisKey} on {sourceName}",
                 redisKey,
-                nameof(CachedReadOnlyProductRepository));
+                nameof(CachedReadOnlyCustomerRepository));
         }
 
-        return Product;
+        return Customer;
     }
 
-    public async ValueTask<EntityQueryResultPaginated<Product>> GetByPaginatedAsync(Expression<Func<Product, bool>> predicate, int page, int pageSize, CancellationToken cancellationToken = default)
+    public async ValueTask<EntityQueryResultPaginated<Customer>> GetByPaginatedAsync(Expression<Func<Customer, bool>> predicate, int page, int pageSize, CancellationToken cancellationToken = default)
     {
         var result = await _repo.GetByPaginatedAsync(predicate, page, pageSize, cancellationToken);
 
@@ -132,18 +132,13 @@ public sealed class CachedReadOnlyProductRepository : IReadOnlyProductRepository
         return result;
     }
 
-    public async ValueTask<int> CountByAsync(Expression<Func<Product, bool>> predicate, CancellationToken cancellationToken = default)
+    public async ValueTask<int> CountByAsync(Expression<Func<Customer, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return await _repo.CountByAsync(predicate, cancellationToken);
     }
 
-    public async ValueTask<Product> GetUniqueByAsync(Expression<Func<Product, bool>> predicate, CancellationToken cancellationToken = default)
+    public async ValueTask<Customer> GetUniqueByAsync(Expression<Func<Customer, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return await _repo.GetUniqueByAsync(predicate, cancellationToken);
-    }
-
-    public async Task<decimal> GetProductCost(Guid productId, CancellationToken cancellationToken = default)
-    {
-        return await _repo.GetProductCost(productId, cancellationToken);
     }
 }

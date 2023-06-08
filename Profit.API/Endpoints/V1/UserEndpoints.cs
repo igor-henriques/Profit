@@ -4,11 +4,11 @@ public static class UserEndpoints
 {
     public static void ConfigureUserEndpoints(this WebApplication app)
     {
-        app.MapGet(Routes.User.GetMany, async (
+        app.MapGet(Routes.User.GetPaginated, async (
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {
-            var query = new GetManyUsersQuery();
+            var query = new GetPaginatedUsersQuery();
             var response = await mediator.Send(query, cancellationToken);
 
             return Results.Ok(response);

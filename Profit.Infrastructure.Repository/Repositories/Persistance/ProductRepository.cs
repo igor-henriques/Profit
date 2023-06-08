@@ -1,4 +1,4 @@
-﻿namespace Profit.Infrastructure.Repository.Repositories;
+﻿namespace Profit.Infrastructure.Repository.Repositories.Persistance;
 
 internal sealed class ProductRepository : BaseRepository<Product, ProfitDbContext>, IProductRepository
 {
@@ -9,8 +9,8 @@ internal sealed class ProductRepository : BaseRepository<Product, ProfitDbContex
         ProfitDbContext context,
         ILogger<UnitOfWork> logger) : base(context, logger)
     {
-        this._context = context;
-        this._logger = logger;
+        _context = context;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<Product>> GetProductsByRecipeId(Guid recipeId, CancellationToken cancellationToken = default)

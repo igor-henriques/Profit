@@ -1,11 +1,11 @@
-﻿namespace Profit.Domain.Queries.Product.GetMany;
+﻿namespace Profit.Domain.Queries.Product.GetPaginated;
 
-public sealed class GetManyProductsQueryHandler : IRequestHandler<GetManyProductsQuery, IEnumerable<ProductDto>>
+public sealed class GetPaginatedProductsQueryHandler : IRequestHandler<GetPaginatedProductsQuery, IEnumerable<ProductDto>>
 {
     private readonly IReadOnlyProductRepository _repo;
     private readonly IMapper _mapper;
 
-    public GetManyProductsQueryHandler(
+    public GetPaginatedProductsQueryHandler(
         IMapper mapper,
         IReadOnlyProductRepository repo)
     {
@@ -13,9 +13,9 @@ public sealed class GetManyProductsQueryHandler : IRequestHandler<GetManyProduct
         _repo = repo;
     }
 
-    public async Task<IEnumerable<ProductDto>> Handle(GetManyProductsQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<ProductDto>> Handle(GetPaginatedProductsQuery request, CancellationToken cancellationToken)
     {
-        var ingredient = await _repo.GetManyAsync(cancellationToken);
+        var ingredient = await _repo.GetPaginatedAsync(cancellationToken);
         var ingredientDto = ingredient.Select(_mapper.Map<ProductDto>);
         return ingredientDto;
     }

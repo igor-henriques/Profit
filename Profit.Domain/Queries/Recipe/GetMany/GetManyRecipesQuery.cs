@@ -1,5 +1,5 @@
-﻿namespace Profit.Domain.Queries.Recipe.GetMany;
+﻿namespace Profit.Domain.Queries.Recipe.GetPaginated;
 
-public readonly record struct GetManyRecipesQuery : IQuery<IEnumerable<RecipeDto>>
+public readonly record struct GetPaginatedRecipesQuery : IQuery<IEnumerable<RecipeDto>>
 {
 }

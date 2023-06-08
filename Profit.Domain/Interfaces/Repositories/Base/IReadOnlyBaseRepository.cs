@@ -10,9 +10,8 @@ public interface IReadOnlyBaseRepository<TEntity> where TEntity : Entity<TEntity
     ValueTask<int> CountAsync(CancellationToken cancellationToken = default);
     ValueTask<int> CountByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
     ValueTask<bool> ExistsAsync(TEntity entity, CancellationToken cancellationToken = default);
-    ValueTask<EntityQueryResultPaginated<TEntity>> GetByPaginated(Expression<Func<TEntity, bool>> predicate, int page, int pageSize, CancellationToken cancellationToken = default);
-    ValueTask<IEnumerable<TEntity>> GetManyAsync(CancellationToken cancellationToken = default);
-    ValueTask<IEnumerable<TEntity>> GetManyByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+    ValueTask<EntityQueryResultPaginated<TEntity>> GetByPaginatedAsync(Expression<Func<TEntity, bool>> predicate, int page, int pageSize, CancellationToken cancellationToken = default);
+    ValueTask<EntityQueryResultPaginated<TEntity>> GetPaginatedAsync(int page, int pageSize, CancellationToken cancellationToken = default);
     ValueTask<TEntity> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default);
     ValueTask<TEntity> GetUniqueByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 }

@@ -16,7 +16,7 @@ internal sealed class MigratorApplication : IMigratorApplication
         _authContext = authContext;
     }
 
-    internal async Task RunMigrationsForAllTenantsAsync()
+    public async Task RunMigrationsForAllTenantsAsync()
     {
         await Console.Out.WriteLineAsync($"INITIALIZING SERVICE {nameof(MigratorApplication)}");        
 

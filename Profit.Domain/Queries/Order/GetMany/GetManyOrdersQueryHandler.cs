@@ -1,11 +1,11 @@
-﻿namespace Profit.Domain.Queries.Order.GetMany;
+﻿namespace Profit.Domain.Queries.Order.GetPaginated;
 
-public sealed class GetManyOrdersQueryHandler : IRequestHandler<GetManyOrdersQuery, IEnumerable<OrderDto>>
+public sealed class GetPaginatedOrdersQueryHandler : IRequestHandler<GetPaginatedOrdersQuery, IEnumerable<OrderDto>>
 {
     private readonly IReadOnlyIngredientRepository _repo;
     private readonly IMapper _mapper;
 
-    public GetManyOrdersQueryHandler(
+    public GetPaginatedOrdersQueryHandler(
         IMapper mapper,
         IReadOnlyIngredientRepository repo)
     {
@@ -13,9 +13,9 @@ public sealed class GetManyOrdersQueryHandler : IRequestHandler<GetManyOrdersQue
         _repo = repo;
     }
 
-    public async Task<IEnumerable<OrderDto>> Handle(GetManyOrdersQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<OrderDto>> Handle(GetPaginatedOrdersQuery request, CancellationToken cancellationToken)
     {
-        var orders = await _repo.GetManyAsync(cancellationToken);
+        var orders = await _repo.GetPaginatedAsync(cancellationToken);
         var ordersDto = orders.Select(_mapper.Map<OrderDto>);
         return ordersDto;
     }

@@ -1,4 +1,4 @@
-﻿namespace Profit.Infrastructure.Repository.Repositories;
+﻿namespace Profit.Infrastructure.Repository.Repositories.Persistance;
 
 internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUserRepository
 {

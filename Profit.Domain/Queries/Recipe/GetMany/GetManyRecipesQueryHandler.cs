@@ -1,11 +1,11 @@
-﻿namespace Profit.Domain.Queries.Recipe.GetMany;
+﻿namespace Profit.Domain.Queries.Recipe.GetPaginated;
 
-public sealed class GetManyRecipesQueryHandler : IRequestHandler<GetManyRecipesQuery, IEnumerable<RecipeDto>>
+public sealed class GetPaginatedRecipesQueryHandler : IRequestHandler<GetPaginatedRecipesQuery, IEnumerable<RecipeDto>>
 {
     private readonly IReadOnlyRecipeRepository _repo;
     private readonly IMapper _mapper;
 
-    public GetManyRecipesQueryHandler(
+    public GetPaginatedRecipesQueryHandler(
         IMapper mapper,
         IReadOnlyRecipeRepository repo)
     {
@@ -13,9 +13,9 @@ public sealed class GetManyRecipesQueryHandler : IRequestHandler<GetManyRecipesQ
         _repo = repo;
     }
 
-    public async Task<IEnumerable<RecipeDto>> Handle(GetManyRecipesQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<RecipeDto>> Handle(GetPaginatedRecipesQuery request, CancellationToken cancellationToken)
     {
-        var recipes = await _repo.GetManyAsync(cancellationToken);
+        var recipes = await _repo.GetPaginatedAsync(cancellationToken);
         var recipesDto = recipes.Select(_mapper.Map<RecipeDto>);
         return recipesDto;
     }

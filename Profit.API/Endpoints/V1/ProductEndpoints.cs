@@ -4,11 +4,11 @@ public static class ProductEndpoints
 {
     public static void ConfigureProductEndpoints(this WebApplication app)
     {
-        app.MapGet(Routes.Product.GetMany, async (
+        app.MapGet(Routes.Product.GetPaginated, async (
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {
-            var query = new GetManyProductsQuery();
+            var query = new GetPaginatedProductsQuery();
             var response = await mediator.Send(query, cancellationToken);
 
             return Results.Ok(response);

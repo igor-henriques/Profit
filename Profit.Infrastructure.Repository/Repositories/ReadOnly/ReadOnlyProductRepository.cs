@@ -14,39 +14,28 @@ public sealed class ReadOnlyProductRepository : ReadOnlyBaseRepository<Product, 
         this._logger = localLogger;
     }
 
-    public override async ValueTask<IEnumerable<Product>> GetManyAsync(CancellationToken cancellationToken = default)
+    public override async ValueTask<EntityQueryResultPaginated<Product>> GetPaginatedAsync(int page, int pageSize, CancellationToken cancellationToken = default)
     {
         var response = await _context.Products
             .AsNoTracking()
             .Include(x => x.Recipe)
             .ThenInclude(x => x.IngredientRecipeRelations)
             .ThenInclude(x => x.Ingredient)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(cancellationToken);
 
         _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-            nameof(GetManyAsync),
+            nameof(GetPaginatedAsync),
             nameof(ReadOnlyProductRepository),
             response);
 
-        return response;
-    }
-
-    public override async ValueTask<IEnumerable<Product>> GetManyByAsync(Expression<Func<Product, bool>> predicate, CancellationToken cancellationToken = default)
-    {
-        var response = await _context.Products
-            .AsNoTracking()
-            .Include(x => x.Recipe)
-            .ThenInclude(x => x.IngredientRecipeRelations)
-            .ThenInclude(x => x.Ingredient)
-            .Where(predicate)
-            .ToListAsync(cancellationToken);
-
-        _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
-            nameof(GetManyByAsync),
-            nameof(ReadOnlyProductRepository),
-            response);
-
-        return response;
+        return new EntityQueryResultPaginated<Product>()
+        {
+            Data = response,
+            PageSize = pageSize,
+            PageNumber = page
+        };
     }
 
     public override async ValueTask<Product> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default)

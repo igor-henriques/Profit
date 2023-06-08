@@ -7,6 +7,6 @@ public interface IBaseRepository<TEntity> where TEntity : Entity<TEntity>
     public void Update(TEntity entity);
     public void Delete(TEntity entity);
     public ValueTask<TEntity> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default);
-    public ValueTask<IEnumerable<TEntity>> GetManyAsync(CancellationToken cancellationToken = default);
-    ValueTask<IEnumerable<TEntity>> GetManyByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+    public ValueTask<IEnumerable<TEntity>> GetPaginatedAsync(CancellationToken cancellationToken = default);
+    ValueTask<IEnumerable<TEntity>> GetPaginatedByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 }
