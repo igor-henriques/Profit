@@ -1,7 +1,7 @@
 ﻿namespace Profit.Domain.Queries.Ingredient.GetPaginated;
 
 public sealed class GetPaginatedIngredientsQueryHandler : IRequestHandler<GetPaginatedIngredientsQuery, IEnumerable<IngredientDto>>
-{
+{                                    ]
     private readonly IReadOnlyIngredientRepository _repo;
     private readonly IMapper _mapper;
 

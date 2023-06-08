@@ -40,7 +40,7 @@ try
     builder.Services.AddHealthChecks();
     builder.Services.AddMemoryCache();
     builder.Services.AddCors();
-
+    
     var app = builder.Build();
     app.UseMiddleware<ExceptionHandlerMiddleware>();
     if (app.Environment.IsDevelopment())
