@@ -5,12 +5,12 @@ public static class UserEndpoints
     public static void ConfigureUserEndpoints(this WebApplication app)
     {
         app.MapGet(Routes.User.GetPaginated, async (
+            [FromQuery] int pageNumber,
+            [FromQuery] int pageSize,
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {
-            var query = new GetPaginatedUsersQuery();
-            var response = await mediator.Send(query, cancellationToken);
-
+            var response = await mediator.Send(new GetPaginatedUsersQuery(pageNumber, pageSize), cancellationToken);
             return Results.Ok(response);
         }).WithTags(SwaggerTags.USER).RequireAuthorization();
 

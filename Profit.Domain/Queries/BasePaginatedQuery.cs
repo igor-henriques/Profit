@@ -1,7 +1,16 @@
 ﻿namespace Profit.Domain.Queries;
 
-public sealed record BasePaginatedQuery<T> : IQuery<EntityQueryResultPaginated<T>>
+public record BasePaginatedQuery
 {
+    private const int DEFAULT_PAGE_NUMBER = 1;
+    private const int DEFAULT_ITEMS_PER_PAGE = 10;
+
+    public BasePaginatedQuery(int pageNumber, int itemsPerPage)
+    {
+        PageNumber = pageNumber <= 0 ? DEFAULT_PAGE_NUMBER : pageNumber;
+        ItemsPerPage = itemsPerPage <= 0 ? DEFAULT_ITEMS_PER_PAGE : pageNumber;
+    }
+
     public int PageNumber { get; init; }
-    public int PageSize { get; init; }
+    public int ItemsPerPage { get; init; }
 }

@@ -4,6 +4,6 @@ public sealed class CreateOrderCommandValidator : AbstractValidator<CreateOrderC
 {
     public CreateOrderCommandValidator()
     {
-        
+
     }
 }

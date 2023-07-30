@@ -2,15 +2,15 @@
 
 internal sealed class MigratorApplication : IMigratorApplication
 {
-    private readonly AuthDbContext _authContext;    
+    private readonly AuthDbContext _authContext;
     private readonly IOptions<ConnectionStringsOptions> _options;
     private readonly ILogger<MigratorApplication> _logger;
 
     public MigratorApplication(
-        IOptions<ConnectionStringsOptions> options, 
-        ILogger<MigratorApplication> logger, 
+        IOptions<ConnectionStringsOptions> options,
+        ILogger<MigratorApplication> logger,
         AuthDbContext authContext)
-    {        
+    {
         _options = options;
         _logger = logger;
         _authContext = authContext;
@@ -18,7 +18,7 @@ internal sealed class MigratorApplication : IMigratorApplication
 
     public async Task RunMigrationsForAllTenantsAsync()
     {
-        await Console.Out.WriteLineAsync($"INITIALIZING SERVICE {nameof(MigratorApplication)}");        
+        await Console.Out.WriteLineAsync($"INITIALIZING SERVICE {nameof(MigratorApplication)}");
 
         var tenants = await _authContext.Users
             .AsNoTracking()

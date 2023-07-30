@@ -5,12 +5,12 @@ public static class OrderEndpoints
     public static void ConfigureOrderEndpoints(this WebApplication app)
     {
         app.MapGet(Routes.Order.GetPaginated, async (
+            [FromQuery] int pageNumber,
+            [FromQuery] int pageSize,
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {
-            var query = new GetPaginatedOrdersQuery();
-            var response = await mediator.Send(query, cancellationToken);
-
+            var response = await mediator.Send(new GetPaginatedOrdersQuery(pageNumber, pageSize), cancellationToken);
             return Results.Ok(response);
         }).WithTags(SwaggerTags.ORDER).RequireAuthorization();
 

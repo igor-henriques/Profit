@@ -5,12 +5,12 @@ public static class IngredientEndpoints
     public static void ConfigureIngredientEndpoints(this WebApplication app)
     {
         app.MapGet(Routes.Ingredient.GetPaginated, async (
+            [FromQuery] int pageNumber,
+            [FromQuery] int pageSize,
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {
-            var query = new GetPaginatedIngredientsQuery();
-            var response = await mediator.Send(query, cancellationToken);
-
+            var response = await mediator.Send(new GetPaginatedIngredientsQuery(pageNumber, pageSize), cancellationToken);
             return Results.Ok(response);
         }).WithTags(SwaggerTags.INGREDIENT).RequireAuthorization();
 

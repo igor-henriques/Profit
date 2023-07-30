@@ -14,15 +14,15 @@ public sealed class ReadOnlyProductRepository : ReadOnlyBaseRepository<Product, 
         this._logger = localLogger;
     }
 
-    public override async ValueTask<EntityQueryResultPaginated<Product>> GetPaginatedAsync(int page, int pageSize, CancellationToken cancellationToken = default)
+    public override async ValueTask<EntityQueryResultPaginated<Product>> GetPaginatedAsync(BasePaginatedQuery paginatedQuery, CancellationToken cancellationToken = default)
     {
         var response = await _context.Products
             .AsNoTracking()
             .Include(x => x.Recipe)
             .ThenInclude(x => x.IngredientRecipeRelations)
             .ThenInclude(x => x.Ingredient)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip((paginatedQuery.PageNumber - 1) * paginatedQuery.ItemsPerPage)
+            .Take(paginatedQuery.ItemsPerPage)
             .ToListAsync(cancellationToken);
 
         _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
@@ -33,8 +33,8 @@ public sealed class ReadOnlyProductRepository : ReadOnlyBaseRepository<Product, 
         return new EntityQueryResultPaginated<Product>()
         {
             Data = response,
-            PageSize = pageSize,
-            PageNumber = page
+            ItemsPerPage = paginatedQuery.ItemsPerPage,
+            PageNumber = paginatedQuery.PageNumber
         };
     }
 

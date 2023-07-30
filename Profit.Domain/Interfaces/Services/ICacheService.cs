@@ -60,7 +60,7 @@ public interface ICacheService
             sb.Append(keys[i]);
 
             if (i != keys.Length - 1)
-            {                
+            {
                 sb.Append(':');
             }
         }

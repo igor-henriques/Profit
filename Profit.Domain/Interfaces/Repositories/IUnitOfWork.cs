@@ -24,7 +24,7 @@ public interface IUnitOfWork : IAsyncDisposable
     /// <summary>
     /// Readonly access to <see cref="IRecipeRepository"/>
     /// </summary>
-    IRecipeRepository RecipeRepository { get; } 
+    IRecipeRepository RecipeRepository { get; }
 
     /// <summary>
     /// Readonly access to <see cref="IOrderRepository"/>

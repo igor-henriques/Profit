@@ -71,7 +71,7 @@ public sealed class CachedReadOnlyProductRepository : IReadOnlyProductRepository
         return await _repo.ExistsAsync(entity, cancellationToken);
     }
 
-    public async ValueTask<EntityQueryResultPaginated<Product>> GetPaginatedAsync(int page, int pageSize, CancellationToken cancellationToken = default)
+    public async ValueTask<EntityQueryResultPaginated<Product>> GetPaginatedAsync(BasePaginatedQuery paginatedQuery, CancellationToken cancellationToken = default)
     {
         var redisKey = GetRedisKey(nameof(GetPaginatedAsync));
         var response = await _cacheService.GetAsync<EntityQueryResultPaginated<Product>>(redisKey);
@@ -82,7 +82,7 @@ public sealed class CachedReadOnlyProductRepository : IReadOnlyProductRepository
                 redisKey,
                 nameof(CachedReadOnlyProductRepository));
 
-            response = await _repo.GetPaginatedAsync(page, pageSize, cancellationToken);
+            response = await _repo.GetPaginatedAsync(paginatedQuery, cancellationToken);
             await _cacheService.SetAsync(redisKey, response, TimeSpan.FromSeconds(_cacheOptions.Value.SecondsDuration));
         }
         else
@@ -119,12 +119,12 @@ public sealed class CachedReadOnlyProductRepository : IReadOnlyProductRepository
         return Product;
     }
 
-    public async ValueTask<EntityQueryResultPaginated<Product>> GetByPaginatedAsync(Expression<Func<Product, bool>> predicate, int page, int pageSize, CancellationToken cancellationToken = default)
+    public async ValueTask<EntityQueryResultPaginated<Product>> GetByPaginatedAsync(Expression<Func<Product, bool>> predicate, BasePaginatedQuery paginatedQuery, CancellationToken cancellationToken = default)
     {
-        var result = await _repo.GetByPaginatedAsync(predicate, page, pageSize, cancellationToken);
+        var result = await _repo.GetByPaginatedAsync(predicate, paginatedQuery, cancellationToken);
 
         int totalCount = await CountAsync(cancellationToken);
-        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+        var totalPages = (int)Math.Ceiling(totalCount / (double)paginatedQuery.ItemsPerPage);
 
         result.TotalPages = totalPages;
         result.TotalCount = totalCount;

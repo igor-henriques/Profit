@@ -2,5 +2,5 @@
 
 public sealed record PutOrderCommand : IRequest<Unit>
 {
-    
+
 }

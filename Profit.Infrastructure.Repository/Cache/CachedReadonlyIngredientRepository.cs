@@ -71,18 +71,18 @@ public sealed class CachedReadOnlyIngredientRepository : IReadOnlyIngredientRepo
         return await _repo.ExistsAsync(entity, cancellationToken);
     }
 
-    public async ValueTask<EntityQueryResultPaginated<Ingredient>> GetPaginatedAsync(int page, int pageSize, CancellationToken cancellationToken = default)
+    public async ValueTask<EntityQueryResultPaginated<Ingredient>> GetPaginatedAsync(BasePaginatedQuery paginatedQuery, CancellationToken cancellationToken = default)
     {
         var redisKey = GetRedisKey(nameof(GetPaginatedAsync));
         var response = await _cacheService.GetAsync<EntityQueryResultPaginated<Ingredient>>(redisKey);
 
-        if (response is not null)
+        if (response is null)
         {
             _logger.LogInformation("Cache was not hit for {redisKey} on {sourceName}",
                 redisKey,
                 nameof(CachedReadOnlyIngredientRepository));
 
-            response = await _repo.GetPaginatedAsync(page, pageSize, cancellationToken);
+            response = await _repo.GetPaginatedAsync(paginatedQuery, cancellationToken);
             await _cacheService.SetAsync(redisKey, response, TimeSpan.FromSeconds(_cacheOptions.Value.SecondsDuration));
         }
         else
@@ -118,12 +118,12 @@ public sealed class CachedReadOnlyIngredientRepository : IReadOnlyIngredientRepo
 
         return ingredient;
     }
-    public async ValueTask<EntityQueryResultPaginated<Ingredient>> GetByPaginatedAsync(Expression<Func<Ingredient, bool>> predicate, int page, int pageSize, CancellationToken cancellationToken = default)
+    public async ValueTask<EntityQueryResultPaginated<Ingredient>> GetByPaginatedAsync(Expression<Func<Ingredient, bool>> predicate, BasePaginatedQuery paginatedQuery, CancellationToken cancellationToken = default)
     {
-        var result = await _repo.GetByPaginatedAsync(predicate, page, pageSize, cancellationToken);
+        var result = await _repo.GetByPaginatedAsync(predicate, paginatedQuery, cancellationToken);
 
         int totalCount = await CountAsync(cancellationToken);
-        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+        var totalPages = (int)Math.Ceiling(totalCount / (double)paginatedQuery.ItemsPerPage);
 
         result.TotalPages = totalPages;
         result.TotalCount = totalCount;

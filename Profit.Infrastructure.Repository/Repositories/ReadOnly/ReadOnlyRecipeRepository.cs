@@ -16,8 +16,7 @@ public sealed class ReadOnlyRecipeRepository : ReadOnlyBaseRepository<Recipe, Pr
     }
 
     public override async ValueTask<EntityQueryResultPaginated<Recipe>> GetPaginatedAsync(
-        int page,
-        int pageSize,
+        BasePaginatedQuery paginatedQuery,
         CancellationToken cancellationToken = default)
     {
         var response = await _context.Recipes
@@ -33,12 +32,12 @@ public sealed class ReadOnlyRecipeRepository : ReadOnlyBaseRepository<Recipe, Pr
         return new EntityQueryResultPaginated<Recipe>()
         {
             Data = response,
-            PageSize = pageSize,
-            PageNumber = page            
+            ItemsPerPage = paginatedQuery.ItemsPerPage,
+            PageNumber = paginatedQuery.PageNumber
         };
     }
 
-    public override async ValueTask<EntityQueryResultPaginated<Recipe>> GetByPaginatedAsync(Expression<Func<Recipe, bool>> predicate, int page, int pageSize, CancellationToken cancellationToken = default)
+    public override async ValueTask<EntityQueryResultPaginated<Recipe>> GetByPaginatedAsync(Expression<Func<Recipe, bool>> predicate, BasePaginatedQuery paginatedQuery, CancellationToken cancellationToken = default)
     {
         var response = await _context.Recipes
             .AsNoTracking()
@@ -54,8 +53,8 @@ public sealed class ReadOnlyRecipeRepository : ReadOnlyBaseRepository<Recipe, Pr
         return new EntityQueryResultPaginated<Recipe>()
         {
             Data = response,
-            PageNumber = page,
-            PageSize = pageSize            
+            PageNumber = paginatedQuery.PageNumber,
+            ItemsPerPage = paginatedQuery.ItemsPerPage
         };
     }
     public override async ValueTask<Recipe> GetUniqueAsync(Guid id, CancellationToken cancellationToken = default)

@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
+﻿#nullable disable
 
 namespace Profit.Infrastructure.Migrator.Migrations
 {
@@ -11,7 +8,7 @@ namespace Profit.Infrastructure.Migrator.Migrations
         private readonly IDbContextSchema _schema;
 
         public AddedDomainEntites(IDbContextSchema schema)
-        {            
+        {
             _schema = schema ?? throw new ArgumentNullException(nameof(schema));
         }
 

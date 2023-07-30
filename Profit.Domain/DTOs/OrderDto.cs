@@ -11,6 +11,6 @@ public readonly record struct OrderDto
     public DateTime CreatedAt { get; init; }
     public DateTime? UpdatedAt { get; init; }
     public DateTime? PaidAt { get; init; }
-    public DateTime? CanceledAt { get; init; }    
-    public ICollection<OrderDetailDto> OrderDetails { get; init; }    
+    public DateTime? CanceledAt { get; init; }
+    public ICollection<OrderDetailDto> OrderDetails { get; init; }
 }

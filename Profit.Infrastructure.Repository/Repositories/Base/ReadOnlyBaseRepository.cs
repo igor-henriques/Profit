@@ -93,13 +93,12 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
 
     public virtual async ValueTask<EntityQueryResultPaginated<TEntity>> GetByPaginatedAsync(
         Expression<Func<TEntity, bool>> predicate,
-        int page,
-        int pageSize,
+        BasePaginatedQuery basePaginated,
         CancellationToken cancellationToken = default)
     {
-        if (page < 1 || pageSize <= 0)
+        if (basePaginated.PageNumber < 1 || basePaginated.ItemsPerPage <= 0)
         {
-            _logger.LogInformation("{methodName} from {sourceName} retrieved {response} due invalid page or pageSize",
+            _logger.LogInformation("{methodName} from {sourceName} retrieved {response} due invalid paginatedQuery.PageNumber or paginatedQuery.ItemsPerPage",
                 nameof(GetByPaginatedAsync),
                 nameof(ReadOnlyBaseRepository<TEntity, TDbContext>),
                 "empty");
@@ -107,23 +106,23 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
             return new EntityQueryResultPaginated<TEntity>()
             {
                 Data = Enumerable.Empty<TEntity>().ToList(),
-                PageNumber = page,
-                PageSize = pageSize
-            }; 
+                PageNumber = basePaginated.PageNumber,
+                ItemsPerPage = basePaginated.ItemsPerPage
+            };
         }
 
         var response = await _context.Set<TEntity>()
             .AsNoTracking()
             .Where(predicate)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip((basePaginated.PageNumber - 1) * basePaginated.ItemsPerPage)
+            .Take(basePaginated.ItemsPerPage)
             .ToListAsync(cancellationToken);
 
         var paginatedResult = new EntityQueryResultPaginated<TEntity>()
         {
             Data = response,
-            PageNumber = page,
-            PageSize = pageSize
+            PageNumber = basePaginated.PageNumber,
+            ItemsPerPage = basePaginated.ItemsPerPage
         };
 
         _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
@@ -135,13 +134,12 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
     }
 
     public virtual async ValueTask<EntityQueryResultPaginated<TEntity>> GetPaginatedAsync(
-        int page, 
-        int pageSize,
+        BasePaginatedQuery paginatedQuery,
         CancellationToken cancellationToken = default)
     {
-        if (page < 1 || pageSize <= 0)
+        if (paginatedQuery.PageNumber < 1 || paginatedQuery.ItemsPerPage <= 0)
         {
-            _logger.LogInformation("{methodName} from {sourceName} retrieved {response} due invalid page or pageSize",
+            _logger.LogInformation("{methodName} from {sourceName} retrieved {response} due invalid paginatedQuery.PageNumber or paginatedQuery.ItemsPerPage",
                 nameof(GetPaginatedAsync),
                 nameof(ReadOnlyBaseRepository<TEntity, TDbContext>),
                 "empty");
@@ -149,23 +147,27 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
             return new EntityQueryResultPaginated<TEntity>()
             {
                 Data = Enumerable.Empty<TEntity>().ToList(),
-                PageNumber = page,
-                PageSize = pageSize
+                PageNumber = paginatedQuery.PageNumber,
+                ItemsPerPage = paginatedQuery.ItemsPerPage
             };
         }
 
         var response = await _context
             .Set<TEntity>()
             .AsNoTracking()
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip((paginatedQuery.PageNumber - 1) * paginatedQuery.ItemsPerPage)
+            .Take(paginatedQuery.ItemsPerPage)
             .ToListAsync(cancellationToken);
+
+        var count = await CountAsync(cancellationToken);
 
         var paginatedResult = new EntityQueryResultPaginated<TEntity>()
         {
             Data = response,
-            PageNumber = page,
-            PageSize = pageSize
+            PageNumber = paginatedQuery.PageNumber,
+            ItemsPerPage = paginatedQuery.ItemsPerPage,
+            TotalCount = count,
+            TotalPages = count / paginatedQuery.ItemsPerPage
         };
 
         _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
@@ -204,5 +206,5 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
            response);
 
         return response;
-    }   
+    }
 }

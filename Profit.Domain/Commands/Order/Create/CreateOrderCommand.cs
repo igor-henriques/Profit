@@ -2,9 +2,9 @@
 
 public sealed record CreateOrderCommand : IRequest<Guid>
 {
-    public Guid CustomerId { get; init; }
-    public Guid AddressId { get; init; }
-    public Guid InvoiceId { get; init; }
+    public Guid? CustomerId { get; init; }
+    public Guid? AddressId { get; init; }
+    public Guid? InvoiceId { get; init; }
     public decimal TotalAmount { get; init; }
     public PaymentMethod PaymentMethod { get; init; }
     public OrderStatus OrderStatus { get; init; }

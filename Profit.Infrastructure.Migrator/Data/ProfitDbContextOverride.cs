@@ -13,7 +13,7 @@ internal sealed class ProfitDbContextOverride : ProfitDbContext, IDbContextSchem
     public ProfitDbContextOverride(DbContextOptions<ProfitDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {        
+    {
         base.OnModelCreating(modelBuilder);
         modelBuilder.HasDefaultSchema(_tenantId);
     }
