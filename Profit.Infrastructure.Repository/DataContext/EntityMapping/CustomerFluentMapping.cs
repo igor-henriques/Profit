@@ -11,5 +11,6 @@ public sealed class CustomerFluentMapping : IEntityTypeConfiguration<Customer>
         builder.Property(c => c.Email).IsRequired().HasMaxLength(100);
         builder.Property(c => c.Document).HasMaxLength(20);
         builder.HasMany(c => c.Addresses).WithOne().HasForeignKey(a => a.CustomerId);
+        builder.HasQueryFilter(p => !p.IsDeleted);
     }
 }

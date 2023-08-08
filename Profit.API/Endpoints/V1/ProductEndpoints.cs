@@ -6,11 +6,11 @@ public static class ProductEndpoints
     {
         app.MapGet(Routes.Product.GetPaginated, async (
             [FromQuery] int pageNumber,
-            [FromQuery] int pageSize,
+            [FromQuery] int itemsPerPage,
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {
-            var response = await mediator.Send(new GetPaginatedProductsQuery(pageNumber, pageSize), cancellationToken);
+            var response = await mediator.Send(new GetPaginatedProductsQuery(pageNumber, itemsPerPage), cancellationToken);
 
             return Results.Ok(response);
         }).WithTags(SwaggerTags.PRODUCT).RequireAuthorization();

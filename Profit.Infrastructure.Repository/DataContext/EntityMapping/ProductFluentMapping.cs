@@ -15,5 +15,7 @@ public sealed class ProductFluentMapping : IEntityTypeConfiguration<Product>
         builder.HasOne(p => p.Recipe)
             .WithMany()
             .HasForeignKey(p => p.RecipeId);
+
+        builder.HasQueryFilter(p => !p.IsDeleted);
     }
 }

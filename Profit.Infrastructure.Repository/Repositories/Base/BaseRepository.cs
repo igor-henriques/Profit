@@ -1,7 +1,7 @@
 ﻿namespace Profit.Infrastructure.Repository.Repositories.Base;
 
 internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TEntity>
-    where TEntity : Entity<TEntity>
+    where TEntity : Entity<TEntity>    
     where TDbContext : DbContext
 {
     private readonly TDbContext _context;
@@ -24,7 +24,7 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
 
         _context.Set<TEntity>().Add(entity);
 
-        _logger.LogInformation("{methodName} from {sourceName}: {entity} was added, but not commited: {value}",
+        _logger.LogInformation("{methodName} from {sourceName}: {entity} was added, but not yet commited: {value}",
            nameof(Add),
            nameof(BaseRepository<TEntity, TDbContext>),
            nameof(TEntity),
@@ -64,17 +64,22 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
         _context.Set<TEntity>()
                 .AddRange(entities);
 
-        _logger.LogInformation("{methodName} from {sourceName}: {entityCount} was added, but not commited",
+        _logger.LogInformation("{methodName} from {sourceName}: {entityCount} was added, but not yet commited",
            nameof(BulkAdd),
            nameof(BaseRepository<TEntity, TDbContext>),
            entities.Count());
     }
 
+    /// <summary>
+    /// Make sure to keep the method deleting, even tho the project is using soft delete.
+    /// In the <see cref="SoftDeleteInterceptor"/> we are checking if the entity is soft deletable, and if it is, we are marking it as deleted.
+    /// </summary>
+    /// <param name="entity"></param>
     public virtual void Delete(TEntity entity)
-    {
+    {        
         _context.Set<TEntity>().Remove(entity);
 
-        _logger.LogInformation("{methodName} from {sourceName}: {entity} was marked to removal, but not commited: {value}",
+        _logger.LogInformation("{methodName} from {sourceName}: {entity} was marked to removal, but not yet commited: {value}",
            nameof(Delete),
            nameof(BaseRepository<TEntity, TDbContext>),
            nameof(TEntity),
@@ -110,10 +115,12 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
 
     public virtual void Update(TEntity entity)
     {
+        entity.UpdatedAt = DateTime.Now;
+
         _context.Set<TEntity>()
                 .Update(entity);
 
-        _logger.LogInformation("{methodName} from {sourceName}: {entity} was marked to update, but not commited: {value}",
+        _logger.LogInformation("{methodName} from {sourceName}: {entity} was marked to update, but not yet commited: {value}",
            nameof(Update),
            nameof(BaseRepository<TEntity, TDbContext>),
            nameof(TEntity),

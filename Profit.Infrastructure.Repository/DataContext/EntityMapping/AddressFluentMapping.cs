@@ -1,4 +1,6 @@
-﻿namespace Profit.Infrastructure.Repository.DataContext.EntityMapping;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Profit.Infrastructure.Repository.DataContext.EntityMapping;
 
 public sealed class AddressFluentMapping : IEntityTypeConfiguration<Address>
 {
@@ -13,5 +15,6 @@ public sealed class AddressFluentMapping : IEntityTypeConfiguration<Address>
         builder.Property(a => a.Country).IsRequired().HasMaxLength(100);
         builder.Property(a => a.Reference).HasMaxLength(250);
         builder.Property(a => a.Observation).HasMaxLength(500);
+        builder.HasQueryFilter(p => !p.IsDeleted);
     }
 }

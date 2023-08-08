@@ -20,6 +20,6 @@ public sealed class IngredientRecipeRelationFluentMapping : IEntityTypeConfigura
         builder.HasOne(i => i.Recipe)
            .WithMany(i => i.IngredientRecipeRelations)
            .HasForeignKey(i => i.RecipeId)
-           .IsRequired();
+           .IsRequired();        
     }
 }

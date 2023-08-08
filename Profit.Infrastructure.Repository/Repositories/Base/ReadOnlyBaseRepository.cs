@@ -118,11 +118,15 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
             .Take(basePaginated.ItemsPerPage)
             .ToListAsync(cancellationToken);
 
+        var count = await CountAsync(cancellationToken);
+
         var paginatedResult = new EntityQueryResultPaginated<TEntity>()
         {
             Data = response,
             PageNumber = basePaginated.PageNumber,
-            ItemsPerPage = basePaginated.ItemsPerPage
+            ItemsPerPage = basePaginated.ItemsPerPage,
+            TotalCount = count,
+            TotalPages = (int)Math.Ceiling(count / (double)basePaginated.ItemsPerPage)
         };
 
         _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
@@ -167,7 +171,7 @@ public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBas
             PageNumber = paginatedQuery.PageNumber,
             ItemsPerPage = paginatedQuery.ItemsPerPage,
             TotalCount = count,
-            TotalPages = count / paginatedQuery.ItemsPerPage
+            TotalPages = (int)Math.Ceiling(count / (double)paginatedQuery.ItemsPerPage)
         };
 
         _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",

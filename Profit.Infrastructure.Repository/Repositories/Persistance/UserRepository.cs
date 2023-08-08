@@ -31,7 +31,7 @@ internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUse
         {
             _context.Claims.RemoveRange(userClaims);
 
-            _logger.LogInformation("{methodName} from {sourceName}: {entity} was marked to removal, but not commited: {values}",
+            _logger.LogInformation("{methodName} from {sourceName}: {entity} was marked to removal, but not yet commited: {values}",
                nameof(Delete),
                nameof(UserRepository),
                nameof(User),
@@ -40,7 +40,7 @@ internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUse
 
         _context.Users.Remove(entity);
 
-        _logger.LogInformation("{methodName} from {sourceName}: {entity} was marked to removal, but not commited: {value}",
+        _logger.LogInformation("{methodName} from {sourceName}: {entity} was marked to removal, but not yet commited: {value}",
                nameof(Delete),
                nameof(UserRepository),
                nameof(User),
@@ -64,7 +64,7 @@ internal sealed class UserRepository : BaseRepository<User, AuthDbContext>, IUse
             UserId = entity.Id
         });
 
-        _logger.LogInformation("{methodName} from {sourceName}: {entity} was added, but not commited: {value}",
+        _logger.LogInformation("{methodName} from {sourceName}: {entity} was added, but not yet commited: {value}",
           nameof(Add),
           nameof(UserRepository),
           nameof(User),

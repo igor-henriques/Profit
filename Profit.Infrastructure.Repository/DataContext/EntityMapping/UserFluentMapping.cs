@@ -17,5 +17,7 @@ public sealed class UserFluentMapping : IEntityTypeConfiguration<User>
             .WithOne(u => u.User)
             .HasForeignKey(u => u.UserId)
             .IsRequired();
+
+        builder.HasQueryFilter(p => !p.IsDeleted);
     }
 }

@@ -16,7 +16,7 @@ public sealed class GetPaginatedOrdersQueryHandler : IRequestHandler<GetPaginate
     public async Task<EntityQueryResultPaginated<OrderDto>> Handle(GetPaginatedOrdersQuery request, CancellationToken cancellationToken)
     {
         var paginatedResult = await _repo.GetPaginatedAsync(request, cancellationToken);
-        var paginatedResponse = paginatedResult.TransformToDto(paginatedResult.Data.Select(_mapper.Map<OrderDto>));
+        var paginatedResponse = paginatedResult.MapToDto(paginatedResult.Data.Select(_mapper.Map<OrderDto>));
         return paginatedResponse;
     }
 }

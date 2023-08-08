@@ -6,11 +6,11 @@ public static class RecipeEndpoints
     {
         app.MapGet(Routes.Recipe.GetPaginated, async (
             [FromQuery] int pageNumber,
-            [FromQuery] int pageSize,
+            [FromQuery] int itemsPerPage,
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken) =>
         {
-            var response = await mediator.Send(new GetPaginatedRecipesQuery(pageNumber, pageSize), cancellationToken);
+            var response = await mediator.Send(new GetPaginatedRecipesQuery(pageNumber, itemsPerPage), cancellationToken);
             return Results.Ok(response);
         }).WithTags(SwaggerTags.RECIPE).RequireAuthorization();
 

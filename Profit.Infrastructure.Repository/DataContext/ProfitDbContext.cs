@@ -12,6 +12,8 @@ public class ProfitDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.ApplyConfiguration(new AddressFluentMapping());
         modelBuilder.ApplyConfiguration(new CustomerFluentMapping());
         modelBuilder.ApplyConfiguration(new IngredientFluentMapping());
@@ -21,9 +23,25 @@ public class ProfitDbContext : DbContext
         modelBuilder.ApplyConfiguration(new OrderFluentMapping());
         modelBuilder.ApplyConfiguration(new ProductFluentMapping());
         modelBuilder.ApplyConfiguration(new RecipeFluentMapping());
-        modelBuilder.HasDefaultSchema("dbo");
+        modelBuilder.HasDefaultSchema("dbo");        
 
-        base.OnModelCreating(modelBuilder);
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            if (typeof(Entity<>).IsAssignableFrom(entityType.ClrType))
+            {
+                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(GetIsNotDeletedExpression(entityType.ClrType));
+            }
+        }
+    }
+
+    private static LambdaExpression GetIsNotDeletedExpression(Type type)
+    {
+        var parameter = Expression.Parameter(type, "e");
+        var body = Expression.Equal(
+            Expression.PropertyOrField(parameter, "IsDeleted"),
+            Expression.Constant(false));
+
+        return Expression.Lambda(body, parameter);
     }
 
     public DbSet<Ingredient> Ingredients { get; init; }

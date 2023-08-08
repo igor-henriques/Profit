@@ -16,7 +16,7 @@ public sealed class GetPaginatedRecipesQueryHandler : IRequestHandler<GetPaginat
     public async Task<EntityQueryResultPaginated<RecipeDto>> Handle(GetPaginatedRecipesQuery request, CancellationToken cancellationToken)
     {
         var paginatedResult = await _repo.GetPaginatedAsync(request, cancellationToken);
-        var paginatedResponse = paginatedResult.TransformToDto(paginatedResult.Data.Select(_mapper.Map<RecipeDto>));
+        var paginatedResponse = paginatedResult.MapToDto(paginatedResult.Data.Select(_mapper.Map<RecipeDto>));
         return paginatedResponse;
     }
 }

@@ -20,7 +20,8 @@ public sealed class DeleteIngredientCommandHandler : IRequestHandler<DeleteIngre
         if (recipesAffected.Any())
         {
             var recipesNameAffected = string.Join(",", recipesAffected.Select(x => x.Name).ToList());
-            throw new InvalidEntityDeleteException(recipesNameAffected);
+            var errorMessage = $"Ingredient can't be deleted because it is being used in recipes: {recipesNameAffected}";
+            throw new InvalidEntityDeleteException(errorMessage);
         }
 
         var ingredient = await _unitOfWork.IngredientRepository.GetUniqueAsync(request.IngredientId, cancellationToken);

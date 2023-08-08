@@ -10,5 +10,6 @@ public sealed class RecipeFluentMapping : IEntityTypeConfiguration<Recipe>
         builder.Property(r => r.Name).IsRequired().HasMaxLength(Constants.FieldsDefinitions.MaxLengthName);
         builder.Property(r => r.TotalCost).IsRequired().HasPrecision(18, 2);
         builder.Property(r => r.Description).HasMaxLength(Constants.FieldsDefinitions.MaxLengthDescriptions);
+        builder.HasQueryFilter(p => !p.IsDeleted);
     }
 }

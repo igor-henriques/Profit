@@ -73,7 +73,13 @@ public sealed class CachedReadOnlyOrderRepository : IReadOnlyOrderRepository
 
     public async ValueTask<EntityQueryResultPaginated<Order>> GetPaginatedAsync(BasePaginatedQuery paginatedQuery, CancellationToken cancellationToken = default)
     {
-        var redisKey = GetRedisKey(nameof(GetPaginatedAsync));
+        var redisKey = GetRedisKey(
+            nameof(GetPaginatedAsync),
+            nameof(paginatedQuery.PageNumber),
+            paginatedQuery.PageNumber.ToString(),
+            nameof(paginatedQuery.ItemsPerPage),
+            paginatedQuery.ItemsPerPage.ToString());
+
         var response = await _cacheService.GetAsync<EntityQueryResultPaginated<Order>>(redisKey);
 
         if (response is not null)
@@ -122,13 +128,6 @@ public sealed class CachedReadOnlyOrderRepository : IReadOnlyOrderRepository
     public async ValueTask<EntityQueryResultPaginated<Order>> GetByPaginatedAsync(Expression<Func<Order, bool>> predicate, BasePaginatedQuery paginatedQuery, CancellationToken cancellationToken = default)
     {
         var result = await _repo.GetByPaginatedAsync(predicate, paginatedQuery, cancellationToken);
-
-        int totalCount = await CountAsync(cancellationToken);
-        var totalPages = (int)Math.Ceiling(totalCount / (double)paginatedQuery.ItemsPerPage);
-
-        result.TotalPages = totalPages;
-        result.TotalCount = totalCount;
-
         return result;
     }
 

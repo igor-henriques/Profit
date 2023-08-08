@@ -8,7 +8,7 @@ public sealed class EntityQueryResultPaginated<TEntity>
     public int PageNumber { get; init; }
     public int ItemsPerPage { get; init; }
 
-    public EntityQueryResultPaginated<TDtoData> TransformToDto<TDtoData>(IEnumerable<TDtoData> dtoData)
+    public EntityQueryResultPaginated<TDtoData> MapToDto<TDtoData>(IEnumerable<TDtoData> dtoData)
     {
         return new EntityQueryResultPaginated<TDtoData>()
         {

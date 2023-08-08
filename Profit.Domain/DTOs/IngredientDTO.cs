@@ -9,7 +9,6 @@ public readonly record struct IngredientDto
     public EMeasurementUnit MeasurementUnit { get; init; }
     public string ImageThumbnailUrl { get; init; }
     public string Description { get; init; }
-    public bool IsDeleted { get; init; }
 
     public IngredientDto(Guid id,
                          string name,
@@ -17,8 +16,7 @@ public readonly record struct IngredientDto
                          decimal quantity,
                          string imageThumbnailUrl,
                          EMeasurementUnit measurementUnit,
-                         string description,
-                         bool isDeleted)
+                         string description)
     {
         Id = id;
         Name = name;
@@ -27,7 +25,6 @@ public readonly record struct IngredientDto
         ImageThumbnailUrl = imageThumbnailUrl;
         MeasurementUnit = measurementUnit;
         Description = description;
-        IsDeleted = isDeleted;
     }
 
     public IngredientDto() { }

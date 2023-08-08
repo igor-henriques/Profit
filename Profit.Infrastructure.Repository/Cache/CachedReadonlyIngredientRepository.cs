@@ -73,7 +73,13 @@ public sealed class CachedReadOnlyIngredientRepository : IReadOnlyIngredientRepo
 
     public async ValueTask<EntityQueryResultPaginated<Ingredient>> GetPaginatedAsync(BasePaginatedQuery paginatedQuery, CancellationToken cancellationToken = default)
     {
-        var redisKey = GetRedisKey(nameof(GetPaginatedAsync));
+        var redisKey = GetRedisKey(
+            nameof(GetPaginatedAsync), 
+            nameof(paginatedQuery.PageNumber), 
+            paginatedQuery.PageNumber.ToString(), 
+            nameof(paginatedQuery.ItemsPerPage), 
+            paginatedQuery.ItemsPerPage.ToString());
+
         var response = await _cacheService.GetAsync<EntityQueryResultPaginated<Ingredient>>(redisKey);
 
         if (response is null)
@@ -121,13 +127,6 @@ public sealed class CachedReadOnlyIngredientRepository : IReadOnlyIngredientRepo
     public async ValueTask<EntityQueryResultPaginated<Ingredient>> GetByPaginatedAsync(Expression<Func<Ingredient, bool>> predicate, BasePaginatedQuery paginatedQuery, CancellationToken cancellationToken = default)
     {
         var result = await _repo.GetByPaginatedAsync(predicate, paginatedQuery, cancellationToken);
-
-        int totalCount = await CountAsync(cancellationToken);
-        var totalPages = (int)Math.Ceiling(totalCount / (double)paginatedQuery.ItemsPerPage);
-
-        result.TotalPages = totalPages;
-        result.TotalCount = totalCount;
-
         return result;
     }
 

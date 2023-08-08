@@ -10,5 +10,6 @@ public sealed class OrderFluentMapping : IEntityTypeConfiguration<Order>
         builder.HasMany(o => o.OrderDetails).WithOne(od => od.Order).HasForeignKey(od => od.OrderId);
         builder.HasOne(o => o.Customer).WithMany(c => c.Orders).HasForeignKey(o => o.CustomerId);
         builder.HasOne(o => o.Address).WithOne().HasForeignKey<Order>(o => o.AddressId);
+        builder.HasQueryFilter(p => !p.IsDeleted);
     }
 }

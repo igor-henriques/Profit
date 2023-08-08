@@ -14,8 +14,7 @@ public sealed class IngredientTests
             ingredient.Quantity,
             ingredient.ImageThumbnailUrl,
             ingredient.MeasurementUnit,
-            ingredient.Description,
-            ingredient.IsDeleted);
+            ingredient.Description);
 
         var config = new MapperConfiguration(cfg => cfg.AddProfile<IngredientProfile>());
         var mapper = new Mapper(config);

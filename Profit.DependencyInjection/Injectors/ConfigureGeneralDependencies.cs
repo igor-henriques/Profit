@@ -9,6 +9,7 @@ public static class ConfigureGeneralDependencies
         services.AddScoped<ITenantInfo, TenantInfo>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<SchemaInterceptor>();
+        services.AddScoped<SoftDeleteInterceptor>();
         services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
         services.AddSingleton<IStorageQueueService, StorageQueueService>();
         services.AddSingleton<IPasswordHashingService, PasswordHashingService>();
