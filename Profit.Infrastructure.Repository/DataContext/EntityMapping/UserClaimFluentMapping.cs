@@ -14,6 +14,6 @@ public sealed class UserClaimFluentMapping : IEntityTypeConfiguration<UserClaim>
         builder.HasOne(uc => uc.User)
             .WithMany(uc => uc.UserClaims)
             .HasForeignKey(uc => uc.UserId)
-            .IsRequired();        
+            .IsRequired();
     }
 }

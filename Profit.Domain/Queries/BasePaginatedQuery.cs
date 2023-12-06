@@ -8,7 +8,7 @@ public record BasePaginatedQuery
     public BasePaginatedQuery(int pageNumber, int itemsPerPage)
     {
         PageNumber = pageNumber <= 0 ? DEFAULT_PAGE_NUMBER : pageNumber;
-        ItemsPerPage = itemsPerPage <= 0 ? DEFAULT_ITEMS_PER_PAGE : pageNumber;
+        ItemsPerPage = itemsPerPage <= 0 ? DEFAULT_ITEMS_PER_PAGE : itemsPerPage;
     }
 
     public int PageNumber { get; init; }

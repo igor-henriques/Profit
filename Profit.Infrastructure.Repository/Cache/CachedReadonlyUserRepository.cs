@@ -9,10 +9,10 @@ public sealed class CachedReadOnlyUserRepository : IReadOnlyUserRepository
     private readonly ICacheService _cacheService;
     private readonly IReadOnlyUserRepository _repo;
     private readonly IOptions<CacheOptions> _cacheOptions;
-    private readonly ILogger<UnitOfWork> _logger;
+    private readonly ILogger<CachedReadOnlyUserRepository> _logger;
 
     public CachedReadOnlyUserRepository(
-        ILogger<UnitOfWork> logger,
+        ILogger<CachedReadOnlyUserRepository> logger,
         ICacheService cacheService,
         IOptions<CacheOptions> cacheOptions,
         IReadOnlyUserRepository readOnlyRepo)

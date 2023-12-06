@@ -16,32 +16,39 @@ public sealed class RecipeRepositoryTests
 
         // Act        
         await unitOfWork.RecipeRepository.Add(recipe);
-        await unitOfWork.Commit();
+        var changeCount = await unitOfWork.Commit();
 
         // Assert
-        //(await unitOfWork.RecipeRepository.CountAsync()).Should().Be(1);
+        changeCount.Should().Be(4);
     }
 
     [Theory]
     [@AutoData]
-    public async Task GetUniqueAsync_ShouldReturnCachedEntityWhenAvailable(
-        Recipe recipe,
-        Mock<ILogger<UnitOfWork>> loggerMock,
-        Mock<ICacheService> redisMock,
-        Mock<IMigratorApplication> migrator)
+    public async Task GetUniqueAsync_ShouldReturnCachedEntity_WhenAvailable(
+       Recipe recipe,
+       Mock<ILogger<CachedReadOnlyRecipeRepository>> loggerMock,
+       Mock<ICacheService> cacheServiceMock,
+       Mock<IOptions<CacheOptions>> cacheOptionsMock,
+       Mock<ITenantInfo> tenantMock,
+       Mock<IReadOnlyRecipeRepository> readOnlyRecipeRepoMock)
     {
         // Arrange
-        redisMock.Setup(c => c.GetAsync<Recipe>(It.IsAny<string>())).ReturnsAsync(recipe);
-        var unitOfWork = RepositoryFixtures.GetUnitOfWork(
-            loggerMock,
-            migrator);
+        cacheServiceMock.Setup(c => c.GetAsync<Recipe>(It.IsAny<string>())).ReturnsAsync(recipe);
+
+        var cachedReadOnlyRecipeRepository = new CachedReadOnlyRecipeRepository(
+            loggerMock.Object,
+            cacheServiceMock.Object,
+            cacheOptionsMock.Object,
+            tenantMock.Object,
+            readOnlyRecipeRepoMock.Object);
 
         // Act
-        var entity = await unitOfWork.RecipeRepository.GetUniqueAsync(recipe.Id);
+        var entity = await cachedReadOnlyRecipeRepository.GetUniqueAsync(recipe.Id);
 
         // Assert
         Assert.Equal(recipe, entity);
-        redisMock.Verify(c => c.GetAsync<Recipe>(It.IsAny<string>()), Times.Once());
+        readOnlyRecipeRepoMock.Verify(x => x.GetUniqueAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never());
+        cacheServiceMock.Verify(c => c.GetAsync<Recipe>(It.IsAny<string>()), Times.Once());
         loggerMock.Verify(
             x => x.Log(
                 It.Is<LogLevel>(x => x == LogLevel.Information),
@@ -56,24 +63,39 @@ public sealed class RecipeRepositoryTests
     [@AutoData]
     public async Task GetUniqueAsync_ShouldReturnRepoEntityWhenCacheIsEmpty(
         Recipe recipe,
-        Mock<ILogger<UnitOfWork>> loggerMock,
-        Mock<ICacheService> redisMock,
-        Mock<IMigratorApplication> migrator)
+        Mock<ILogger<CachedReadOnlyRecipeRepository>> loggerMock,
+        Mock<ICacheService> cacheServiceMock,
+        Mock<IOptions<CacheOptions>> cacheOptionsMock,
+        Mock<ITenantInfo> tenantMock,
+        Mock<IReadOnlyRecipeRepository> readOnlyRecipeRepoMock)
     {
         // Arrange
-        redisMock.Setup(c => c.GetAsync<Recipe>(It.IsAny<string>())).ReturnsAsync((Recipe)null);
-        var unitOfWork = RepositoryFixtures.GetUnitOfWork(
-            loggerMock,
-            migrator);
+        cacheOptionsMock.Setup(x => x.Value).Returns(new CacheOptions());
+        cacheServiceMock.Setup(c => c.GetAsync<Recipe>(It.IsAny<string>())).ReturnsAsync((Recipe)null);
+        readOnlyRecipeRepoMock.Setup(x => x.GetUniqueAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(recipe);
 
-        await unitOfWork.RecipeRepository.Add(recipe);
-        await unitOfWork.Commit();
+        var cachedReadOnlyRecipeRepository = new CachedReadOnlyRecipeRepository(
+            loggerMock.Object,
+            cacheServiceMock.Object,
+            cacheOptionsMock.Object,
+            tenantMock.Object,
+            readOnlyRecipeRepoMock.Object);
 
         // Act
-        var entity = await unitOfWork.RecipeRepository.GetUniqueAsync(recipe.Id);
+        var entity = await cachedReadOnlyRecipeRepository.GetUniqueAsync(recipe.Id);
 
         // Assert
         Assert.Equal(recipe, entity);
-        redisMock.Verify(c => c.GetAsync<Recipe>(It.IsAny<string>()), Times.Once());
+        readOnlyRecipeRepoMock.Verify(x => x.GetUniqueAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once());
+        cacheServiceMock.Verify(c => c.GetAsync<Recipe>(It.IsAny<string>()), Times.Once());
+        cacheServiceMock.Verify(c => c.SetAsync(It.IsAny<string>(), recipe, It.IsAny<TimeSpan>()));
+        loggerMock.Verify(
+            x => x.Log(
+                It.Is<LogLevel>(x => x == LogLevel.Information),
+                It.IsAny<EventId>(),
+                It.IsAny<It.IsAnyType>(),
+                It.IsAny<Exception>(),
+                It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+            Times.Once);
     }
 }

@@ -9,13 +9,10 @@
     var authConnection = configuration.GetConnectionString("AuthConnection");
     var profitConnection = configuration.GetConnectionString("ProfitConnection");
 
-    Console.WriteLine(authConnection);
-    Console.WriteLine(profitConnection);
-
     var host = Host.CreateDefaultBuilder(args)
             .ConfigureServices(services =>
             {
-                services.AddDbContext<ProfitDbContext>(options => options.UseSqlServer(authConnection), ServiceLifetime.Singleton, ServiceLifetime.Singleton);
+                services.AddDbContext<ProfitDbContext>(options => options.UseSqlServer(profitConnection), ServiceLifetime.Singleton, ServiceLifetime.Singleton);
                 services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(authConnection), ServiceLifetime.Singleton, ServiceLifetime.Singleton);
                 services.Configure<ConnectionStringsOptions>(configuration.GetSection("ConnectionStrings"));
                 services.AddSingleton<MigratorApplication>();

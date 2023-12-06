@@ -11,10 +11,7 @@ public static class ConfigureGeneralDependencies
         services.AddScoped<SchemaInterceptor>();
         services.AddScoped<SoftDeleteInterceptor>();
         services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
-        services.AddSingleton<IStorageQueueService, StorageQueueService>();
         services.AddSingleton<IPasswordHashingService, PasswordHashingService>();
-        services.AddSingleton(typeof(ICommandBatchProcessorService<>), typeof(CommandBatchProcessorService<>));
-        services.AddHostedService<CommandBatchProcessorWorker<RequestCommandQueryLog>>();
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
         services.AddScoped<IMigratorApplication, MigratorApplication>();
 

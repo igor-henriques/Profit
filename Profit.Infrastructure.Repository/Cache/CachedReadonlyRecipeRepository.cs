@@ -6,10 +6,10 @@ public sealed class CachedReadOnlyRecipeRepository : IReadOnlyRecipeRepository
     private readonly ICacheService _cacheService;
     private readonly IOptions<CacheOptions> _cacheOptions;
     private readonly IReadOnlyRecipeRepository _repo;
-    private readonly ILogger<UnitOfWork> _logger;
+    private readonly ILogger<CachedReadOnlyRecipeRepository> _logger;
 
     public CachedReadOnlyRecipeRepository(
-        ILogger<UnitOfWork> logger,
+        ILogger<CachedReadOnlyRecipeRepository> logger,
         ICacheService cacheService,
         IOptions<CacheOptions> cacheOptions,
         ITenantInfo tenant,

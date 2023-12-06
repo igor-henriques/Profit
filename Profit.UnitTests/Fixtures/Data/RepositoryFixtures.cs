@@ -9,19 +9,8 @@ internal static class RepositoryFixtures
     {
         database ??= Guid.NewGuid().ToString();
 
-        var profitOptions = new DbContextOptionsBuilder<ProfitDbContext>()
-            .EnableSensitiveDataLogging()
-            .UseInMemoryDatabase(databaseName: database)
-            .Options;
-
-        var profitContext = new ProfitDbContext(profitOptions);
-
-        var authOptions = new DbContextOptionsBuilder<AuthDbContext>()
-            .EnableSensitiveDataLogging()
-            .UseInMemoryDatabase(databaseName: "Users")
-            .Options;
-
-        var authContext = new AuthDbContext(authOptions);
+        var profitContext = GetProfitDbContext(database);
+        var authContext = GetAuthDbContext();
 
         var unitOfWork = new UnitOfWork(
             profitContext,
@@ -30,5 +19,29 @@ internal static class RepositoryFixtures
             migrator.Object);
 
         return unitOfWork;
+    }
+
+    internal static ProfitDbContext GetProfitDbContext(string database = null)
+    {
+        var profitOptions = new DbContextOptionsBuilder<ProfitDbContext>()
+          .EnableSensitiveDataLogging()
+          .UseInMemoryDatabase(databaseName: database)
+          .Options;
+
+        var profitContext = new ProfitDbContext(profitOptions);
+
+        return profitContext;
+    }
+
+    internal static AuthDbContext GetAuthDbContext()
+    {
+        var authOptions = new DbContextOptionsBuilder<AuthDbContext>()
+           .EnableSensitiveDataLogging()
+           .UseInMemoryDatabase(databaseName: "Users")
+           .Options;
+
+        var authContext = new AuthDbContext(authOptions);
+
+        return authContext;
     }
 }

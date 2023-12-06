@@ -23,7 +23,7 @@ public class ProfitDbContext : DbContext
         modelBuilder.ApplyConfiguration(new OrderFluentMapping());
         modelBuilder.ApplyConfiguration(new ProductFluentMapping());
         modelBuilder.ApplyConfiguration(new RecipeFluentMapping());
-        modelBuilder.HasDefaultSchema("dbo");        
+        modelBuilder.HasDefaultSchema("dbo");
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {

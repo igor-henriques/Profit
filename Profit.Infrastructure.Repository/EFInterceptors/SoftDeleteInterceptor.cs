@@ -9,15 +9,15 @@ public sealed class SoftDeleteInterceptor : SaveChangesInterceptor
         if (eventData.Context is null)
         {
             return result;
-        }        
+        }
 
         foreach (var entry in eventData.Context.ChangeTracker.Entries())
         {
             var entity = entry.Entity;
             var entityType = entity.GetType();
-            
-            if (entry.State == EntityState.Deleted && 
-                entityType.IsGenericType && 
+
+            if (entry.State == EntityState.Deleted &&
+                entityType.IsGenericType &&
                 entityType.GetGenericTypeDefinition() == typeof(Entity<>))
             {
                 entry.State = EntityState.Modified;

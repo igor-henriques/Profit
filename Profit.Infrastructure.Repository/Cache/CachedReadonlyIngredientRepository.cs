@@ -6,10 +6,10 @@ public sealed class CachedReadOnlyIngredientRepository : IReadOnlyIngredientRepo
     private readonly ICacheService _cacheService;
     private readonly IOptions<CacheOptions> _cacheOptions;
     private readonly IReadOnlyIngredientRepository _repo;
-    private readonly ILogger<UnitOfWork> _logger;
+    private readonly ILogger<CachedReadOnlyIngredientRepository> _logger;
 
     public CachedReadOnlyIngredientRepository(
-        ILogger<UnitOfWork> logger,
+        ILogger<CachedReadOnlyIngredientRepository> logger,
         ICacheService cacheService,
         IOptions<CacheOptions> cacheOptions,
         ITenantInfo tenant,
@@ -74,10 +74,10 @@ public sealed class CachedReadOnlyIngredientRepository : IReadOnlyIngredientRepo
     public async ValueTask<EntityQueryResultPaginated<Ingredient>> GetPaginatedAsync(BasePaginatedQuery paginatedQuery, CancellationToken cancellationToken = default)
     {
         var redisKey = GetRedisKey(
-            nameof(GetPaginatedAsync), 
-            nameof(paginatedQuery.PageNumber), 
-            paginatedQuery.PageNumber.ToString(), 
-            nameof(paginatedQuery.ItemsPerPage), 
+            nameof(GetPaginatedAsync),
+            nameof(paginatedQuery.PageNumber),
+            paginatedQuery.PageNumber.ToString(),
+            nameof(paginatedQuery.ItemsPerPage),
             paginatedQuery.ItemsPerPage.ToString());
 
         var response = await _cacheService.GetAsync<EntityQueryResultPaginated<Ingredient>>(redisKey);
