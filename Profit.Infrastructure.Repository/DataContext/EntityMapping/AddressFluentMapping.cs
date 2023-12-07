@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace Profit.Infrastructure.Repository.DataContext.EntityMapping;
+﻿namespace Profit.Infrastructure.Repository.DataContext.EntityMapping;
 
 public sealed class AddressFluentMapping : IEntityTypeConfiguration<Address>
 {

@@ -1,7 +1,7 @@
 ﻿namespace Profit.Infrastructure.Repository.Repositories.Base;
 
 internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TEntity>
-    where TEntity : Entity<TEntity>    
+    where TEntity : Entity<TEntity>
     where TDbContext : DbContext
 {
     private readonly TDbContext _context;
@@ -76,7 +76,7 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
     /// </summary>
     /// <param name="entity"></param>
     public virtual void Delete(TEntity entity)
-    {        
+    {
         _context.Set<TEntity>().Remove(entity);
 
         _logger.LogInformation("{methodName} from {sourceName}: {entity} was marked to removal, but not yet commited: {value}",

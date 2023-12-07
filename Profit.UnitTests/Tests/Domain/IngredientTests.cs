@@ -25,7 +25,8 @@ public sealed class IngredientTests
 
         // Assert
         ingredientDtoMapped.Should().Be(ingredientDto);
-        ingredient.Should().BeEquivalentTo(ingredientMapped, options => options.Excluding(x => x.UnitPrice));
+        ingredient.Should().BeEquivalentTo(ingredientMapped, options => options.Excluding(x => x.UnitPrice)
+                                                                               .Excluding(x => x.UpdatedAt));
     }
 
     [Theory]

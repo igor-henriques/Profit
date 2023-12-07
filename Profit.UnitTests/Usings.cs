@@ -33,3 +33,5 @@ global using Profit.UnitTests.Fixtures.Customizations;
 global using Profit.UnitTests.Fixtures.Data;
 global using System.Security.Claims;
 global using Xunit;
+global using Profit.Domain.Interfaces.Repositories.ReadOnly;
+global using Profit.Infrastructure.Repository.Cache;

@@ -1,7 +1,4 @@
-﻿global using Azure.Storage.Queues;
-global using Microsoft.Extensions.Hosting;
-global using Microsoft.Extensions.Logging;
-global using Microsoft.Extensions.Options;
+﻿global using Microsoft.Extensions.Options;
 global using Microsoft.IdentityModel.Tokens;
 global using Newtonsoft.Json;
 global using Profit.Core.JsonResolvers;
@@ -9,9 +6,7 @@ global using Profit.Core.Shared;
 global using Profit.Domain.Interfaces.Services;
 global using Profit.Domain.Models.Authentication;
 global using Profit.Domain.Models.Options;
-global using Profit.Infrastructure.Service.Services;
 global using StackExchange.Redis;
-global using System.Collections.Concurrent;
 global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
 global using System.Text;

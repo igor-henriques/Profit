@@ -6,10 +6,10 @@ public sealed class CachedReadOnlyOrderRepository : IReadOnlyOrderRepository
     private readonly ICacheService _cacheService;
     private readonly IOptions<CacheOptions> _cacheOptions;
     private readonly IReadOnlyOrderRepository _repo;
-    private readonly ILogger<UnitOfWork> _logger;
+    private readonly ILogger<CachedReadOnlyOrderRepository> _logger;
 
     public CachedReadOnlyOrderRepository(
-        ILogger<UnitOfWork> logger,
+        ILogger<CachedReadOnlyOrderRepository> logger,
         ICacheService cacheService,
         IOptions<CacheOptions> cacheOptions,
         ITenantInfo tenant,
