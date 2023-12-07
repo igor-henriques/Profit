@@ -5,8 +5,7 @@ public sealed record Order : Entity<Order>
     public decimal TotalAmount { get; init; }
     public PaymentMethod PaymentMethod { get; init; }
     public OrderStatus OrderStatus { get; private set; }
-    public DateTime CreatedAt { get; init; }
-    public DateTime? UpdatedAt { get; private set; }
+    public DateTime CreatedAt { get; init; }    
     public DateTime? PaidAt { get; private set; }
     public DateTime? CanceledAt { get; init; }
     public Guid? CustomerId { get; init; }
@@ -20,6 +19,7 @@ public sealed record Order : Entity<Order>
     public void Pay()
     {
         OrderStatus |= OrderStatus.Paid;
+        UpdatedAt = DateTime.Now;
         PaidAt = DateTime.Now;
     }
 

@@ -1,7 +1,7 @@
 ﻿namespace Profit.Domain.Entities.Base;
 
 public abstract record Entity<T> where T : Entity<T>
-    {
+{
     public Guid Id { get; init; }
     public DateTime? UpdatedAt { get; set; }
     public bool IsDeleted { get; private set; }
