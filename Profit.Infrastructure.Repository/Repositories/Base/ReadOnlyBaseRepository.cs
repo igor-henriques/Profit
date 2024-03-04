@@ -1,7 +1,7 @@
 ﻿namespace Profit.Infrastructure.Repository.Repositories.Base;
 
 public abstract class ReadOnlyBaseRepository<TEntity, TDbContext> : IReadOnlyBaseRepository<TEntity>
-    where TEntity : Entity<TEntity>
+    where TEntity : Entity<TEntity>, IEntity
     where TDbContext : DbContext
 {
     private readonly TDbContext _context;

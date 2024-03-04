@@ -4,25 +4,33 @@ public static class IngredientEndpoints
 {
     public static void ConfigureIngredientEndpoints(this WebApplication app)
     {
-        app.MapGet(Routes.Ingredient.GetPaginated, async (
-            [FromQuery] int pageNumber,
-            [FromQuery] int itemsPerPage,
-            [FromServices] IMediator mediator,
-            CancellationToken cancellationToken) =>
+        app.MapGet(Routes.Ingredient.GetPaginated, GetPaginated)
+            .WithTags(SwaggerTags.INGREDIENT)
+            .RequireAuthorization();
+
+        static async Task<IResult> GetPaginated(
+            [FromQuery] int pageNumber, 
+            [FromQuery] int itemsPerPage, 
+            [FromServices] IMediator mediator, 
+            CancellationToken cancellationToken)
         {
             var response = await mediator.Send(new GetPaginatedIngredientsQuery(pageNumber, itemsPerPage), cancellationToken);
             return Results.Ok(response);
-        }).WithTags(SwaggerTags.INGREDIENT).RequireAuthorization();
+        }
 
-        app.MapGet(Routes.Ingredient.GetUnique, async (
+        app.MapGet(Routes.Ingredient.GetUnique, GetUnique)
+            .WithTags(SwaggerTags.INGREDIENT)
+            .RequireAuthorization();
+
+       static async Task<IResult> GetUnique(
             [FromQuery] Guid guid,
             [FromServices] IMediator mediator,
-            CancellationToken cancellationToken) =>
+            CancellationToken cancellationToken)
         {
             var query = new GetUniqueIngredientQuery(guid);
             var response = await mediator.Send(query, cancellationToken);
             return Results.Ok(response);
-        }).WithTags(SwaggerTags.INGREDIENT).RequireAuthorization();
+        }
 
         app.MapPost(Routes.Ingredient.Create, async (
             [FromBody] CreateIngredientCommand command,

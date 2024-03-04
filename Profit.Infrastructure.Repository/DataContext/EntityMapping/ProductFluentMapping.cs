@@ -4,6 +4,7 @@ public sealed class ProductFluentMapping : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
+        builder.HasQueryFilter(x => !x.IsDeleted);
         builder.HasKey(p => p.Id);
         builder.ToTable(Constants.TableNames.Product);
         builder.Property(p => p.Id).ValueGeneratedOnAdd();

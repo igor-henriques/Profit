@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Entities;
 
-public sealed record Invoice : Entity<Invoice>
+public sealed record Invoice : Entity<Invoice>, IEntity
 {
     public Guid OrderId { get; init; }
     public Order Order { get; init; }

@@ -4,6 +4,7 @@ public sealed class UserFluentMapping : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
+        builder.HasQueryFilter(x => !x.IsDeleted);
         builder.HasKey(u => u.Id);
         builder.ToTable(Constants.TableNames.User);
         builder.Property(u => u.TenantId).ValueGeneratedOnAdd();

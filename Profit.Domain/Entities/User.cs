@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Entities;
 
-public sealed record User : Entity<User>
+public sealed record User : Entity<User>, IEntity
 {
     public Guid TenantId { get; init; } = Guid.NewGuid();
     public string Username { get; private set; }

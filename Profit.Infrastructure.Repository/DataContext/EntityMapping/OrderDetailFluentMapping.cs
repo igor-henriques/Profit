@@ -4,6 +4,7 @@ public sealed class OrderDetailFluentMapping : IEntityTypeConfiguration<OrderDet
 {
     public void Configure(EntityTypeBuilder<OrderDetail> builder)
     {
+        builder.HasQueryFilter(x => !x.IsDeleted);
         builder.HasKey(od => od.Id);
         builder.Property(od => od.Id).HasMaxLength(64);
         builder.Property(od => od.Quantity).IsRequired();

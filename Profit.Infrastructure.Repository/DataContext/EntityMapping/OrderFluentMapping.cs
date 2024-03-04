@@ -4,6 +4,7 @@ public sealed class OrderFluentMapping : IEntityTypeConfiguration<Order>
 {
     public void Configure(EntityTypeBuilder<Order> builder)
     {
+        builder.HasQueryFilter(x => !x.IsDeleted);
         builder.HasKey(o => o.Id);
         builder.Property(o => o.Id).HasMaxLength(64);
         builder.Property(o => o.TotalAmount).IsRequired().HasColumnType("decimal(18,2)");

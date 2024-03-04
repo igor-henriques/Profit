@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Entities;
 
-public sealed record Product : Entity<Product>
+public sealed record Product : Entity<Product>, IEntity
 {
     public string Name { get; private set; }
     public decimal TotalPrice { get; private set; }

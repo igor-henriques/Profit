@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Entities;
 
-public sealed record Order : Entity<Order>
+public sealed record Order : Entity<Order>, IEntity
 {
     public decimal TotalAmount { get; init; }
     public PaymentMethod PaymentMethod { get; init; }

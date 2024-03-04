@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Interfaces.Repositories.Base;
 
-public interface IBaseRepository<TEntity> where TEntity : Entity<TEntity>
+public interface IBaseRepository<TEntity> where TEntity : Entity<TEntity>, IEntity
 {
     public ValueTask Add(TEntity entity, CancellationToken cancellationToken = default);
     public void BulkAdd(IEnumerable<TEntity> ingredients);

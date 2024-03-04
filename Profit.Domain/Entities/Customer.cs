@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Entities;
 
-public sealed record Customer : Entity<Customer>
+public sealed record Customer : Entity<Customer>, IEntity
 {
     public string FirstName { get; init; }
     public string LastName { get; init; }

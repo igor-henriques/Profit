@@ -4,6 +4,7 @@ public sealed class AddressFluentMapping : IEntityTypeConfiguration<Address>
 {
     public void Configure(EntityTypeBuilder<Address> builder)
     {
+        builder.HasQueryFilter(x => !x.IsDeleted);
         builder.HasKey(a => a.Id);
         builder.Property(a => a.Id).HasMaxLength(64);
         builder.Property(a => a.Street).IsRequired().HasMaxLength(250);

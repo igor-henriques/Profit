@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 
@@ -35,6 +35,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Profit.API\Profit.API.csproj" />
+		<ProjectReference Include="..\Profit.Application\Profit.Application.csproj" />
 		<ProjectReference Include="..\Profit.Domain\Profit.Domain.csproj" />
 		<ProjectReference Include="..\Profit.Infrastructure.Repository\Profit.Infrastructure.Repository.csproj" />
 		<ProjectReference Include="..\Profit.Infrastructure.Service\Profit.Infrastructure.Service.csproj" />

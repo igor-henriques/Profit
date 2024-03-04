@@ -2,7 +2,7 @@
 
 public sealed class InvalidMeasurementConversionException : Exception
 {
-    public InvalidMeasurementConversionException(string message) : base(message)
+    public InvalidMeasurementConversionException(EMeasurementUnit currentUnit, EMeasurementUnit incomingUnit) : base($"{currentUnit} is not convertible to {incomingUnit}")
     {
 
     }

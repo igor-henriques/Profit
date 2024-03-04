@@ -1,7 +1,7 @@
 ﻿namespace Profit.Infrastructure.Repository.Repositories.Base;
 
 internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TEntity>
-    where TEntity : Entity<TEntity>
+    where TEntity : Entity<TEntity>, IEntity
     where TDbContext : DbContext
 {
     private readonly TDbContext _context;
@@ -103,7 +103,7 @@ internal abstract class BaseRepository<TEntity, TDbContext> : IBaseRepository<TE
     {
         var response = await _context
             .Set<TEntity>()
-            .FindAsync(new object[] { id }, cancellationToken);
+            .FindAsync([id], cancellationToken: cancellationToken);
 
         _logger.LogInformation("{methodName} from {sourceName} retrieved {response}",
           nameof(GetUniqueAsync),

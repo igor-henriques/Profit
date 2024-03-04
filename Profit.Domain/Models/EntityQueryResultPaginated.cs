@@ -1,8 +1,8 @@
 ﻿namespace Profit.Domain.Models;
 
-public sealed class EntityQueryResultPaginated<TEntity>
+public sealed record EntityQueryResultPaginated<TEntity>
 {
-    public List<TEntity> Data { get; set; }
+    public List<TEntity> Data { get; init; } = [];
     public int? TotalCount { get; set; }
     public int? TotalPages { get; set; }
     public int PageNumber { get; init; }
@@ -12,11 +12,11 @@ public sealed class EntityQueryResultPaginated<TEntity>
     {
         return new EntityQueryResultPaginated<TDtoData>()
         {
-            Data = dtoData?.ToList() ?? Enumerable.Empty<TDtoData>().ToList(),
+            Data = dtoData?.ToList() ?? [],
             ItemsPerPage = ItemsPerPage,
             PageNumber = PageNumber,
-            TotalCount = TotalPages,
-            TotalPages = TotalCount
+            TotalCount = TotalCount,
+            TotalPages = TotalPages
         };
     }
 }

@@ -4,6 +4,7 @@ public sealed class IngredientFluentMapping : IEntityTypeConfiguration<Ingredien
 {
     public void Configure(EntityTypeBuilder<Ingredient> builder)
     {
+        builder.HasQueryFilter(x => !x.IsDeleted);
         builder.HasKey(i => i.Id);
         builder.ToTable(Constants.TableNames.Ingredient);
         builder.Property(i => i.Id).ValueGeneratedOnAdd();

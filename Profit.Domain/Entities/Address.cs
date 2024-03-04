@@ -1,6 +1,6 @@
 ﻿namespace Profit.Domain.Entities;
 
-public sealed record Address : Entity<Address>
+public sealed record Address : Entity<Address>, IEntity
 {
     public Guid? CustomerId { get; init; }
     public Guid? OrderId { get; init; }

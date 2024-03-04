@@ -23,7 +23,7 @@ internal static class MeasurementExtensions
 
         if (isInvalidConversion)
         {
-            throw new InvalidMeasurementConversionException($"{currentUnit} is not convertible to {incomingUnit}");
+            throw new InvalidMeasurementConversionException(currentUnit, incomingUnit);
         }
     }
 }

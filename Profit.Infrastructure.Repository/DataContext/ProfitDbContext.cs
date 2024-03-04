@@ -24,24 +24,25 @@ public class ProfitDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ProductFluentMapping());
         modelBuilder.ApplyConfiguration(new RecipeFluentMapping());
         modelBuilder.HasDefaultSchema("dbo");
-
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-        {
-            if (typeof(Entity<>).IsAssignableFrom(entityType.ClrType))
-            {
-                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(GetIsNotDeletedExpression(entityType.ClrType));
-            }
-        }
     }
 
-    private static LambdaExpression GetIsNotDeletedExpression(Type type)
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {
-        var parameter = Expression.Parameter(type, "e");
-        var body = Expression.Equal(
-            Expression.PropertyOrField(parameter, "IsDeleted"),
-            Expression.Constant(false));
+        foreach (var entry in ChangeTracker.Entries())
+        {
+            if (entry.Entity is IEntity entity)
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Deleted:
+                        entry.State = EntityState.Modified;
+                        entity.Delete();
+                        break;
+                }
+            }
+        }
 
-        return Expression.Lambda(body, parameter);
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 
     public DbSet<Ingredient> Ingredients { get; init; }

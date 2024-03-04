@@ -25,7 +25,7 @@ public sealed class TenantResolverMiddleware
     }
     private static string GetUsernameFromAuthorizationHeader(HttpContext context)
     {
-        var authorizationClaims = context.Request.Headers["Authorization"].FirstOrDefault();
+        var authorizationClaims = context.Request.Headers.Authorization.FirstOrDefault();
         if (string.IsNullOrEmpty(authorizationClaims))
         {
             throw new InvalidCredentialsException("Authentication is required");

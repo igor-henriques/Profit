@@ -4,6 +4,7 @@ public sealed class InvoiceFluentMapping : IEntityTypeConfiguration<Invoice>
 {
     public void Configure(EntityTypeBuilder<Invoice> builder)
     {
+        builder.HasQueryFilter(x => !x.IsDeleted);
         builder.HasKey(i => i.Id);
         builder.Property(i => i.Id).HasMaxLength(64);
         builder.Property(i => i.InvoiceNumber).HasMaxLength(200).IsRequired();

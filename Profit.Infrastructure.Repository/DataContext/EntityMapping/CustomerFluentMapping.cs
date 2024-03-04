@@ -4,6 +4,7 @@ public sealed class CustomerFluentMapping : IEntityTypeConfiguration<Customer>
 {
     public void Configure(EntityTypeBuilder<Customer> builder)
     {
+        builder.HasQueryFilter(x => !x.IsDeleted);
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Id).HasMaxLength(64);
         builder.Property(c => c.FirstName).IsRequired().HasMaxLength(100);
